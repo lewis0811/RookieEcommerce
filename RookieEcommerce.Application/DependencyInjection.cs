@@ -14,6 +14,9 @@ namespace RookieEcommerce.Application
             // Register validators from this assembly
             services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
 
+            // -- Add Mediatr ---
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IAssemblyMarker>());
+
             return services;
         }
     }
