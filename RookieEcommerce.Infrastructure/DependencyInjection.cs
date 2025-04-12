@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RookieEcommerce.Application.Contacts.Persistence;
+using RookieEcommerce.Infrastructure.Persistence;
 
 namespace RookieEcommerce.Infrastructure
 {
@@ -24,6 +26,10 @@ namespace RookieEcommerce.Infrastructure
                 options.Configuration = redisConnectionString;
                 options.InstanceName = "RookieEcommerce";
             });
+
+            // -- Add Repository Registrations
+            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             return services;
         }
