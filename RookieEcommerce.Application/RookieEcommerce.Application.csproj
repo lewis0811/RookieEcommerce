@@ -9,10 +9,12 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RookieEcommerce.Domain\RookieEcommerce.Domain.csproj" />
+    <ProjectReference Include="..\RookieEcommerce.SharedViewModels\RookieEcommerce.SharedViewModels.csproj" />
   </ItemGroup>
 
 </Project>
