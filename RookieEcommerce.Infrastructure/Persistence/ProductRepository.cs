@@ -1,14 +1,8 @@
-﻿using Azure.Core;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using RookieEcommerce.Application.Common;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Application.Features.Products.Queries;
 using RookieEcommerce.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RookieEcommerce.Infrastructure.Persistence
 {
@@ -16,10 +10,11 @@ namespace RookieEcommerce.Infrastructure.Persistence
     {
         private static readonly string productName = nameof(Product.Name).ToLowerInvariant();
         private static readonly string productDescription = nameof(Product.Description).ToLowerInvariant();
+
         public Task<PagedResult<Product>> GetPaginatedProduct(GetProductsQuery query)
         {
             var products = context.Products.AsQueryable();
-            
+
             // Apply filtering if it is not null
             if (query.MinPrice != null)
             {

@@ -30,7 +30,9 @@ namespace RookieEcommerce.Infrastructure
             // -- Add Repository Registrations
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IProductRepository, ProductRepository>();
-
+            services.AddScoped<IProductVariantRepository, ProductVariantRepository>();
+            // -- Add Unit Of Work Registrations
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
     }

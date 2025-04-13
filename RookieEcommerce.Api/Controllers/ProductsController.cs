@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using RookieEcommerce.Application.Features.Products.Queries;
+using RookieEcommerce.Application.Features.Products.Variants.Commands;
+using RookieEcommerce.Application.Features.Products.Variants.Queries;
 using RookieEcommerce.SharedViewModels;
 
 namespace RookieEcommerce.Api.Controllers
@@ -14,7 +14,7 @@ namespace RookieEcommerce.Api.Controllers
         // GET: api/products
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetProducts([FromQuery]GetProductsQuery query,CancellationToken cancellationToken)
+        public async Task<IActionResult> GetProducts([FromQuery] GetProductsQuery query, CancellationToken cancellationToken)
         {
             var products = await mediator.Send(query, cancellationToken);
             return Ok(products);
@@ -28,6 +28,16 @@ namespace RookieEcommerce.Api.Controllers
         {
             var productDto = await mediator.Send(query, cancellationToken);
             return Ok(productDto);
+        }
+
+        // GET: api/products/{productId}/variants
+        [HttpGet("{productId}/variants")]
+        [ProducesResponseType(typeof(IEnumerable<ProductVariantDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetVariants(Guid productId, CancellationToken cancellationToken)
+        {
+            var query = new GetProductVariantsByProductQuery(productId);
+            var variants = await mediator.Send(query, cancellationToken);
+            return Ok(variants);
         }
     }
 }
