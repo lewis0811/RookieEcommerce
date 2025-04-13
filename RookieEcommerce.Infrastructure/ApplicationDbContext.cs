@@ -16,7 +16,9 @@ namespace RookieEcommerce.Infrastructure
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ProductRating> ProductRatings { get; set; }
+        public DbSet<ProductVariant> ProductVariants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -60,6 +62,15 @@ namespace RookieEcommerce.Infrastructure
                 .HasForeignKey(pr => pr.CustomerId)
                 .OnDelete(DeleteBehavior.Cascade); // Delete ratings if customer is deleted
 
+            // --- ProductVariant ---
+            modelBuilder.Entity<ProductVariant>()
+                .HasOne(pv => pv.Product)
+                .WithMany(p => p.Variants)
+                .HasForeignKey(pv => pv.ProductId)
+                .OnDelete(DeleteBehavior.Cascade); // Delete variant if product is deleted
+            modelBuilder.Entity<ProductVariant>()
+                .Property(pv => pv.Price)
+                .HasColumnType("decimal(18,2)");
 
             // --- Cart / CartItem ---
             modelBuilder.Entity<Cart>()
@@ -105,9 +116,9 @@ namespace RookieEcommerce.Infrastructure
                 .HasForeignKey(oi => oi.OrderId);
 
             modelBuilder.Entity<OrderItem>()
-                .HasOne(oi => oi.Product)
+                .HasOne(oi => oi.ProductVariant)
                 .WithMany() // Product doesn't need navigation back to OrderItems
-                .HasForeignKey(oi => oi.ProductId)
+                .HasForeignKey(oi => oi.ProductVariantId)
                 .OnDelete(DeleteBehavior.Restrict); // Prevent deleting product if it's in an order
         }
     }

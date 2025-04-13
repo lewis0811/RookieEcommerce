@@ -12,5 +12,6 @@
         // Navigation Properties
         public virtual Category? Category { get; set; }
         public virtual ICollection<ProductImage> Images { get; set; } = [];
+        public virtual ICollection<ProductVariant> Variants { get; set; } = [];
     }
 }

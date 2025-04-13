@@ -7,10 +7,10 @@
 
         // Foreign Keys
         public Guid OrderId { get; set; }
-        public Guid ProductId { get; set; }
+        public Guid ProductVariantId { get; set; }
 
         // Navigation Properties
         public virtual Order Order { get; set; } = new();
-        public virtual Product Product { get; set; } = new Product();
+        public virtual ProductVariant ProductVariant { get; set; } = new ProductVariant();
     }
 }
