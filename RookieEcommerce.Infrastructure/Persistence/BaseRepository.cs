@@ -21,8 +21,12 @@ namespace RookieEcommerce.Infrastructure.Persistence
             return await query.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 
-        public virtual async Task<List<T>> ListAllAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<List<T>> ListAllAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default)
         {
+            if (filter != null)
+            {
+                dbSet.Where(filter);
+            }
             return await dbSet.ToListAsync(cancellationToken);
         }
 
@@ -58,7 +62,7 @@ namespace RookieEcommerce.Infrastructure.Persistence
             return await dbSet.AnyAsync(filter, cancellationToken);
         }
 
-        public virtual async Task<int> CountAsync(Expression<Func<T, bool>>? filter = null, CancellationToken cancellationToken = default)
+        public virtual async Task<int> CountAsync(Expression<Func<T, bool>>? filter, CancellationToken cancellationToken = default)
         {
             if (filter != null)
             {
