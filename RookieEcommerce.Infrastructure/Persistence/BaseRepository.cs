@@ -21,13 +21,16 @@ namespace RookieEcommerce.Infrastructure.Persistence
             return await query.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 
-        public virtual async Task<List<T>> ListAllAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default)
+        public virtual async Task<List<T>> ListAllAsync(Expression<Func<T, bool>>? filter, CancellationToken cancellationToken = default)
         {
+            IQueryable<T> query = dbSet;
+
             if (filter != null)
             {
-                dbSet.Where(filter);
+                query = query.Where(filter);
             }
-            return await dbSet.ToListAsync(cancellationToken);
+
+            return await query.ToListAsync(cancellationToken);
         }
 
         public virtual async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)

@@ -3,12 +3,8 @@ using RookieEcommerce.Domain.Entities;
 
 namespace RookieEcommerce.Infrastructure
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
-        }
-
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -26,12 +22,32 @@ namespace RookieEcommerce.Infrastructure
 
             // --- Category ---
             modelBuilder.Entity<Category>()
+                .Property(p => p.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            modelBuilder.Entity<Category>()
+                .Property(p => p.Description)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            modelBuilder.Entity<Category>()
                 .HasOne(c => c.ParentCategory)
                 .WithMany(c => c.SubCategories)
                 .HasForeignKey(c => c.ParentCategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // --- Product ---
+            modelBuilder.Entity<Product>()
+                .Property(p => p.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            modelBuilder.Entity<Product>()
+                .Property(p => p.Description)
+                .IsRequired()
+                .HasMaxLength(200);
+
             modelBuilder.Entity<Product>()
                .Property(p => p.Price)
                .HasColumnType("decimal(18,2)");
