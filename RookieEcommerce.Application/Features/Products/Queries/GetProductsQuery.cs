@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using RookieEcommerce.Application.Common;
 using RookieEcommerce.Application.Contacts.Persistence;
-using RookieEcommerce.SharedViewModels;
+using RookieEcommerce.SharedViewModels.ProductDtos;
 
 namespace RookieEcommerce.Application.Features.Products.Queries
 {
@@ -15,7 +15,7 @@ namespace RookieEcommerce.Application.Features.Products.Queries
     {
         public async Task<PagedResult<ProductDto>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
         {
-            var products = await productRepository.GetPaginatedProduct(request);
+            var products = await productRepository.GetPaginated(request);
 
             var productDtos = products.Items
                 .Select(p => new ProductDto

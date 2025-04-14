@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Domain.Entities;
-using RookieEcommerce.SharedViewModels;
+using RookieEcommerce.SharedViewModels.ProductDtos;
 
 namespace RookieEcommerce.Application.Features.Products.Commands
 {

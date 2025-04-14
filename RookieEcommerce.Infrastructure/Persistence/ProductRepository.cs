@@ -12,22 +12,14 @@ namespace RookieEcommerce.Infrastructure.Persistence
         private static readonly string productName = nameof(Product.Name).ToLowerInvariant();
         private static readonly string productDescription = nameof(Product.Description).ToLowerInvariant();
 
-        public Task<PagedResult<Product>> GetPaginatedProduct(GetProductsQuery query)
+        public Task<PagedResult<Product>> GetPaginated(GetProductsQuery query)
         {
             var products = context.Products.AsQueryable();
-            // Apply include query if includeProperties count > 0
+            
+            // Apply include query if includeProperties is not null
             if (!string.IsNullOrEmpty(query.IncludeProperties))
             {
-                var productProperties = typeof(Product).GetProperties().Select(c => c.Name);
-                var validProperty = query.IncludeProperties
-                    .Split(",")
-                    .Where(property => productProperties.Any(c => c.Equals( property)));
-                
-                foreach (var property in validProperty)
-                {
-                    var trimmedProperty = property.Trim();
-                    products = products.Include(trimmedProperty);
-                }
+                AddIncludesToQuery(query.IncludeProperties, products);
             }
 
             // Apply filtering if it is not null
@@ -104,12 +96,6 @@ namespace RookieEcommerce.Infrastructure.Persistence
                 }
 
                 if (sortProduct != null) products = sortProduct;
-            }
-
-            // Apply include if includeProperties is not null
-            if (!string.IsNullOrEmpty(query.IncludeProperties))
-            {
-                products.Include(nameof(query.IncludeProperties));
             }
 
             return Task.FromResult(PagedResult<Product>.Create(products, query.PageSize, query.PageNumber));

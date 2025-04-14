@@ -12,37 +12,37 @@ namespace RookieEcommerce.Api.Controllers
     {
         // GET: api/Products
         [HttpGet(ApiEndPointConstant.Product.ProductsEndpoint)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> GetProducts([FromQuery] GetProductsQuery query, CancellationToken cancellationToken)
         {
-            var products = await mediator.Send(query, cancellationToken);
-            return Ok(products);
+            var result = await mediator.Send(query, cancellationToken);
+            return Ok(result);
         }
 
         // GET: api/Products/{productId}
         [HttpGet(ApiEndPointConstant.Product.ProductEndpoint)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> GetProduct(Guid productId, string? includeProperties, CancellationToken cancellationToken)
         {
             var query = new GetProductByIdQuery { Id = productId, IncludeProperties = includeProperties };
-            var productDto = await mediator.Send(query, cancellationToken);
+            var result = await mediator.Send(query, cancellationToken);
 
-            return Ok(productDto);
+            return Ok(result);
         }
 
         // POST: api/Products
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [HttpPost(ApiEndPointConstant.Product.ProductsEndpoint)]
+        [ProducesResponseType(201)]
         public async Task<IActionResult> AddProduct([FromBody] CreateProductCommand command, CancellationToken cancellationToken)
         {
-            var product = await mediator.Send(command, cancellationToken);
-            return CreatedAtAction(nameof(AddProduct), product);
+            var result = await mediator.Send(command, cancellationToken);
+            return CreatedAtAction(nameof(AddProduct), result);
         }
 
         // PUT: api/Product/{productId}
-        [HttpPut("{productId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpPut(ApiEndPointConstant.Product.ProductEndpoint)]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> UpdateProduct(Guid productId, [FromBody] UpdateProductCommand command, CancellationToken cancellationToken)
         {
             command.Id = productId;
@@ -51,8 +51,8 @@ namespace RookieEcommerce.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("{productId}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpDelete(ApiEndPointConstant.Product.ProductEndpoint)]
+        [ProducesResponseType(204)]
         public async Task<IActionResult> DeleteProduct(Guid productId, CancellationToken cancellationToken)
         {
             var command = new DeleteProductCommand { Id = productId };

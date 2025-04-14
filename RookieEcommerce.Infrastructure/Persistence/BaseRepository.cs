@@ -11,22 +11,7 @@ namespace RookieEcommerce.Infrastructure.Persistence
         {
             IQueryable<T> query = dbSet;
 
-            if (!string.IsNullOrEmpty(includeProperties))
-            {
-                var entityProperties = typeof(T).GetProperties().Select(c => c.Name);
-
-                var validProperty = includeProperties.Trim()
-                  .Split(",")
-                  .Where(property => entityProperties
-                    .Any(c => c.Equals(property.Trim()))
-                  );
-
-                foreach (var property in validProperty)
-                {
-                    var trimmedProperty = property.Trim();
-                    query = query.Include(trimmedProperty);
-                }
-            }
+            query = AddIncludesToQuery(includeProperties, query);
 
             return await query.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
@@ -82,6 +67,28 @@ namespace RookieEcommerce.Infrastructure.Persistence
                 return await dbSet.CountAsync(filter, cancellationToken);
             }
             return await dbSet.CountAsync(cancellationToken);
+        }
+
+        public static IQueryable<T> AddIncludesToQuery(string? includeProperties, IQueryable<T> query)
+        {
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                var entityProperties = typeof(T).GetProperties().Select(c => c.Name);
+
+                var validProperty = includeProperties.Trim()
+                  .Split(",")
+                  .Where(property => entityProperties
+                    .Any(c => c.Equals(property.Trim()))
+                  );
+
+                foreach (var property in validProperty)
+                {
+                    var trimmedProperty = property.Trim();
+                    query = query.Include(trimmedProperty);
+                }
+            }
+
+            return query;
         }
     }
 }
