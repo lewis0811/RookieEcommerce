@@ -3,6 +3,7 @@ using RookieEcommerce.Application.Common;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Application.Features.Products.Queries;
 using RookieEcommerce.Domain.Entities;
+using System.Linq;
 
 namespace RookieEcommerce.Infrastructure.Persistence
 {
@@ -14,6 +15,20 @@ namespace RookieEcommerce.Infrastructure.Persistence
         public Task<PagedResult<Product>> GetPaginatedProduct(GetProductsQuery query)
         {
             var products = context.Products.AsQueryable();
+            // Apply include query if includeProperties count > 0
+            if (!string.IsNullOrEmpty(query.IncludeProperties))
+            {
+                var productProperties = typeof(Product).GetProperties().Select(c => c.Name);
+                var validProperty = query.IncludeProperties
+                    .Split(",")
+                    .Where(property => productProperties.Any(c => c.Equals( property)));
+                
+                foreach (var property in validProperty)
+                {
+                    var trimmedProperty = property.Trim();
+                    products = products.Include(trimmedProperty);
+                }
+            }
 
             // Apply filtering if it is not null
             if (query.MinPrice != null)

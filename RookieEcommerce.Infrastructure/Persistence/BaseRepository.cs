@@ -10,11 +10,21 @@ namespace RookieEcommerce.Infrastructure.Persistence
         public virtual async Task<T?> GetByIdAsync(Guid id, string? includeProperties, CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = dbSet;
+
             if (!string.IsNullOrEmpty(includeProperties))
             {
-                foreach (var property in includeProperties.Split(','))
+                var entityProperties = typeof(T).GetProperties().Select(c => c.Name);
+
+                var validProperty = includeProperties.Trim()
+                  .Split(",")
+                  .Where(property => entityProperties
+                    .Any(c => c.Equals(property.Trim()))
+                  );
+
+                foreach (var property in validProperty)
                 {
-                    query = query.Include(property.Trim());
+                    var trimmedProperty = property.Trim();
+                    query = query.Include(trimmedProperty);
                 }
             }
 
