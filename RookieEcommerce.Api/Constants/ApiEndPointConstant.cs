@@ -11,5 +11,11 @@
             public const string ProductsEndpoint = ApiEndPoint + "/products";
             public const string ProductEndpoint = ProductsEndpoint + "/{productId}";
         }
+
+        public static class Categories
+        {
+            public const string CategoriesEndpoint = ApiEndPoint + "/categories";
+            public const string CategoryEndpoint = CategoriesEndpoint + "/{categoryId}";
+        }
     }
 }

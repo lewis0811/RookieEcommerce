@@ -16,5 +16,16 @@
 
         // Relationship to Products
         public virtual ICollection<Product> Products { get; set; } = [];
+
+        public static Category Create(string name, string description, Guid? parentCategoryId)
+        {
+            return new Category { Name = name, Description = description, ParentCategoryId = parentCategoryId };
+        }
+
+        public void Update(string name, string description)
+        {
+            if (Name != name) { Name = name; }
+            if (Description != description) { Description = description; }
+        }
     }
 }
