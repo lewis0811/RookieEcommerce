@@ -2,7 +2,7 @@
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.SharedViewModels;
 
-namespace RookieEcommerce.Application.Features.Products.Variants.Queries
+namespace RookieEcommerce.Application.Features.ProductVariants.Queries
 {
     public class GetProductVariantByIdQuery : IRequest<ProductVariantDto>
     {

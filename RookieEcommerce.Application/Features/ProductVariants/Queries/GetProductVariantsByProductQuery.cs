@@ -1,19 +1,19 @@
 ﻿using MediatR;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.SharedViewModels;
-using System.Text.Json.Serialization;
 
-namespace RookieEcommerce.Application.Features.Products.Variants.Queries
+namespace RookieEcommerce.Application.Features.ProductVariants.Queries
 {
-    public record GetProductVariantsByProductQuery(Guid productId) : IRequest<IEnumerable<ProductVariantDto>>
-    
+    public record GetProductVariantsByProductQuery(Guid ProductId) : IRequest<IEnumerable<ProductVariantDto>>
+    {
+    }
 
-    public class GetProductVariantsQueryHandler(IProductVariantRepository productVariantRepository) 
+    public class GetProductVariantsQueryHandler(IProductVariantRepository productVariantRepository)
         : IRequestHandler<GetProductVariantsByProductQuery, IEnumerable<ProductVariantDto>>
     {
         public async Task<IEnumerable<ProductVariantDto>> Handle(GetProductVariantsByProductQuery request, CancellationToken cancellationToken)
         {
-            var variants = await productVariantRepository.ListAllAsync(c => c.ProductId == request.productId, cancellationToken);
+            var variants = await productVariantRepository.ListAllAsync(c => c.ProductId == request.ProductId, cancellationToken);
 
             var variantDtos = variants.Select(pv => new ProductVariantDto(
                     pv.Id,

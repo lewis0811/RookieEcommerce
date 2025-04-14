@@ -5,7 +5,7 @@ using RookieEcommerce.Domain.Enums;
 using RookieEcommerce.SharedViewModels;
 using System.Text.Json.Serialization;
 
-namespace RookieEcommerce.Application.Features.Products.Variants.Commands
+namespace RookieEcommerce.Application.Features.ProductVariants.Commands
 {
     public class AddVariantCommand : IRequest<ProductVariantDto>
     {

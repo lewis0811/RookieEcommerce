@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace RookieEcommerce.Application.Features.Products.Variants.Commands
+namespace RookieEcommerce.Application.Features.ProductVariants.Commands
 {
     public class AddVariantCommandValidator : AbstractValidator<AddVariantCommand>
     {

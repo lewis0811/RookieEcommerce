@@ -2,7 +2,7 @@
 using RookieEcommerce.Application.Contacts.Persistence;
 using System.Text.Json.Serialization;
 
-namespace RookieEcommerce.Application.Features.Products.Variants.Commands
+namespace RookieEcommerce.Application.Features.ProductVariants.Commands
 {
     public class DeleteVariantCommand : IRequest
     {

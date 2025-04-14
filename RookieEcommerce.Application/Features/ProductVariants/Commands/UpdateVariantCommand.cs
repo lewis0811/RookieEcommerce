@@ -2,7 +2,7 @@
 using RookieEcommerce.Application.Contacts.Persistence;
 using System.Text.Json.Serialization;
 
-namespace RookieEcommerce.Application.Features.Products.Variants.Commands
+namespace RookieEcommerce.Application.Features.ProductVariants.Commands
 {
     public class UpdateVariantCommand : IRequest
     {
@@ -15,7 +15,7 @@ namespace RookieEcommerce.Application.Features.Products.Variants.Commands
         public decimal Price { get; set; }
     }
 
-    public class UpdateVariantCommandHandler(IUnitOfWork unitOfWork, IProductVariantRepository productVariantRepository, IProductRepository productRepository)
+    public class UpdateVariantCommandHandler(IUnitOfWork unitOfWork, IProductVariantRepository productVariantRepository)
         : IRequestHandler<UpdateVariantCommand>
     {
         public async Task Handle(UpdateVariantCommand request, CancellationToken cancellationToken)
