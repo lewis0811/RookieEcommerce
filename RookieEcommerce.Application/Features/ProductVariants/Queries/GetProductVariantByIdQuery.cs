@@ -15,7 +15,7 @@ namespace RookieEcommerce.Application.Features.ProductVariants.Queries
         {
             // Check if the product variant exist
             var variant = await productVariantRepository.GetByIdAsync(request.Id, null, cancellationToken)
-                ?? throw new KeyNotFoundException($"Product variant Id {request.Id} not found.");
+                ?? throw new InvalidOperationException ($"Product variant Id {request.Id} not found.");
 
             var variantDto = new ProductVariantDto(
                 variant.Id,

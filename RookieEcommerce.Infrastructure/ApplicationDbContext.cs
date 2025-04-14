@@ -68,7 +68,7 @@ namespace RookieEcommerce.Infrastructure
             // --- ProductRating ---
             modelBuilder.Entity<ProductRating>()
                  .HasOne(pr => pr.Product)
-                 .WithMany() // Product might not have direct navigation back to ratings
+                 .WithMany()
                  .HasForeignKey(pr => pr.ProductId)
                  .OnDelete(DeleteBehavior.Cascade); // Delete ratings if product is deleted
 
@@ -94,7 +94,7 @@ namespace RookieEcommerce.Infrastructure
             // --- Cart / CartItem ---
             modelBuilder.Entity<Cart>()
                 .HasOne(ca => ca.Customer)
-                .WithOne(cu => cu.Cart) // One-to-one relationship
+                .WithOne(cu => cu.Cart)
                 .HasForeignKey<Cart>(ca => ca.CustomerId);
 
             modelBuilder.Entity<CartItem>()
@@ -127,8 +127,7 @@ namespace RookieEcommerce.Infrastructure
 
             modelBuilder.Entity<OrderItem>()
                 .Property(oi => oi.Price)
-                .HasColumnType("decimal(18, 2)"); // Price at time of order
-
+                .HasColumnType("decimal(18, 2)"); 
             modelBuilder.Entity<OrderItem>()
                 .HasOne(oi => oi.Order)
                 .WithMany(o => o.OrderItems)
@@ -136,7 +135,7 @@ namespace RookieEcommerce.Infrastructure
 
             modelBuilder.Entity<OrderItem>()
                 .HasOne(oi => oi.ProductVariant)
-                .WithMany() // Product doesn't need navigation back to OrderItems
+                .WithMany()
                 .HasForeignKey(oi => oi.ProductVariantId)
                 .OnDelete(DeleteBehavior.Restrict); // Prevent deleting product if it's in an order
         }

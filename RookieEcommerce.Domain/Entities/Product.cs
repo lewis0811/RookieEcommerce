@@ -26,6 +26,7 @@
             if (name != Name) Name = name;
             if (description != Description) Description = description;
             if (price != Price) Price = price;
+            UpdateModifiedDate();
         }
     }
 }

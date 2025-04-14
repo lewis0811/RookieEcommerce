@@ -25,7 +25,8 @@ namespace RookieEcommerce.Application.Features.ProductVariants.Commands
         {
             // Check if product exist
             var productExist = await productRepository.AnyAsync(c => c.Id == request.ProductId, cancellationToken);
-            if (!productExist) { throw new KeyNotFoundException($"Product with ID { request.ProductId } not found."); }
+            if (!productExist) { throw new InvalidOperationException
+                    ($"Product with ID { request.ProductId } not found."); }
 
             // Create new variant entity
             var variant = new ProductVariant

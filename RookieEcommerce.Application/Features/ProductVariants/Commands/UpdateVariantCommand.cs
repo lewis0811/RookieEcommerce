@@ -22,7 +22,7 @@ namespace RookieEcommerce.Application.Features.ProductVariants.Commands
         {
             // Check if product variant exist
             var productVariant = await productVariantRepository.GetByIdAsync(request.Id, null, cancellationToken)
-                ?? throw new KeyNotFoundException($"Product variant with ID {request.Id} not found.");
+                ?? throw new InvalidOperationException ($"Product variant with ID {request.Id} not found.");
 
             // Update properties
             productVariant.Name = request.Name;
