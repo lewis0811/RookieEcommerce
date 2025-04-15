@@ -7,7 +7,7 @@ namespace RookieEcommerce.Domain.Entities
         private readonly int minStock = 0;
         private int stockQuantity;
 
-        public PVariantType VariantType { get; set; }
+        public string VariantType { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Sku { get; set; } = string.Empty;
 
@@ -27,5 +27,27 @@ namespace RookieEcommerce.Domain.Entities
 
         // Navigation property
         public Product Product { get; set; } = new Product();
+
+        // Methods
+        public static ProductVariant Create(Guid productId, string name, decimal price, int stockQuantity, string variantType)
+        {
+            var generatedSku = "";
+            var nameParts = name.Split(' ');
+            var skuParts = nameParts.Select(part =>
+                (part.Length >= 2 ? part[..2] : part).ToUpperInvariant()
+            );
+
+            generatedSku = string.Join("-", skuParts);
+
+            return new ProductVariant
+            {
+                ProductId = productId,
+                Name = name,
+                Sku = generatedSku,
+                Price = price,
+                StockQuantity = stockQuantity,
+                VariantType = variantType
+            };
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace RookieEcommerce.Application.Features.ProductVariants.Commands
         {
             // Check if product variant exist
             var productVariant = await productVariantRepository.GetByIdAsync(request.Id, null, cancellationToken)
-                ?? throw new InvalidOperationException ($"Product variant with ID {request.Id} not found.");
+                ?? throw new InvalidOperationException($"Product variant with ID {request.Id} not found.");
 
             // Delete the product via Repository
             await productVariantRepository.DeleteAsync(productVariant, cancellationToken);

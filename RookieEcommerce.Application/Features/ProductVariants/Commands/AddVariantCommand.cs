@@ -1,43 +1,46 @@
 ﻿using MediatR;
 using RookieEcommerce.Application.Contacts.Persistence;
+using RookieEcommerce.Application.Mappers;
 using RookieEcommerce.Domain.Entities;
-using RookieEcommerce.Domain.Enums;
-using RookieEcommerce.SharedViewModels;
+using RookieEcommerce.SharedViewModels.ProductVariantDtos;
 using System.Text.Json.Serialization;
 
 namespace RookieEcommerce.Application.Features.ProductVariants.Commands
 {
-    public class AddVariantCommand : IRequest<ProductVariantDto>
+    public class AddVariantCommand : IRequest<ProductVariantCreateDto>
     {
-        [JsonIgnore]
+        
         public Guid ProductId { get; set; }
-        public PVariantType Type { get; set; }
+
+        public string VariantType { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
-        public string Sku { get; set; } = string.Empty;
         public int StockQuantity { get; set; }
         public decimal Price { get; set; }
     }
 
     public class AddVariantCommandHandler(IUnitOfWork unitOfWork, IProductRepository productRepository, IProductVariantRepository productVariantRepository)
-        : IRequestHandler<AddVariantCommand, ProductVariantDto>
+        : IRequestHandler<AddVariantCommand, ProductVariantCreateDto>
     {
-        public async Task<ProductVariantDto> Handle(AddVariantCommand request, CancellationToken cancellationToken)
+        public async Task<ProductVariantCreateDto> Handle(AddVariantCommand request, CancellationToken cancellationToken)
         {
             // Check if product exist
             var productExist = await productRepository.AnyAsync(c => c.Id == request.ProductId, cancellationToken);
-            if (!productExist) { throw new InvalidOperationException
-                    ($"Product with ID { request.ProductId } not found."); }
+            if (!productExist)
+            {
+                throw new InvalidOperationException
+                    ($"Product with ID {request.ProductId} not found.");
+            }
+
+            // Check if variant exist
+            var existVariant = await productVariantRepository.AnyAsync(c => c.Name.ToLowerInvariant().Equals(request.Name), cancellationToken);
+            if (existVariant) throw new InvalidOperationException($"Product variant name {request.Name} already exist.");
 
             // Create new variant entity
-            var variant = new ProductVariant
-            {
-                ProductId = request.ProductId,
-                Name = request.Name,
-                Sku = request.Sku,
-                Price = request.Price,
-                StockQuantity = request.StockQuantity,
-                VariantType = request.Type
-            };
+            var variant = ProductVariant.Create(request.ProductId, request.Name, request.Price, request.StockQuantity, request.VariantType);
+
+            // Generate Sku number
+            var existingSkus = await productVariantRepository.ListAllAsync(c => c.Sku.Equals(variant.Sku), cancellationToken);
+            variant.Sku += $"-{existingSkus.Count + 1}";
 
             // Add entity via Repository
             await productVariantRepository.AddAsync(variant, cancellationToken);
@@ -46,17 +49,7 @@ namespace RookieEcommerce.Application.Features.ProductVariants.Commands
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
             // Map to Dto and return
-            return new ProductVariantDto(
-                variant.Id,
-                variant.ProductId,
-                variant.VariantType,
-                variant.Name,
-                variant.Sku,
-                variant.StockQuantity,
-                variant.Price,
-                variant.CreatedDate,
-                variant.ModifiedDate
-                );
+            return ProductVariantMapper.ProductVariantToProductVariantCreateDto(variant);
         }
     }
 }

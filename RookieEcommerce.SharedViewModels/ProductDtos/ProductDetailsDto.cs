@@ -9,7 +9,7 @@ namespace RookieEcommerce.SharedViewModels.ProductDtos
         public decimal Price { get; set; }
         public string? Details { get; set; }
         public Guid? CategoryId { get; set; }
-        public string CategoryName { get; set; }
+        public string CategoryName { get; set; } = string.Empty;
         public ICollection<ProductImage>? Images { get; set; }
         public ICollection<ProductVariant>? Variants { get; set;}
     }
