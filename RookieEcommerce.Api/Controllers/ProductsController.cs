@@ -11,7 +11,7 @@ namespace RookieEcommerce.Api.Controllers
     public class ProductsController(IMediator mediator) : ControllerBase
     {
         // GET: api/Products
-        [HttpGet(ApiEndPointConstant.Product.ProductsEndpoint)]
+        [HttpGet(ApiEndPointConstant.Products.ProductsEndpoint)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetProducts([FromQuery] GetProductsQuery query, CancellationToken cancellationToken)
         {
@@ -20,7 +20,7 @@ namespace RookieEcommerce.Api.Controllers
         }
 
         // GET: api/Product/{productId}
-        [HttpGet(ApiEndPointConstant.Product.ProductEndpoint)]
+        [HttpGet(ApiEndPointConstant.Products.ProductEndpoint)]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetProduct(Guid productId, string? includeProperties, CancellationToken cancellationToken)
@@ -32,7 +32,7 @@ namespace RookieEcommerce.Api.Controllers
         }
 
         // POST: api/Products
-        [HttpPost(ApiEndPointConstant.Product.ProductsEndpoint)]
+        [HttpPost(ApiEndPointConstant.Products.ProductsEndpoint)]
         [ProducesResponseType(201)]
         public async Task<IActionResult> AddProduct([FromBody] CreateProductCommand command, CancellationToken cancellationToken)
         {
@@ -41,7 +41,7 @@ namespace RookieEcommerce.Api.Controllers
         }
 
         // PUT: api/Product/{productId}
-        [HttpPut(ApiEndPointConstant.Product.ProductEndpoint)]
+        [HttpPut(ApiEndPointConstant.Products.ProductEndpoint)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> UpdateProduct(Guid productId, [FromBody] UpdateProductCommand command, CancellationToken cancellationToken)
         {
@@ -51,7 +51,8 @@ namespace RookieEcommerce.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete(ApiEndPointConstant.Product.ProductEndpoint)]
+        // DELETE: api/Product/{productId}
+        [HttpDelete(ApiEndPointConstant.Products.ProductEndpoint)]
         [ProducesResponseType(204)]
         public async Task<IActionResult> DeleteProduct(Guid productId, CancellationToken cancellationToken)
         {

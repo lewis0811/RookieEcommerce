@@ -6,6 +6,7 @@
         public const string RootEndPoint = "/api";
         public const string ApiVersion = "/v1";
         public const string ApiEndPoint = RootEndPoint + ApiVersion;
+
         public static class Categories
         {
             public const string CategoriesEndpoint = ApiEndPoint + "/categories";
@@ -18,11 +19,10 @@
             public const string ProductEndpoint = ProductsEndpoint + "/{productId}";
         }
 
-
         public static class ProductVariants
         {
-            public const string ProductVariantsEndpoint = ApiEndPoint + "/productVariants";
-            public const string ProductVariantEndpoint = ProductVariantsEndpoint + "/{productVariantId}"
+            public const string ProductVariantsEndpoint = ApiEndPoint + "/product-variants";
+            public const string ProductVariantEndpoint = ProductVariantsEndpoint + "/{product-variantId}";
         }
     }
 }

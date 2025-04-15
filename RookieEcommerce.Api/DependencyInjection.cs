@@ -22,7 +22,7 @@ namespace RookieEcommerce.Api
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc(ApiEndPointConstant.ApiVersion, new OpenApiInfo { Title = ApiEndPointConstant.ApiTitle, Version = ApiEndPointConstant.ApiVersion });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = ApiEndPointConstant.ApiTitle, Version = $"{ApiEndPointConstant.ApiVersion}" });
 
                 // Define the OAuth2.0 scheme that's compatible with OpenIddict
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme

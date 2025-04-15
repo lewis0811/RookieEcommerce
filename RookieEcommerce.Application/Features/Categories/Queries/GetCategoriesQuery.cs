@@ -5,14 +5,14 @@ using RookieEcommerce.SharedViewModels.CategoryDtos;
 
 namespace RookieEcommerce.Application.Features.Categories.Queries
 {
-    public class GetCategoriesQuery : PaginatedQuery, IRequest<PagedResult<CategoryDetailsDto>>
+    public class GetCategoriesQuery : PaginatedQuery, IRequest<PaginationList<CategoryDetailsDto>>
     {
         public Guid? ParentCategoryId { get; set; }
     }
 
-    public class GetCategoreisQueryHandler(ICategoryRepository categoryRepository) : IRequestHandler<GetCategoriesQuery, PagedResult<CategoryDetailsDto>>
+    public class GetCategoreisQueryHandler(ICategoryRepository categoryRepository) : IRequestHandler<GetCategoriesQuery, PaginationList<CategoryDetailsDto>>
     {
-        public async Task<PagedResult<CategoryDetailsDto>> Handle(GetCategoriesQuery request, CancellationToken cancellationToken)
+        public async Task<PaginationList<CategoryDetailsDto>> Handle(GetCategoriesQuery request, CancellationToken cancellationToken)
         {
             // Get paginated of categories
             var categories = await categoryRepository.GetPaginated(request);
@@ -21,7 +21,7 @@ namespace RookieEcommerce.Application.Features.Categories.Queries
             var dtos = Mappers.CategoryMapper.CategoryListToCategoryDetailsDtoList(categories.Items);
 
             // Map dto to page result and return
-            var pagedResult = new PagedResult<CategoryDetailsDto>(
+            var pagedResult = new PaginationList<CategoryDetailsDto>(
                 dtos,
                 categories.TotalCount,
                 categories.PageNumber,
