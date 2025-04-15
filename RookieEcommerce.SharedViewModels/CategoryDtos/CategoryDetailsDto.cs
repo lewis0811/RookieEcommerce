@@ -12,8 +12,9 @@ namespace RookieEcommerce.SharedViewModels.CategoryDtos
         public DateTime CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
 
-        public ICollection<CategorySummaryDto> SubCategories { get; set; } = [];
+        
+        public ICollection<SubCategoriesDto> SubCategories { get; set; } = [];
 
-        public ICollection<ProductSummaryDto> Products { get; set; } = [];
+        public ICollection<ProductsInCategoryDto> Products { get; set; } = [];
     }
 }

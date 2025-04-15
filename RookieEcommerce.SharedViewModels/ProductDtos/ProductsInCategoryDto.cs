@@ -1,8 +1,9 @@
-﻿namespace RookieEcommerce.SharedViewModels.ProductDtos
+﻿using RookieEcommerce.Domain.Entities;
+
+namespace RookieEcommerce.SharedViewModels.ProductDtos
 {
-    public class ProductSummaryDto
+    public class ProductsInCategoryDto : BaseEntity
     {
-        public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; }

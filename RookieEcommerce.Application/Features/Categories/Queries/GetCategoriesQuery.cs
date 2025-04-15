@@ -2,7 +2,6 @@
 using RookieEcommerce.Application.Common;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.SharedViewModels.CategoryDtos;
-using RookieEcommerce.SharedViewModels.ProductDtos;
 
 namespace RookieEcommerce.Application.Features.Categories.Queries
 {
@@ -16,30 +15,32 @@ namespace RookieEcommerce.Application.Features.Categories.Queries
         public async Task<PagedResult<CategoryDetailsDto>> Handle(GetCategoriesQuery request, CancellationToken cancellationToken)
         {
             var categories = await categoryRepository.GetPaginated(request);
-            var dtos = categories.Items
-                .Select(p => new CategoryDetailsDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    ParentCategoryId = p.ParentCategoryId,
-                    CreatedDate = p.CreatedDate,
-                    ModifiedDate = p.ModifiedDate,
-                    ParentCategoryName = p.ParentCategory?.Name,
-                    SubCategories = [.. p.SubCategories.Select(sub => new CategorySummaryDto
-                    {
-                        Id = sub.Id,
-                        Name = sub.Name
+            //var dtos = categories.Items
+            //    .Select(p => new CategoryDetailsDto
+            //    {
+            //        Id = p.Id,
+            //        Name = p.Name,
+            //        Description = p.Description,
+            //        ParentCategoryId = p.ParentCategoryId,
+            //        CreatedDate = p.CreatedDate,
+            //        ModifiedDate = p.ModifiedDate,
+            //        ParentCategoryName = p.ParentCategory?.Name,
+            //        SubCategories = [.. p.SubCategories.Select(sub => new CategorySummaryDto
+            //        {
+            //            Id = sub.Id,
+            //            Name = sub.Name
 
-                    })],
-                    Products = [..p.Products.Select(prod => new ProductSummaryDto
-                    {
-                        Id = prod.Id,
-                        Name = prod.Name,
-                        Description = prod.Description
-                    })]
-                })
-                .ToList();
+            //        })],
+            //        Products = [..p.Products.Select(prod => new ProductSummaryDto
+            //        {
+            //            Id = prod.Id,
+            //            Name = prod.Name,
+            //            Description = prod.Description
+            //        })]
+            //    })
+            //    .ToList();
+
+            var dtos = Mappers.CategoryMapper.CategoryListToDetailsDtoList(categories.Items);
 
             var pagedResult = new PagedResult<CategoryDetailsDto>(
                 dtos,

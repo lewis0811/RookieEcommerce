@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RookieEcommerce.Application.Common;
+﻿using RookieEcommerce.Application.Common;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Application.Features.Categories.Queries;
 using RookieEcommerce.Domain.Entities;
@@ -14,11 +13,6 @@ namespace RookieEcommerce.Infrastructure.Persistence
         public Task<PagedResult<Category>> GetPaginated(GetCategoriesQuery query)
         {
             var categories = context.Categories.AsQueryable();
-            categories = categories
-                .Include(c => c.ParentCategory)
-                .Include(c => c.SubCategories)
-                .Include(c => c.Products)
-                .AsNoTracking();
 
             // Apply include query if includeProperties is not null
             if (!string.IsNullOrEmpty(query.IncludeProperties))
