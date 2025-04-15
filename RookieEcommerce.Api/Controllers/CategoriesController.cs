@@ -43,7 +43,7 @@ namespace RookieEcommerce.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<IActionResult> UpdateCategory(Guid categoryId, [FromBody] UpdateCategoryCommand command, CancellationToken cancellationToken)
         {
-            command.Update.Id = categoryId;
+            command.Id = categoryId;
             await mediator.Send(command, cancellationToken);
 
             return Ok();

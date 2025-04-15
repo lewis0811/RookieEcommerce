@@ -1,6 +1,8 @@
-﻿namespace RookieEcommerce.SharedViewModels.CategoryDtos
+﻿using RookieEcommerce.Domain.Entities;
+
+namespace RookieEcommerce.SharedViewModels.CategoryDtos
 {
-    public class CategoryCreateDto
+    public class CategoryCreateDto : BaseEntity
     {
         public string Name { get; set; } = string.Empty;
 

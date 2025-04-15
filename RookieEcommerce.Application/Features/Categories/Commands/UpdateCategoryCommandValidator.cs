@@ -6,10 +6,10 @@ namespace RookieEcommerce.Application.Features.Categories.Commands
     {
         public UpdateCategoryCommandValidator()
         {
-            RuleFor(x => x.Update.Name)
+            RuleFor(x => x.Name)
                 .NotEmpty().MaximumLength(100);
 
-            RuleFor(x => x.Update.Description)
+            RuleFor(x => x.Description)
                 .NotEmpty().MaximumLength(200);
         }
     }

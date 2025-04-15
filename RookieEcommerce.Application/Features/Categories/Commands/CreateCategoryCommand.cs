@@ -1,24 +1,28 @@
 ﻿using MediatR;
 using RookieEcommerce.Application.Contacts.Persistence;
+using RookieEcommerce.Application.Mappers;
 using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.SharedViewModels.CategoryDtos;
 
 namespace RookieEcommerce.Application.Features.Categories.Commands
 {
-    public class CreateCategoryCommand : IRequest<CategorySummaryDto>
+    public class CreateCategoryCommand : IRequest<CategoryCreateDto>
     {
-        public CategoryCreateDto Create { get; set; } = new();
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public Guid? ParentCategoryId { get; set; }
     }
 
-    public class CreateCategoryCommandHandler(IUnitOfWork unitOfWork, ICategoryRepository categoryRepository) : IRequestHandler<CreateCategoryCommand, CategorySummaryDto>
+    public class CreateCategoryCommandHandler(IUnitOfWork unitOfWork, ICategoryRepository categoryRepository) : IRequestHandler<CreateCategoryCommand, CategoryCreateDto>
     {
-        public async Task<CategorySummaryDto> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<CategoryCreateDto> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
             // Check if category already exist
-            var categoryExist = await categoryRepository.AnyAsync(c => c.Name.ToLowerInvariant().Equals(request.Create.Name.ToLowerInvariant()), cancellationToken);
-            if (categoryExist) { throw new ArgumentException($"Category name {request.Create.Name} already exist."); }
+            var categoryExist = await categoryRepository.AnyAsync(c => c.Name.ToLower().Equals(request.Name.ToLower()), cancellationToken);
+            if (categoryExist) { throw new ArgumentException($"Category name {request.Name} already exist."); }
+
             // Create product instance
-            var category = Category.Create(request.Create.Name, request.Create.Description, request.Create.ParentCategoryId);
+            var category = Category.Create(request.Name, request.Description, request.ParentCategoryId);
 
             // Add product via Repository
             await categoryRepository.AddAsync(category, cancellationToken);
@@ -27,7 +31,7 @@ namespace RookieEcommerce.Application.Features.Categories.Commands
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
             // Map to dto and return the result
-            return new CategorySummaryDto { Id = category.Id, Name = category.Name, ParentCategoryId = category.ParentCategoryId };
+            return CategoryMapper.CategoryToCategoryCreateDto(category);
         }
     }
 }

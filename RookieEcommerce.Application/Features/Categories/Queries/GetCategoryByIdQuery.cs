@@ -2,7 +2,6 @@
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Application.Mappers;
 using RookieEcommerce.SharedViewModels.CategoryDtos;
-using RookieEcommerce.SharedViewModels.ProductDtos;
 using System.Text.Json.Serialization;
 
 namespace RookieEcommerce.Application.Features.Categories.Queries
@@ -24,7 +23,7 @@ namespace RookieEcommerce.Application.Features.Categories.Queries
                 ?? throw new InvalidOperationException($"Category Id {request.Id} not found.");
 
             // Mapping to dto and return
-            return CategoryMapper.CategoryListToDetailsDtoList(category);
+            return CategoryMapper.CategoryToCategoryDetailsDtoList(category);
         }
     }
 }

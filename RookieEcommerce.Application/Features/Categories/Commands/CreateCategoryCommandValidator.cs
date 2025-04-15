@@ -6,10 +6,10 @@ namespace RookieEcommerce.Application.Features.Categories.Commands
     {
         public CreateCategoryCommandValidator()
         {
-            RuleFor(x => x.Create.Name)
+            RuleFor(x => x.Name)
                 .NotEmpty().MaximumLength(100);
 
-            RuleFor(x => x.Create.Description)
+            RuleFor(x => x.Description)
                 .NotEmpty().MaximumLength(200);
         }
     }
