@@ -24,18 +24,6 @@ namespace RookieEcommerce.Application.Features.Products.Queries
 
             // Map to dto and return
             return ProductMapper.ProductToProductDetailsDto(product);
-            //return new ProductDto(
-            //    product.Id,
-            //    product.Name,
-            //    product.Description,
-            //    product.Price,
-            //    product.CategoryId,
-            //    product.Category?.Name,
-            //    product.Images,
-            //    product.Details,
-            //    product.CreatedDate,
-            //    product.ModifiedDate
-            //    );
         }
     }
 }

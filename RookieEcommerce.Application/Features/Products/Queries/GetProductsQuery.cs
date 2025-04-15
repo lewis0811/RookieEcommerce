@@ -8,6 +8,7 @@ namespace RookieEcommerce.Application.Features.Products.Queries
 {
     public class GetProductsQuery : PaginatedQuery, IRequest<PagedResult<ProductDetailsDto>>
     {
+        public Guid? CategoryId { get; set; }
         public decimal? MaxPrice { get; set; }
         public decimal? MinPrice { get; set; }
     }
@@ -16,26 +17,13 @@ namespace RookieEcommerce.Application.Features.Products.Queries
     {
         public async Task<PagedResult<ProductDetailsDto>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
         {
+            // Get paginated of products
             var products = await productRepository.GetPaginated(request);
 
-            //var productDtos = products.Items
-            //    .Select(p => new ProductDto
-            //    (
-            //        p.Id,
-            //        p.Name,
-            //        p.Description,
-            //        p.Price,
-            //        p.CategoryId,
-            //        p.Category?.Name,
-            //        p.Images,
-            //        p.Details,
-            //        p.CreatedDate,
-            //        p.ModifiedDate
-            //    ))
-            //    .ToList();
-
+            // Map to dto
             var dtos = ProductMapper.ProductListToProductDetailsDto(products.Items);
 
+            // Map dto to page result and return
             var pagedResult = new PagedResult<ProductDetailsDto>(
                 dtos,
                 products.TotalCount,
