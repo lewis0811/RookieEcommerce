@@ -15,25 +15,22 @@ namespace RookieEcommerce.Infrastructure.Persistence
             var categories = context.Categories.AsQueryable();
 
             // Apply include query if includeProperties is not null
-            if (!string.IsNullOrEmpty(query.IncludeProperties))
-            {
-                categories = AddIncludesToQuery(query.IncludeProperties, categories);
-            }
+            categories = ApplyInclude(query, categories);
 
             // Apply filtering if ParantCategoryId is not null
-            if (query.ParentCategoryId != null)
-            {
-                categories = categories.Where(c => c.Id == query.ParentCategoryId);
-            }
+            categories = ApplyFilter(query, categories);
 
             // Apply searching term if SearchTerm is not null
-            if (query.SearchTerm != null)
-            {
-                categories = categories.Where(c => c.Name.Contains(query.SearchTerm) ||
-                                                            c.Description.Contains(query.SearchTerm));
-            }
+            categories = ApplySearch(query, categories);
 
             // Apply sorting if SortBy is not null
+            categories = ApplySort(query, categories);
+
+            return Task.FromResult(PagedResult<Category>.Create(categories, query.PageSize, query.PageNumber));
+        }
+
+        private static IQueryable<Category> ApplySort(GetCategoriesQuery query, IQueryable<Category> categories)
+        {
             if (query.SortBy != null)
             {
                 // Split multiple attribute if have
@@ -90,7 +87,38 @@ namespace RookieEcommerce.Infrastructure.Persistence
                 if (sortCategory != null) { categories = sortCategory; }
             }
 
-            return Task.FromResult(PagedResult<Category>.Create(categories, query.PageSize, query.PageNumber));
+            return categories;
+        }
+
+        private static IQueryable<Category> ApplySearch(GetCategoriesQuery query, IQueryable<Category> categories)
+        {
+            if (query.SearchTerm != null)
+            {
+                categories = categories.Where(c => c.Name.Contains(query.SearchTerm) ||
+                                                            c.Description.Contains(query.SearchTerm));
+            }
+
+            return categories;
+        }
+
+        private static IQueryable<Category> ApplyFilter(GetCategoriesQuery query, IQueryable<Category> categories)
+        {
+            if (query.ParentCategoryId != null)
+            {
+                categories = categories.Where(c => c.Id == query.ParentCategoryId);
+            }
+
+            return categories;
+        }
+
+        private static IQueryable<Category> ApplyInclude(GetCategoriesQuery query, IQueryable<Category> categories)
+        {
+            if (!string.IsNullOrEmpty(query.IncludeProperties))
+            {
+                categories = AddIncludesToQuery(query.IncludeProperties, categories);
+            }
+
+            return categories;
         }
     }
 }

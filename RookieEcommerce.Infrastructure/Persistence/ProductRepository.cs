@@ -15,33 +15,24 @@ namespace RookieEcommerce.Infrastructure.Persistence
         public Task<PagedResult<Product>> GetPaginated(GetProductsQuery query)
         {
             var products = context.Products.AsQueryable();
-            
-            // Apply include query if includeProperties is not null
-            if (!string.IsNullOrEmpty(query.IncludeProperties))
-            {
-                products = AddIncludesToQuery(query.IncludeProperties, products);
-            }
 
-            // Apply filtering if it is not null
-            if (query.MinPrice != null)
-            {
-                products = products.Where(c => c.Price >= query.MinPrice);
-            }
-            else if (query.MaxPrice != null)
-            {
-                products = products.Where(c => c.Price <= query.MaxPrice);
-            }
+            // Apply include query if includeProperties is not null
+            products = ApplyInclude(query, products);
+
+            // Apply filter if it is not null
+            products = ApplyFilter(query, products);
 
             // Apply searching term if search term is not null
-            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
-            {
-                products = products.Include(p => p.Category);
-                products = products.Where(c => c.Name.Contains(query.SearchTerm) ||
-                                               c.Description.Contains(query.SearchTerm) ||
-                                               c.Category!.Name.Contains(query.SearchTerm));
-            }
+            products = ApplySearch(query, products);
 
             // Apply sorting if sort by is not null
+            products = ApplySort(query, products);
+
+            return Task.FromResult(PagedResult<Product>.Create(products, query.PageSize, query.PageNumber));
+        }
+
+        private static IQueryable<Product> ApplySort(GetProductsQuery query, IQueryable<Product> products)
+        {
             if (!string.IsNullOrWhiteSpace(query.SortBy))
             {
                 // Split multiple attribute if have
@@ -98,7 +89,48 @@ namespace RookieEcommerce.Infrastructure.Persistence
                 if (sortProduct != null) products = sortProduct;
             }
 
-            return Task.FromResult(PagedResult<Product>.Create(products, query.PageSize, query.PageNumber));
+            return products;
+        }
+
+        private static IQueryable<Product> ApplySearch(GetProductsQuery query, IQueryable<Product> products)
+        {
+            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
+            {
+                products = products.Include(p => p.Category);
+                products = products.Where(c => c.Name.Contains(query.SearchTerm) ||
+                                               c.Description.Contains(query.SearchTerm) ||
+                                               c.Category!.Name.Contains(query.SearchTerm));
+            }
+
+            return products;
+        }
+
+        private static IQueryable<Product> ApplyFilter(GetProductsQuery query, IQueryable<Product> products)
+        {
+            if (query.CategoryId != null)
+            {
+                products = products.Where(c => c.CategoryId == query.CategoryId);
+            }
+            if (query.MinPrice != null)
+            {
+                products = products.Where(c => c.Price >= query.MinPrice);
+            }
+            else if (query.MaxPrice != null)
+            {
+                products = products.Where(c => c.Price <= query.MaxPrice);
+            }
+
+            return products;
+        }
+
+        private static IQueryable<Product> ApplyInclude(GetProductsQuery query, IQueryable<Product> products)
+        {
+            if (!string.IsNullOrEmpty(query.IncludeProperties))
+            {
+                products = AddIncludesToQuery(query.IncludeProperties, products);
+            }
+
+            return products;
         }
     }
 }
