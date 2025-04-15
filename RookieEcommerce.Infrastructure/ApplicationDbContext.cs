@@ -87,9 +87,6 @@ namespace RookieEcommerce.Infrastructure
             modelBuilder.Entity<ProductVariant>()
                 .Property(pv => pv.Price)
                 .HasColumnType("decimal(18,2)");
-            modelBuilder.Entity<ProductVariant>()
-                .Property(pv => pv.VariantType)
-                .HasConversion<string>();
 
             // --- Cart / CartItem ---
             modelBuilder.Entity<Cart>()

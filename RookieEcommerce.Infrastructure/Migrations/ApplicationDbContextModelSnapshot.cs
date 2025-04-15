@@ -42,7 +42,7 @@ namespace RookieEcommerce.Infrastructure.Migrations
                     b.HasIndex("CustomerId")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("RookieEcommerce.Domain.Entities.CartItem", b =>
@@ -72,7 +72,7 @@ namespace RookieEcommerce.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("RookieEcommerce.Domain.Entities.Category", b =>
@@ -104,7 +104,7 @@ namespace RookieEcommerce.Infrastructure.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("RookieEcommerce.Domain.Entities.Customer", b =>
@@ -131,7 +131,7 @@ namespace RookieEcommerce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("RookieEcommerce.Domain.Entities.Order", b =>
@@ -175,7 +175,7 @@ namespace RookieEcommerce.Infrastructure.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("RookieEcommerce.Domain.Entities.OrderItem", b =>
@@ -208,7 +208,7 @@ namespace RookieEcommerce.Infrastructure.Migrations
 
                     b.HasIndex("ProductVariantId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("RookieEcommerce.Domain.Entities.Product", b =>
@@ -246,7 +246,7 @@ namespace RookieEcommerce.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("RookieEcommerce.Domain.Entities.ProductImage", b =>
@@ -281,7 +281,7 @@ namespace RookieEcommerce.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
                 });
 
             modelBuilder.Entity("RookieEcommerce.Domain.Entities.ProductRating", b =>
@@ -314,7 +314,7 @@ namespace RookieEcommerce.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductRatings");
+                    b.ToTable("ProductRatings", (string)null);
                 });
 
             modelBuilder.Entity("RookieEcommerce.Domain.Entities.ProductVariant", b =>
@@ -354,7 +354,7 @@ namespace RookieEcommerce.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductVariants");
+                    b.ToTable("ProductVariants", (string)null);
                 });
 
             modelBuilder.Entity("RookieEcommerce.Domain.Entities.Cart", b =>
@@ -405,7 +405,7 @@ namespace RookieEcommerce.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.OwnsOne("RookieEcommerce.Domain.Entities.Address", "ShippingAddress", b1 =>
+                    b.OwnsOne("RookieEcommerce.Domain.Entities.Order.ShippingAddress#RookieEcommerce.Domain.Entities.Address", "ShippingAddress", b1 =>
                         {
                             b1.Property<Guid>("OrderId")
                                 .HasColumnType("uniqueidentifier");
@@ -444,7 +444,7 @@ namespace RookieEcommerce.Infrastructure.Migrations
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("Orders");
+                            b1.ToTable("Orders", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");
