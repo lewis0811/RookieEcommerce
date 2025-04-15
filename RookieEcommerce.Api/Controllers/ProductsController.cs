@@ -19,7 +19,7 @@ namespace RookieEcommerce.Api.Controllers
             return Ok(result);
         }
 
-        // GET: api/Products/{productId}
+        // GET: api/Product/{productId}
         [HttpGet(ApiEndPointConstant.Product.ProductEndpoint)]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]

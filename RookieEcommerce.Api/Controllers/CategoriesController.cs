@@ -10,6 +10,7 @@ namespace RookieEcommerce.Api.Controllers
     [ApiController]
     public class CategoriesController(IMediator mediator) : ControllerBase
     {
+        // GET: api/Categories
         [HttpGet(ApiEndPointConstant.Categories.CategoriesEndpoint)]
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetCategories([FromQuery] GetCategoriesQuery query, CancellationToken cancellationToken)
@@ -18,6 +19,7 @@ namespace RookieEcommerce.Api.Controllers
             return Ok(result);
         }
 
+        // GET: api/Category/{categoryId}
         [HttpGet(ApiEndPointConstant.Categories.CategoryEndpoint)]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]

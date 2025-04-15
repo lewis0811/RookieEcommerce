@@ -8,14 +8,10 @@ namespace RookieEcommerce.Application.Mappers
     [Mapper]
     public static partial class CategoryMapper
     {
-        public static partial CategoryDetailsDto CategoryToCategoryDetailsDtoList(Category categories);
+        // GET
+        public static partial CategoryDetailsDto CategoryToCategoryDetailsDtoList(Category category);
         
-        [MapperIgnoreSource(nameof(Category.ParentCategory))]
-        [MapperIgnoreSource(nameof(Category.SubCategories))]
-        [MapperIgnoreSource(nameof(Category.Products))]
-        public static partial CategoryCreateDto CategoryToCategoryCreateDto(Category category);
-
-        public static partial List<CategoryDetailsDto> CategoryListToDetailsDtoList(List<Category> categories);
+        public static partial List<CategoryDetailsDto> CategoryListToCategoryDetailsDtoList(List<Category> categories);
 
         [MapperIgnoreSource(nameof(Category.SubCategories))]
         [MapperIgnoreSource(nameof(Category.Products))]
@@ -26,6 +22,12 @@ namespace RookieEcommerce.Application.Mappers
         [MapperIgnoreSource(nameof(Product.Images))]
         [MapperIgnoreSource(nameof(Product.Variants))]
         public static partial ProductsInCategoryDto ProductToProductsInCategoryDto(Product product);
+
+        // POST
+        [MapperIgnoreSource(nameof(Category.ParentCategory))]
+        [MapperIgnoreSource(nameof(Category.SubCategories))]
+        [MapperIgnoreSource(nameof(Category.Products))]
+        public static partial CategoryCreateDto CategoryToCategoryCreateDto(Category category);
 
     }
 }

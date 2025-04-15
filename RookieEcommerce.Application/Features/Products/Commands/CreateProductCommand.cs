@@ -1,15 +1,23 @@
 ﻿using MediatR;
 using RookieEcommerce.Application.Contacts.Persistence;
+using RookieEcommerce.Application.Mappers;
 using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.SharedViewModels.ProductDtos;
 
 namespace RookieEcommerce.Application.Features.Products.Commands
 {
-    public record CreateProductCommand(string Name, string Description, decimal Price, Guid? CategoryId, string? Details) : IRequest<ProductDto>;
-
-    public class CreateProductCommandHandler(IUnitOfWork unitOfWork, IProductRepository productRepository) : IRequestHandler<CreateProductCommand, ProductDto>
+    public class CreateProductCommand : IRequest<ProductCreateDto>
     {
-        public async Task<ProductDto> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public Guid CategoryId { get; set; }
+        public string? Details { get; set; }
+    }
+
+    public class CreateProductCommandHandler(IUnitOfWork unitOfWork, IProductRepository productRepository) : IRequestHandler<CreateProductCommand, ProductCreateDto>
+    {
+        public async Task<ProductCreateDto> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
             // Check if product already exist
             var productExist = await productRepository.AnyAsync(c => c.Name == request.Name, cancellationToken);
@@ -24,7 +32,7 @@ namespace RookieEcommerce.Application.Features.Products.Commands
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
             // Map to dto and return the result
-            return new ProductDto(product.Id, product.Name, product.Description, product.Price, product.CategoryId, product.Details);
+            return ProductMapper.ProductToProductCreateDto(product);
         }
     }
 }

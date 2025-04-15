@@ -40,7 +40,7 @@ namespace RookieEcommerce.Application.Features.Categories.Queries
             //    })
             //    .ToList();
 
-            var dtos = Mappers.CategoryMapper.CategoryListToDetailsDtoList(categories.Items);
+            var dtos = Mappers.CategoryMapper.CategoryListToCategoryDetailsDtoList(categories.Items);
 
             var pagedResult = new PagedResult<CategoryDetailsDto>(
                 dtos,

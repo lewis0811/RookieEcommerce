@@ -17,7 +17,7 @@ namespace RookieEcommerce.Infrastructure.Persistence
             // Apply include query if includeProperties is not null
             if (!string.IsNullOrEmpty(query.IncludeProperties))
             {
-                AddIncludesToQuery(query.IncludeProperties, categories);
+                categories = AddIncludesToQuery(query.IncludeProperties, categories);
             }
 
             // Apply filtering if ParantCategoryId is not null
