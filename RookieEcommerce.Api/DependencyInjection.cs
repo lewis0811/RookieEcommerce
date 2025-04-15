@@ -1,6 +1,7 @@
 ﻿using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
+using RookieEcommerce.Api.Constants;
 using RookieEcommerce.Infrastructure;
 
 namespace RookieEcommerce.Api
@@ -21,7 +22,7 @@ namespace RookieEcommerce.Api
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "YourProject API", Version = "v1" });
+                options.SwaggerDoc(ApiEndPointConstant.ApiVersion, new OpenApiInfo { Title = ApiEndPointConstant.ApiTitle, Version = ApiEndPointConstant.ApiVersion });
 
                 // Define the OAuth2.0 scheme that's compatible with OpenIddict
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
