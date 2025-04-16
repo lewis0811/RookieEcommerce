@@ -2,9 +2,9 @@
 
 namespace RookieEcommerce.Application.Features.ProductVariants.Commands
 {
-    public class AddVariantCommandValidator : AbstractValidator<AddVariantCommand>
+    public class CreateVariantCommandValidator : AbstractValidator<CreateVariantCommand>
     {
-        public AddVariantCommandValidator()
+        public CreateVariantCommandValidator()
         {
             RuleFor(c => c.Name).NotEmpty().MaximumLength(100);
             RuleFor(c => c.Price).GreaterThanOrEqualTo(0);

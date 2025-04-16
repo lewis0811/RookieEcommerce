@@ -36,7 +36,7 @@ namespace RookieEcommerce.Api.Controllers
         [HttpPost(ApiEndPointConstant.ProductVariants.ProductVariantsEndpoint)]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> AddProductVariant(AddVariantCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddProductVariant(CreateVariantCommand command, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(command, cancellationToken);
 

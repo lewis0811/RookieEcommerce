@@ -3,13 +3,11 @@ using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Application.Mappers;
 using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.SharedViewModels.ProductVariantDtos;
-using System.Text.Json.Serialization;
 
 namespace RookieEcommerce.Application.Features.ProductVariants.Commands
 {
-    public class AddVariantCommand : IRequest<ProductVariantCreateDto>
+    public class CreateVariantCommand : IRequest<ProductVariantCreateDto>
     {
-        
         public Guid ProductId { get; set; }
 
         public string VariantType { get; set; } = string.Empty;
@@ -18,10 +16,10 @@ namespace RookieEcommerce.Application.Features.ProductVariants.Commands
         public decimal Price { get; set; }
     }
 
-    public class AddVariantCommandHandler(IUnitOfWork unitOfWork, IProductRepository productRepository, IProductVariantRepository productVariantRepository)
-        : IRequestHandler<AddVariantCommand, ProductVariantCreateDto>
+    public class CreateVariantCommandHandler(IUnitOfWork unitOfWork, IProductRepository productRepository, IProductVariantRepository productVariantRepository)
+        : IRequestHandler<CreateVariantCommand, ProductVariantCreateDto>
     {
-        public async Task<ProductVariantCreateDto> Handle(AddVariantCommand request, CancellationToken cancellationToken)
+        public async Task<ProductVariantCreateDto> Handle(CreateVariantCommand request, CancellationToken cancellationToken)
         {
             // Check if product exist
             var productExist = await productRepository.AnyAsync(c => c.Id == request.ProductId, cancellationToken);
