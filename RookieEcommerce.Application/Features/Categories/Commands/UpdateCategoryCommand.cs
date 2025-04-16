@@ -22,7 +22,7 @@ namespace RookieEcommerce.Application.Features.Categories.Commands
             var category = await categoryRepository.GetByIdAsync(request.Id, null, cancellationToken)
                 ?? throw new InvalidOperationException($"Product Id {request.Id} not found.");
 
-            // Map request to product
+            // Map request to category
             category.Update(request.Name, request.Description);
 
             // Update via Repository

@@ -1,6 +1,4 @@
-﻿using RookieEcommerce.Domain.Enums;
-
-namespace RookieEcommerce.Domain.Entities
+﻿namespace RookieEcommerce.Domain.Entities
 {
     public class ProductVariant : BaseEntity
     {
@@ -21,7 +19,7 @@ namespace RookieEcommerce.Domain.Entities
         }
 
         public decimal Price { get; set; }
-        
+
         // Foreign key
         public Guid ProductId { get; set; }
 
@@ -48,6 +46,13 @@ namespace RookieEcommerce.Domain.Entities
                 StockQuantity = stockQuantity,
                 VariantType = variantType
             };
+        }
+
+        public void Update(Guid id, string? name, decimal? price, int? stockQuantity)
+        {
+            if (name != null && name != Name) { Name = name; }
+            if (price != null && price != Price) { Price = (decimal)price; }
+            if (stockQuantity != null && stockQuantity != StockQuantity) { StockQuantity = (int)stockQuantity; }
         }
     }
 }
