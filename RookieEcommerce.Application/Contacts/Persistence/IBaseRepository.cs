@@ -7,7 +7,9 @@ namespace RookieEcommerce.Application.Contacts.Persistence
     {
         Task<T?> GetByIdAsync(Guid id, string? includeProperties, CancellationToken cancellationToken = default);
 
-        Task<List<T>> ListAllAsync(Expression<Func<T, bool>>? filter,CancellationToken cancellationToken = default);
+        Task<T?> GetByAttributeAsync(Expression<Func<T, bool>>? filter, CancellationToken cancellationToken = default);
+
+        Task<List<T>> ListAllAsync(Expression<Func<T, bool>>? filter, CancellationToken cancellationToken = default);
 
         Task<T> AddAsync(T entity, CancellationToken cancellationToken = default);
 
