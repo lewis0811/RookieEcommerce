@@ -1,17 +1,16 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RookieEcommerce.Api.Constants;
 using RookieEcommerce.Application.Features.Products.Commands;
 using RookieEcommerce.Application.Features.Products.Queries;
 
 namespace RookieEcommerce.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/products")]
     [ApiController]
     public class ProductsController(IMediator mediator) : ControllerBase
     {
-        // GET: api/Products
-        [HttpGet(ApiEndPointConstant.Products.ProductsEndpoint)]
+        // GET: products
+        [HttpGet]
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetProducts([FromQuery] GetProductsQuery query, CancellationToken cancellationToken)
         {
@@ -19,11 +18,11 @@ namespace RookieEcommerce.Api.Controllers
             return Ok(result);
         }
 
-        // GET: api/Product/{productId}
-        [HttpGet(ApiEndPointConstant.Products.ProductEndpoint)]
+        // GET: product/{productId}
+        [HttpGet("{product-id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetProduct(Guid productId, string? includeProperties, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetProduct([FromRoute(Name = "product-id")] Guid productId, string? includeProperties, CancellationToken cancellationToken)
         {
             var query = new GetProductByIdQuery { Id = productId, IncludeProperties = includeProperties };
             var result = await mediator.Send(query, cancellationToken);
@@ -31,19 +30,21 @@ namespace RookieEcommerce.Api.Controllers
             return Ok(result);
         }
 
-        // POST: api/Products
-        [HttpPost(ApiEndPointConstant.Products.ProductsEndpoint)]
+        // POST: products
+        [HttpPost]
         [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> AddProduct([FromBody] CreateProductCommand command, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(command, cancellationToken);
             return CreatedAtAction(nameof(AddProduct), result);
         }
 
-        // PUT: api/Product/{productId}
-        [HttpPut(ApiEndPointConstant.Products.ProductEndpoint)]
+        // PUT: products/{productId}
+        [HttpPut("{product-id}")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateProduct(Guid productId, [FromBody] UpdateProductCommand command, CancellationToken cancellationToken)
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateProduct([FromRoute(Name = "product-id")] Guid productId, [FromBody] UpdateProductCommand command, CancellationToken cancellationToken)
         {
             command.Id = productId;
             await mediator.Send(command, cancellationToken);
@@ -51,10 +52,11 @@ namespace RookieEcommerce.Api.Controllers
             return Ok();
         }
 
-        // DELETE: api/Product/{productId}
-        [HttpDelete(ApiEndPointConstant.Products.ProductEndpoint)]
+        // DELETE: products/{productId}
+        [HttpDelete("{product-id}")]
         [ProducesResponseType(204)]
-        public async Task<IActionResult> DeleteProduct(Guid productId, CancellationToken cancellationToken)
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> DeleteProduct([FromRoute(Name = "product-id")] Guid productId, CancellationToken cancellationToken)
         {
             var command = new DeleteProductCommand { Id = productId };
             await mediator.Send(command, cancellationToken);

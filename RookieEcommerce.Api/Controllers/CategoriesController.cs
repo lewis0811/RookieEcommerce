@@ -1,17 +1,18 @@
-﻿using MediatR;
+﻿using Asp.Versioning;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RookieEcommerce.Api.Constants;
 using RookieEcommerce.Application.Features.Categories.Commands;
 using RookieEcommerce.Application.Features.Categories.Queries;
 
 namespace RookieEcommerce.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/categories")]
     [ApiController]
+    [ApiVersion(1)]
     public class CategoriesController(IMediator mediator) : ControllerBase
     {
-        // GET: api/Categories
-        [HttpGet(ApiEndPointConstant.Categories.CategoriesEndpoint)]
+        // GET: categories
+        [HttpGet]
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetCategories([FromQuery] GetCategoriesQuery query, CancellationToken cancellationToken)
         {
@@ -19,11 +20,11 @@ namespace RookieEcommerce.Api.Controllers
             return Ok(result);
         }
 
-        // GET: api/Category/{categoryId}
-        [HttpGet(ApiEndPointConstant.Categories.CategoryEndpoint)]
+        // GET: categories/{category-id}
+        [HttpGet("{category-id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetCategory(Guid categoryId, string? includeProperties, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCategory([FromRoute(Name = "category-id")]Guid categoryId, string? includeProperties, CancellationToken cancellationToken)
         {
             var query = new GetCategoryByIdQuery { Id = categoryId, IncludeProperties = includeProperties };
             var result = await mediator.Send(query, cancellationToken);
@@ -31,8 +32,8 @@ namespace RookieEcommerce.Api.Controllers
             return Ok(result);
         }
 
-        // POST: api/Categories
-        [HttpPost(ApiEndPointConstant.Categories.CategoriesEndpoint)]
+        // POST: categories
+        [HttpPost]
         [ProducesResponseType(201)]
         public async Task<IActionResult> AddCategory([FromBody] CreateCategoryCommand command, CancellationToken cancellationToken)
         {
@@ -40,10 +41,10 @@ namespace RookieEcommerce.Api.Controllers
             return CreatedAtAction(nameof(AddCategory), result);
         }
 
-        // PUT: api/Categories/{categoryId}
-        [HttpPut(ApiEndPointConstant.Categories.CategoryEndpoint)]
+        // PUT: categories/{category-id}
+        [HttpPut("{category-id}")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateCategory(Guid categoryId, [FromBody] UpdateCategoryCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateCategory([FromRoute(Name = "category-id")] Guid categoryId, [FromBody] UpdateCategoryCommand command, CancellationToken cancellationToken)
         {
             command.Id = categoryId;
             await mediator.Send(command, cancellationToken);
@@ -51,10 +52,10 @@ namespace RookieEcommerce.Api.Controllers
             return Ok();
         }
 
-        // DELETE: api/Categories/{categoryId}
-        [HttpDelete(ApiEndPointConstant.Categories.CategoryEndpoint)]
+        // DELETE: categories/{category-id}
+        [HttpDelete("{category-id}")]
         [ProducesResponseType(204)]
-        public async Task<IActionResult> DeleteCategory(Guid categoryId, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteCategory([FromRoute(Name = "category-id")] Guid categoryId, CancellationToken cancellationToken)
         {
             var command = new DeleteCategoryCommand { Id = categoryId };
             await mediator.Send(command, cancellationToken);
