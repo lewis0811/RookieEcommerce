@@ -1,6 +1,8 @@
-﻿using FluentValidation.AspNetCore;
+﻿using Asp.Versioning;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
+using RookieEcommerce.Api.Configurations;
 using RookieEcommerce.Api.Constants;
 using RookieEcommerce.Infrastructure;
 
@@ -10,10 +12,26 @@ namespace RookieEcommerce.Api
     {
         public static IServiceCollection AddApiServices(
     this IServiceCollection services,
+#pragma warning disable IDE0060 // Remove unused parameter
     IConfiguration configuration) // configuration might be needed for some services
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             // --- Add Controllers & API Behavior ---
             services.AddControllers();
+
+            // --- Add ApiVersioning configuration
+            services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = ApiVersion.Default;
+                options.ReportApiVersions = true;
+            }).AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'V";
+                options.SubstituteApiVersionInUrl = true;
+            });
+
+            services.ConfigureOptions<ConfigureSwaggerOptions>(); // !Important, this one make the version work on swagger
 
             // --- Add FluentValidation ASP.NET Core Integration ---
             services.AddFluentValidationAutoValidation();
@@ -22,8 +40,6 @@ namespace RookieEcommerce.Api
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = ApiEndPointConstant.ApiTitle, Version = $"{ApiEndPointConstant.ApiVersion}" });
-
                 // Define the OAuth2.0 scheme that's compatible with OpenIddict
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
@@ -73,7 +89,9 @@ namespace RookieEcommerce.Api
 
         public static IServiceCollection AddIdentityServices(
             this IServiceCollection services,
+#pragma warning disable IDE0060 // Remove unused parameter
             IConfiguration configuration)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             // --- Add ASP.NET Core Identity ---
             services.AddIdentity<IdentityUser, IdentityRole>(options =>

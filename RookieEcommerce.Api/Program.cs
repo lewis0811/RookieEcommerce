@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using RookieEcommerce.Api;
 using RookieEcommerce.Application;
@@ -25,7 +26,16 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        var groupNames = app.DescribeApiVersions().Select(description => description.GroupName);
+
+        // Build a swagger endpoint for each discovered API version
+        foreach (var groupName in groupNames)
+        {
+            options.SwaggerEndpoint($"/swagger/{groupName}/swagger.json", groupName.ToUpperInvariant());
+        }
+    });
 }
 else
 {
