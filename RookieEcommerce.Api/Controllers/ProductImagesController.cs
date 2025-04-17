@@ -1,7 +1,6 @@
 ﻿using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RookieEcommerce.Api.Constants;
 using RookieEcommerce.Application.Features.ProductImages.Commands;
 using RookieEcommerce.Application.Features.ProductImages.Queries;
 using RookieEcommerce.Application.Features.Products.Queries;

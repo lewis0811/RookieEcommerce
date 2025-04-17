@@ -78,6 +78,10 @@ namespace RookieEcommerce.Infrastructure
                 .HasForeignKey(pr => pr.CustomerId)
                 .OnDelete(DeleteBehavior.Cascade); // Delete ratings if customer is deleted
 
+            modelBuilder.Entity<ProductRating>()
+                .Property(p => p.Comment)
+                .HasMaxLength(2000);
+
             // --- ProductVariant ---
             modelBuilder.Entity<ProductVariant>()
                 .HasOne(pv => pv.Product)

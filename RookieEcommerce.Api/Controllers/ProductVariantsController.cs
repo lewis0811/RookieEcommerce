@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RookieEcommerce.Api.Constants;
 using RookieEcommerce.Application.Features.Products.Queries;
 using RookieEcommerce.Application.Features.ProductVariants.Commands;
 using RookieEcommerce.Application.Features.ProductVariants.Queries;

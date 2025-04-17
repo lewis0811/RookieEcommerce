@@ -33,6 +33,8 @@ namespace RookieEcommerce.Infrastructure
             services.AddScoped<IProductVariantRepository, ProductVariantRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductImageRepository, ProductImageRepository>();
+            services.AddScoped<IProductRatingRepository, ProductRatingRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
             // -- Add Unit Of Work Registrations
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;

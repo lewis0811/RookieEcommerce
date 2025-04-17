@@ -27,4 +27,8 @@
     <ProjectReference Include="..\RookieEcommerce.SharedViewModels\RookieEcommerce.SharedViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Constants\" />
+  </ItemGroup>
+
 </Project>

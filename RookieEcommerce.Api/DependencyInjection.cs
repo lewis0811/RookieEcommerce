@@ -3,7 +3,6 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using RookieEcommerce.Api.Configurations;
-using RookieEcommerce.Api.Constants;
 using RookieEcommerce.Infrastructure;
 
 namespace RookieEcommerce.Api
