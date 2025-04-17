@@ -18,9 +18,9 @@ namespace RookieEcommerce.Application.Features.ProductImages.Commands
     {
         public async Task<ProductImageCreateDto> Handle(CreateProductImageCommand request, CancellationToken cancellationToken)
         {
-            // Check if the product image is exist
+            // Check if the product is exist
             var productExist = await productRepository.AnyAsync(c => c.Id == request.ProductId, cancellationToken);
-            if (!productExist) { throw new InvalidOperationException($"Product Image Id {request.ProductId} not found."); }
+            if (!productExist) { throw new InvalidOperationException($"Product Id {request.ProductId} not found."); }
 
             // Create product image instance
             var productImage = ProductImage.Create(request.ProductId, request.ImageUrl, request.AltText);

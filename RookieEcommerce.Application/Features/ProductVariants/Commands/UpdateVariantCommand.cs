@@ -24,7 +24,7 @@ namespace RookieEcommerce.Application.Features.ProductVariants.Commands
                 ?? throw new InvalidOperationException($"Product variant with ID {request.Id} not found.");
 
             // Update properties
-            productVariant.Update(request.Id, request.Name, request.Price, request.StockQuantity);
+            productVariant.Update(request.Name, request.Price, request.StockQuantity);
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
         }

@@ -48,7 +48,7 @@
             };
         }
 
-        public void Update(Guid id, string? name, decimal? price, int? stockQuantity)
+        public void Update(string? name, decimal? price, int? stockQuantity)
         {
             if (name != null && name != Name) { Name = name; }
             if (price != null && price != Price) { Price = (decimal)price; }
