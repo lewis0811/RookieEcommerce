@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Domain.Entities;
 using System.Linq.Expressions;
@@ -7,11 +8,15 @@ namespace RookieEcommerce.Infrastructure.Persistence
 {
     public class BaseRepository<T>(DbSet<T> dbSet) : IBaseRepository<T> where T : BaseEntity
     {
-        public virtual async Task<T?> GetByIdAsync(Guid id, string? includeProperties, CancellationToken cancellationToken = default)
+        public virtual async Task<T?> GetByIdAsync(Guid id, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = dbSet;
 
-            query = AddIncludesToQuery(includeProperties, query);
+            //query = AddIncludesToQuery(includeProperties, query);
+            if (include != null)
+            {
+                query = include(query);
+            }
 
             return await query.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }

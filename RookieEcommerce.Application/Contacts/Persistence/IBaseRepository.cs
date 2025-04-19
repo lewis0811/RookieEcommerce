@@ -1,11 +1,12 @@
-﻿using RookieEcommerce.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using RookieEcommerce.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace RookieEcommerce.Application.Contacts.Persistence
 {
     public interface IBaseRepository<T> where T : BaseEntity
     {
-        Task<T?> GetByIdAsync(Guid id, string? includeProperties, CancellationToken cancellationToken = default);
+        Task<T?> GetByIdAsync(Guid id, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, CancellationToken cancellationToken = default);
 
         Task<T?> GetByAttributeAsync(Expression<Func<T, bool>>? filter, CancellationToken cancellationToken = default);
 
