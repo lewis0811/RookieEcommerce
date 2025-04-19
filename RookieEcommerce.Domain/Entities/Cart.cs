@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RookieEcommerce.Domain.Entities
+﻿namespace RookieEcommerce.Domain.Entities
 {
     public class Cart : BaseEntity
     {
@@ -12,7 +6,13 @@ namespace RookieEcommerce.Domain.Entities
         public Guid CustomerId { get; set; }
 
         // Navigation Properties
-        public virtual Customer Customer { get; set; } = new();
+        public virtual Customer? Customer { get; set; } = new();
+
         public virtual ICollection<CartItem> Items { get; set; } = [];
+
+        public static Cart Create(Guid customerId)
+        {
+            return new Cart { CustomerId = customerId, Customer = null };
+        }
     }
 }
