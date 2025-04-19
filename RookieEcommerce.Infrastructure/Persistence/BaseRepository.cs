@@ -20,13 +20,18 @@ namespace RookieEcommerce.Infrastructure.Persistence
 
             return await query.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
-        public virtual async Task<T?> GetByAttributeAsync(Expression<Func<T, bool>>? filter, CancellationToken cancellationToken = default)
+        public virtual async Task<T?> GetByAttributeAsync(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = dbSet;
 
             if (filter != null)
             {
                 query = query.Where(filter);
+            }
+
+            if (include != null)
+            {
+                query = include(query);
             }
 
             return await query.FirstOrDefaultAsync<T>(cancellationToken);
