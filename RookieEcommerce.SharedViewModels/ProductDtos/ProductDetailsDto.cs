@@ -8,8 +8,7 @@ namespace RookieEcommerce.SharedViewModels.ProductDtos
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public string? Details { get; set; }
-        public Guid? CategoryId { get; set; }
-        public string CategoryName { get; set; } = string.Empty;
+        public Category Category { get; set; } = new();
         public ICollection<ProductImage>? Images { get; set; }
         public ICollection<ProductVariant>? Variants { get; set;}
     }
