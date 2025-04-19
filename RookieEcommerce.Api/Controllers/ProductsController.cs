@@ -22,9 +22,9 @@ namespace RookieEcommerce.Api.Controllers
         [HttpGet("{product-id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetProduct([FromRoute(Name = "product-id")] Guid productId, string? includeProperties, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetProduct([FromRoute(Name = "product-id")] Guid productId, bool isIncludeItems, CancellationToken cancellationToken)
         {
-            var query = new GetProductByIdQuery { Id = productId, IncludeProperties = includeProperties };
+            var query = new GetProductByIdQuery { Id = productId, IsIncludeItems = isIncludeItems };
             var result = await mediator.Send(query, cancellationToken);
 
             return Ok(result);

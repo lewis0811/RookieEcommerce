@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Application.Mappers;
 using RookieEcommerce.Domain.Entities;
@@ -47,8 +48,16 @@ namespace RookieEcommerce.Application.Features.ProductRatings.Commands
 
         private async Task CheckIfCustomerBoughtProduct(CreateProductRatingCommand request, CancellationToken cancellationToken)
         {
-            var customerExist = await customerRepository.GetByIdAsync(request.CustomerId, "Orders.OrderItems", cancellationToken);
+            // Check if the customer exist
+            var customerExist = await customerRepository
+                .GetByIdAsync(
+                request.CustomerId,
+                filter => filter
+                    .Include(c => c.Orders)
+                        .ThenInclude(c => c.OrderItems),
+                cancellationToken);
             if (customerExist == null) { throw new InvalidOperationException($"Customer Id {request.ProductId} not found."); }
+            // check if the customer has bought the product.
             else
             {
                 var orderItems = customerExist.Orders
@@ -56,7 +65,7 @@ namespace RookieEcommerce.Application.Features.ProductRatings.Commands
                     .Any(c => c.ProductId == request.ProductId);
                 if (!orderItems)
                 {
-                    throw new InvalidOperationException($"Customer hadn't buy a product Id{request.ProductId}.");
+                    throw new InvalidOperationException($"Customer hadn't bought a product Id{request.ProductId}.");
                 }
             }
         }

@@ -23,9 +23,9 @@ namespace RookieEcommerce.Api.Controllers
         [HttpGet("{variant-id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetProductVariant([FromRoute(Name = "variant-id")] Guid productVariantId, string? includeProperties, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetProductVariant([FromRoute(Name = "variant-id")] Guid productVariantId, bool isIncludeItems, CancellationToken cancellationToken)
         {
-            var query = new GetProductByIdQuery { Id = productVariantId, IncludeProperties = includeProperties };
+            var query = new GetProductByIdQuery { Id = productVariantId, IsIncludeItems = isIncludeItems };
             var result = await mediator.Send(query, cancellationToken);
 
             return Ok(result);
