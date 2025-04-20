@@ -23,7 +23,7 @@ namespace RookieEcommerce.Application.Features.Products.Commands
                 ?? throw new InvalidOperationException ($"Product Id {request.Id} not found.");
 
             // Map request to product
-            product.Update(request.Name, request.Description, request.Price);
+            product.Update(request.Name, request.Description, request.Price, null);
 
             // Update via Repository
             await productRepository.UpdateAsync(product, cancellationToken);

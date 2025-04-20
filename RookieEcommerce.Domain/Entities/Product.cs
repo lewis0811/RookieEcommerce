@@ -6,6 +6,7 @@
         public string Description { get; private set; } = string.Empty;
         public decimal Price { get; private set; }
         public string? Details { get; private set; } = string.Empty; // Store as json
+        public int TotalQuantity { get; private set; } = 0;
 
         // Foreign Key
         public Guid? CategoryId { get; private set; }
@@ -21,11 +22,12 @@
             return new Product { Name = name, Description = description, Price = price, Details = details, CategoryId = categoryId };
         }
 
-        public void Update(string name, string description, decimal price)
+        public void Update(string? name, string? description, decimal? price, int? totalQuantity)
         {
-            if (name != Name) Name = name;
-            if (description != Description) Description = description;
-            if (price != Price) Price = price;
+            if (name != null && name != Name) Name = name;
+            if (description != null && description != Description) Description = description;
+            if (price != null && price != Price) Price = (decimal)price;
+            if(totalQuantity != null && totalQuantity != TotalQuantity) TotalQuantity = (int)totalQuantity;
             UpdateModifiedDate();
         }
     }
