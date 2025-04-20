@@ -1,9 +1,9 @@
 ﻿namespace RookieEcommerce.Domain.Enums
 {
-    public enum OrderStatus
+    public enum PaymentStatus
     {
         Pending,
-        Ordered,
-        Cancelled,
+        Succeed,
+        Failed,
     }
 }

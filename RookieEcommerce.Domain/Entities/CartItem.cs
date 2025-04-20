@@ -11,10 +11,10 @@
         public Guid? ProductVariantId { get; private set; }
 
         // Navigation Properties
-        public virtual Cart Cart { get; private set; } = new();
+        public virtual Cart? Cart { get; private set; } = null;
 
-        public virtual Product Product { get; private set; } = new();
-        public virtual ProductVariant ProductVariant { get; private set; } = new();
+        public virtual Product? Product { get; private set; } = null;
+        public virtual ProductVariant? ProductVariant { get; private set; } = null;
 
         // Methods
         public static CartItem Create(Guid cartId, Guid productId, Guid? productVariantId, int quantity)

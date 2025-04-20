@@ -11,8 +11,8 @@ namespace RookieEcommerce.Domain.Entities
         // Store Shipping Address components
         public Address ShippingAddress { get; set; } = new();
 
-        public string? PaymentMethod { get; set; }
-        public string? PaymentStatus { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
         public string? TransactionId { get; set; } // ID from payment gateway
         public DateTime? PaymentDate { get; set; }
         
@@ -20,7 +20,35 @@ namespace RookieEcommerce.Domain.Entities
         public Guid CustomerId { get; set; }
 
         // Navigation Properties
-        public virtual Customer Customer { get; set; } = new Customer();
+        public virtual Customer? Customer { get; set; } = null;
         public virtual ICollection<OrderItem> OrderItems { get; set; } = [];
+
+        public static Order Create(Guid customerId, decimal calculatedTotalAmount, PaymentMethod paymentMethod, Address shippingAddress, List<OrderItem> orderItemsEntities)
+        {
+            return new Order
+            {
+                CustomerId = customerId,
+                TotalAmount = calculatedTotalAmount,
+                PaymentMethod = paymentMethod,
+                ShippingAddress = shippingAddress,
+                OrderItems = orderItemsEntities,
+                OrderDate = DateTime.Now,
+                Status = OrderStatus.Pending,
+                PaymentStatus = PaymentStatus.Pending
+            };
+        }
+
+        public void Update(string? transactionId, OrderStatus? orderStatus, PaymentStatus? paymentStatus)
+        {
+            if (transactionId != null && transactionId != TransactionId) { TransactionId = transactionId; }
+            if (orderStatus != null && orderStatus != Status) { Status = orderStatus.Value; }
+            if (paymentStatus != null && paymentStatus != PaymentStatus) { PaymentStatus = paymentStatus.Value; }
+            if (paymentStatus == PaymentStatus.Succeed)
+            {
+                PaymentDate = DateTime.Now;
+            }
+
+            UpdateModifiedDate();
+        }
     }
 }
