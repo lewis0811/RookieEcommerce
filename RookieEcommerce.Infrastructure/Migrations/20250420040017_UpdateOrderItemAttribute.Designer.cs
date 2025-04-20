@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RookieEcommerce.Infrastructure;
 
@@ -11,9 +12,11 @@ using RookieEcommerce.Infrastructure;
 namespace RookieEcommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250420040017_UpdateOrderItemAttribute")]
+    partial class UpdateOrderItemAttribute
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -358,11 +361,11 @@ namespace RookieEcommerce.Infrastructure.Migrations
                     b.Property<DateTime?>("PaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PaymentStatus")
-                        .HasColumnType("int");
+                    b.Property<string>("PaymentStatus")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -449,9 +452,6 @@ namespace RookieEcommerce.Infrastructure.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("TotalQuantity")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
