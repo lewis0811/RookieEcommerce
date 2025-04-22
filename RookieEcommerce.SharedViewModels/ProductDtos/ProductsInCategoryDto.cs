@@ -1,4 +1,5 @@
 ﻿using RookieEcommerce.Domain.Entities;
+using RookieEcommerce.SharedViewModels.ProductImageDtos;
 
 namespace RookieEcommerce.SharedViewModels.ProductDtos
 {
@@ -9,6 +10,6 @@ namespace RookieEcommerce.SharedViewModels.ProductDtos
         public decimal Price { get; }
         public string? Details { get; }
         public Guid? CategoryId { get; }
-        public string? CategoryName { get; }
+        public List<ProductImageDetailsDto>? Images { get; set; } 
     }
 }
