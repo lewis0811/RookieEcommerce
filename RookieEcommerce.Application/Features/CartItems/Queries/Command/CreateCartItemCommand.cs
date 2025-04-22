@@ -58,7 +58,7 @@ namespace RookieEcommerce.Application.Features.CartItems.Queries.Command
                 (
                     request.CartId,
                     request.ProductId,
-                    null,
+                    request.ProductVariantId,
                     request.Quantity
                 );
                 // Add new item to cart

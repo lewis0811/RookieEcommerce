@@ -5,7 +5,7 @@ using RookieEcommerce.SharedViewModels.ProductDtos;
 
 namespace RookieEcommerce.Application.Mappers
 {
-    [Mapper]
+    [Mapper(RequiredMappingStrategy = RequiredMappingStrategy.None)]
     public static partial class CategoryMapper
     {
         // GET
