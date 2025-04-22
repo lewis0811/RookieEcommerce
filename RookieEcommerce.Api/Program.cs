@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using RookieEcommerce.Api;
+using RookieEcommerce.Api.Middleware;
 using RookieEcommerce.Application;
 using RookieEcommerce.Infrastructure;
 
@@ -20,7 +19,27 @@ builder.Services.AddIdentityServices(builder.Configuration);
 // Register API specific services (Controllers, Swagger, etc.)
 builder.Services.AddApiServices(builder.Configuration);
 
+
+
+// Retrieve BaseAddress from configuration
+var baseAddress = builder.Configuration.GetValue<string>("HttpClient:BaseAddress");
+
+// Register CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
+
+// Register error handling middleware
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -42,9 +61,11 @@ else
     app.UseHsts();
 }
 
-app.UseAuthentication();
 app.UseHttpsRedirection();
+app.UseCors();
+
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

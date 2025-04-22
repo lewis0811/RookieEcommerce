@@ -1,8 +1,16 @@
+using RookieEcommerce.CustomerSite;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+
+// Register Web Client service
+builder.Services.AddWebServices(builder.Configuration);
+
+// Register HTTPClient Service
+//builder.Services.AddWebService()
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
