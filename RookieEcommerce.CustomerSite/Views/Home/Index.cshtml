@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
 @using RookieEcommerce.Domain.Entities
+@using RookieEcommerce.SharedViewModels.ProductImageDtos
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -107,18 +108,27 @@
 
                             @* --- Image --- *@ 
                             @{
-                                var image = ((IEnumerable<ProductImage>)item.Images)?.FirstOrDefault(c => c.IsPrimary);
+                                var image = ((IEnumerable<ProductImageDetailsDto>)item.Images)?.FirstOrDefault(c => c.IsPrimary);
                             }
-                                    <div class="position-relative">
-
-                                        <a href="/wax-1821" title="Wax - 1821 Man Made" class="d-block">
-                                            <img class="card-img-top img-fluid lazyload loaded"
-                                                 src="//bizweb.dktcdn.net/thumb/large/100/189/335/products/1-35f73ae9-7be8-4efc-ab6b-a3a2c3e93420.png?v=1675998098423"
-                                                 data-src="//bizweb.dktcdn.net/thumb/large/100/189/335/products/1-35f73ae9-7be8-4efc-ab6b-a3a2c3e93420.png?v=1675998098423"
-                                                 alt="Wax - 1821 Man Made"
-                                                 data-was-processed="true">
-                                        </a>
-                                    </div>
+                            <div class="position-relative">
+                                @if (image != null)
+                                {
+                                    <a href="/wax-1821" title="Wax - 1821 Man Made" class="d-block">
+                                        <img class="card-img-top img-fluid lazyload loaded"
+                                        src=@image.ImageUrl
+                                        alt=@item.Name
+                                        data-was-processed="true">
+                                    </a>
+                                } else
+                                {
+                                    <a href="/wax-1821" title="Wax - 1821 Man Made" class="d-block">
+                                        <img class="card-img-top img-fluid lazyload loaded"
+                                        src="https://dummyimage.com/400x400/55595c/fff"
+                                        alt=@item.Name
+                                        data-was-processed="true"/>
+                                    </a>
+                                }
+                            </div>
 
                                     @* --- Detail --- *@
                                     <div class="card-body d-flex flex-column">

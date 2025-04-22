@@ -8,7 +8,7 @@ namespace RookieEcommerce.CustomerSite.Services
         public async Task<PaginationResponseDto<ProductDetailsDto>> GetProductsAsync()
         {
             var products = await httpClient
-                .GetFromJsonAsync<PaginationResponseDto<ProductDetailsDto>>("api/v1/products");
+                .GetFromJsonAsync<PaginationResponseDto<ProductDetailsDto>>("api/v1/products?IsIncludeItems=true");
             return products!;
         }
     }

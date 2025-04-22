@@ -1,4 +1,6 @@
-﻿using RookieEcommerce.Application.Common;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using RookieEcommerce.Application.Common;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Application.Features.Products.Queries;
 using RookieEcommerce.Domain.Entities;
@@ -8,12 +10,13 @@ namespace RookieEcommerce.Infrastructure.Persistence
 {
     public class ProductRepository(ApplicationDbContext context) : BaseRepository<Product>(context.Products), IProductRepository
     {
-        public Task<PaginationList<Product>> GetPaginated(GetProductsQuery query)
+        public Task<PaginationList<Product>> GetPaginated(GetProductsQuery query, Func<IQueryable<Product>, IIncludableQueryable<Product, object>>? include)
         {
             var products = context.Products.AsQueryable();
 
             // Apply include query if includeProperties is not null
             products = ApplyInclude(query, products);
+            products = ApplyInclude2(include, products);
 
             // Apply filter if it is not null
             products = ApplyFilter(query, products);
@@ -25,6 +28,16 @@ namespace RookieEcommerce.Infrastructure.Persistence
             products = ApplySort(query, products);
 
             return Task.FromResult(PaginationList<Product>.Create(products, query.PageSize, query.PageNumber));
+        }
+
+        private static IQueryable<Product> ApplyInclude2(Func<IQueryable<Product>, IIncludableQueryable<Product, object>>? include, IQueryable<Product> products)
+        {
+            if (include != null)
+            {
+                products = include(products);
+            }
+
+            return products;
         }
 
         private static IQueryable<Product> ApplySort(GetProductsQuery query, IQueryable<Product> products)

@@ -1,4 +1,5 @@
-﻿using RookieEcommerce.Application.Common;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using RookieEcommerce.Application.Common;
 using RookieEcommerce.Application.Features.Products.Queries;
 using RookieEcommerce.Domain.Entities;
 
@@ -6,6 +7,6 @@ namespace RookieEcommerce.Application.Contacts.Persistence
 {
     public interface IProductRepository : IBaseRepository<Product>
     {
-        Task<PaginationList<Product>> GetPaginated(GetProductsQuery query);
+        Task<PaginationList<Product>> GetPaginated(GetProductsQuery query, Func<IQueryable<Product>, IIncludableQueryable<Product, object>>? include);
     }
 }
