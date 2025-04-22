@@ -2,6 +2,7 @@
 using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.SharedViewModels.CategoryDtos;
 using RookieEcommerce.SharedViewModels.ProductDtos;
+using RookieEcommerce.SharedViewModels.ProductImageDtos;
 
 namespace RookieEcommerce.Application.Mappers
 {
@@ -13,20 +14,13 @@ namespace RookieEcommerce.Application.Mappers
         
         public static partial List<CategoryDetailsDto> CategoryListToCategoryDetailsDtoList(List<Category> categories);
 
-        [MapperIgnoreSource(nameof(Category.SubCategories))]
-        [MapperIgnoreSource(nameof(Category.Products))]
-        [MapperIgnoreSource(nameof(Category.CreatedDate))]
-        [MapperIgnoreSource(nameof(Category.ModifiedDate))]
         public static partial SubCategoriesDto CategoryToSubCategoriesDto(Category category);
 
-        [MapperIgnoreSource(nameof(Product.Images))]
-        [MapperIgnoreSource(nameof(Product.Variants))]
         public static partial ProductsInCategoryDto ProductToProductsInCategoryDto(Product product);
 
+        public static partial ProductImageDetailsDto ProductImageToProductImageDetailsDto(ProductImage productImage);
+
         // POST
-        [MapperIgnoreSource(nameof(Category.ParentCategory))]
-        [MapperIgnoreSource(nameof(Category.SubCategories))]
-        [MapperIgnoreSource(nameof(Category.Products))]
         public static partial CategoryCreateDto CategoryToCategoryCreateDto(Category category);
 
     }

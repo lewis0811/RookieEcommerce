@@ -1,8 +1,194 @@
-﻿@{
+﻿@using System.Globalization
+@using RookieEcommerce.Domain.Entities
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@* --- Tiêu Đề --- *@
+<div class="container">
+    <h3 class="text-center fw-bold mt-5 mb-5">SÁP VUỐT TÓC NAM TỐT NHẤT - ĐẸP TRAI, TỰ TIN TỨC THÌ.</h3>
 </div>
+
+@* --- Sắp xếp và lọc --- *@
+<div class="container">
+
+    @* --- Sắp xếp --- *@
+    <div class="d-flex fw-bold m-4 row text-center">
+        <div class="col">
+            <i class="bi bi-sort-alpha-down fs-4"></i>
+            <span class="col-form-label me-2">Sắp xếp theo:</span>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sortOption" id="sortNewest" value="createdDate desc">
+                <label class="form-check-label" for="sortNewest">Mới nhất</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sortOption" id="sortOldest" value="createdDate asc">
+                <label class="form-check-label" for="sortOldest">Cũ nhất</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sortOption" id="sortAlphaAsc" value="name asc">
+                <label class="form-check-label" for="sortAlphaAsc">Từ A-Z</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sortOption" id="sortAlphaDesc" value="name desc">
+                <label class="form-check-label" for="sortAlphaDesc">Từ Z-A</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sortOption" id="sortPriceAsc" value="price asc">
+                <label class="form-check-label" for="sortPriceAsc">Giá tăng dần</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sortOption" id="sortPriceDesc" value="price desc">
+                <label class="form-check-label" for="sortPriceDesc">Giá giảm dần</label>
+            </div>
+
+        </div>
+    </div>
+
+    @* --- Lọc --- *@
+    <div class="d-flex fw-bold m-4 row align-items-center text-center p-3" style="background-color: #ebebeb">
+
+        <div class="col-auto">
+            <i class="bi bi-filter-square"></i>
+            <span class="me-2 fw-bold">Bộ lọc:</span>
+        </div>
+
+        <div class="col-auto">
+            <div class="dropdown">
+                <button class="btn dropdown-toggle bg-transparent border-0 text-black fw-bold" href="#" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Loại sản phẩm
+                </button>
+
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-auto">
+            <div class="dropdown">
+                <button class="btn dropdown-toggle bg-transparent border-0 text-black fw-bold" href="#" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Mức giá
+                </button>
+
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+<div class="container">
+
+    <div class="row">
+        @if (Model != null)
+        {
+            @foreach (var item in Model.Products.Items)
+            {
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                    <form action="/cart/add" method="post" class="h-100" enctype="multipart/form-data">
+                        <div class="card h-100">
+
+                            @* --- Image --- *@ 
+                            @{
+                                var image = ((IEnumerable<ProductImage>)item.Images)?.FirstOrDefault(c => c.IsPrimary);
+                            }
+                                    <div class="position-relative">
+
+                                        <a href="/wax-1821" title="Wax - 1821 Man Made" class="d-block">
+                                            <img class="card-img-top img-fluid lazyload loaded"
+                                                 src="//bizweb.dktcdn.net/thumb/large/100/189/335/products/1-35f73ae9-7be8-4efc-ab6b-a3a2c3e93420.png?v=1675998098423"
+                                                 data-src="//bizweb.dktcdn.net/thumb/large/100/189/335/products/1-35f73ae9-7be8-4efc-ab6b-a3a2c3e93420.png?v=1675998098423"
+                                                 alt="Wax - 1821 Man Made"
+                                                 data-was-processed="true">
+                                        </a>
+                                    </div>
+
+                                    @* --- Detail --- *@
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title mb-2 text-center">
+                                            <a href="/wax-1821" title="${@item.Name}" class="text-decoration-none text-dark fw-light">@item.Name</a>
+                                        </h5>
+
+                                        <div class="mb-3 text-center">
+                                            <span class="text-black fw-bold">@item.Price.ToString("C", new CultureInfo("vi-VN"))</span>
+                                        </div>
+
+                                        <div class="mt-auto">
+                                            <a href="#" class="btn btn-dark w-100">Add to cart</a>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="variantId" value="23417456">
+
+                                </div>
+                            </form>
+                        </div>
+                    }
+
+                    @* --- Pagination --- *@
+                    <div class="col-12">
+                        <nav aria-label="...">
+
+                            <ul class="pagination justify-content-center">
+
+                                <li class="page-item {@Model.Products.HasPreviousPage ? disabled : null}">
+
+                                    <a class="page-link" href="#" >&lt;</a>
+
+                                </li>
+
+                                @for (int pageNumber = 1; pageNumber <= Model.Products.TotalPages; pageNumber++)
+                                {
+                                    <li class="page-item @(pageNumber == Model.Products.PageNumber ? "active" : "")">
+                                         <a class="page-link" href=@($"/Home/Index?pageNumber={pageNumber}")
+                                            @(pageNumber == Model.Products.PageNumber ? "aria-current=page" : null)
+                                         >
+                                            @pageNumber
+                                        </a>
+                                    </li>
+                                }
+
+                                <li class="page-item {@Model.Products.HasNextPage ? disabled : null}">
+
+                                    <a class="page-link" href="@(Model.Products.HasNextPage 
+                                        ? $"/Home/Index?pageNumber={Model.Products.PageNumber + 1}" 
+                                        : "#")">
+                                        &gt;
+                                    </a>
+
+                                </li>
+
+                            </ul>
+
+                        </nav>
+
+                    </div>
+
+                } else
+                {
+                    <span class="text-black text-center">Chưa có sản phẩm</span>
+                }
+
+
+
+            </div>
+
+        </div>
+
+

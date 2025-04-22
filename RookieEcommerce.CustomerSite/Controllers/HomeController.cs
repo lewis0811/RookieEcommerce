@@ -1,32 +1,25 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RookieEcommerce.CustomerSite.Models;
-using System.Diagnostics;
+using RookieEcommerce.CustomerSite.Services;
 
 namespace RookieEcommerce.CustomerSite.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(CategoryApiClient categoryApiClient, ProductApiClient productApiClient) : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        public async Task<IActionResult> IndexAsync()
         {
-            _logger = logger;
-        }
+            var categories = await categoryApiClient.GetCategoriesAsync();
+            var product = await productApiClient.GetProductsAsync();
+            var model = new HomeViewModel { Categories = categories, Products = product };
 
-        public IActionResult Index()
-        {
-            return View();
+            return View(model);
         }
-
+        // Model.Categories.Items
+        // Model.Products.Items
+        // item.Images
         public IActionResult Privacy()
         {
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
