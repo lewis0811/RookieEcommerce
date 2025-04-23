@@ -11,5 +11,12 @@ namespace RookieEcommerce.CustomerSite.Services
                 .GetFromJsonAsync<PaginationResponseDto<ProductDetailsDto>>("api/v1/products?IsIncludeItems=true");
             return products!;
         }
+
+        public async Task<ProductDetailsDto> GetProductByIdAsync(Guid productId)
+        {
+            var product = await httpClient
+                .GetFromJsonAsync<ProductDetailsDto>($"api/v1/products/{productId}");
+            return product!;
+        }
     }
 }

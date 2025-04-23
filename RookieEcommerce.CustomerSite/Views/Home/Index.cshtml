@@ -113,7 +113,7 @@
                             <div class="position-relative">
                                 @if (image != null)
                                 {
-                                    <a href="/wax-1821" title="Wax - 1821 Man Made" class="d-block">
+                                    <a asp-controller="Products" asp-action="Details" asp-route-productId="@item.Id" title="Wax - 1821 Man Made" class="d-block">
                                         <img class="card-img-top img-fluid lazyload loaded"
                                         src=@image.ImageUrl
                                         alt=@item.Name
@@ -194,8 +194,6 @@
                 {
                     <span class="text-black text-center">Chưa có sản phẩm</span>
                 }
-
-
 
             </div>
 

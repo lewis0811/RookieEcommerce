@@ -22,6 +22,7 @@ namespace RookieEcommerce.Application.Features.Products.Commands
             // Check if product already exist
             var productExist = await productRepository.AnyAsync(c => c.Name == request.Name, cancellationToken);
             if (productExist) { throw new ArgumentException($"Product name {request.Name} already exist."); }
+            
             // Create product instance
             var product = Product.Create(request.Name, request.Description, request.Price, request.CategoryId, request.Details);
 

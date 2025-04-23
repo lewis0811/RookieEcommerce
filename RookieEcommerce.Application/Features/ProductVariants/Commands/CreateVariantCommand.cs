@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Application.Mappers;
 using RookieEcommerce.Domain.Entities;
@@ -22,23 +23,24 @@ namespace RookieEcommerce.Application.Features.ProductVariants.Commands
         public async Task<ProductVariantCreateDto> Handle(CreateVariantCommand request, CancellationToken cancellationToken)
         {
             // Check if product exist
-            var productExist = await productRepository.AnyAsync(c => c.Id == request.ProductId, cancellationToken);
-            if (!productExist)
-            {
-                throw new InvalidOperationException
-                    ($"Product with ID {request.ProductId} not found.");
-            }
+            var productExist = await productRepository
+                .GetByIdAsync(request.ProductId,
+                filter => filter.Include(c => c.Variants),
+                cancellationToken)
+                ?? throw new InvalidOperationException($"Product with ID {request.ProductId} not found.");
 
             // Check if variant exist
-            var existVariant = await productVariantRepository.AnyAsync(c => c.Name.ToLowerInvariant().Equals(request.Name), cancellationToken);
+            var existVariant = await productVariantRepository.AnyAsync(c => c.Name.ToLower().Equals(request.Name), cancellationToken);
             if (existVariant) throw new InvalidOperationException($"Product variant name {request.Name} already exist.");
 
             // Create new variant entity
             var variant = ProductVariant.Create(request.ProductId, request.Name, request.Price, request.StockQuantity, request.VariantType);
 
             // Generate Sku number
-            var existingSkus = await productVariantRepository.ListAllAsync(c => c.Sku.Equals(variant.Sku), cancellationToken);
-            variant.Sku += $"-{existingSkus.Count + 1}";
+            var existingSkus = productExist.Sku;
+            var numberOfVariant = productExist.Variants.Count;
+            numberOfVariant++;
+            variant.Sku = existingSkus + "-" + numberOfVariant;
 
             // Add entity via Repository
             await productVariantRepository.AddAsync(variant, cancellationToken);

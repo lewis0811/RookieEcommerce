@@ -24,7 +24,7 @@
         public Guid ProductId { get; set; }
 
         // Navigation property
-        public Product Product { get; set; } = new Product();
+        public Product? Product { get; set; }
 
         // Methods
         public static ProductVariant Create(Guid productId, string name, decimal price, int stockQuantity, string variantType)
