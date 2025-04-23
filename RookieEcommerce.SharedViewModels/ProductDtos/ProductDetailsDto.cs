@@ -1,5 +1,7 @@
 ﻿using RookieEcommerce.Domain.Entities;
+using RookieEcommerce.SharedViewModels.CategoryDtos;
 using RookieEcommerce.SharedViewModels.ProductImageDtos;
+using RookieEcommerce.SharedViewModels.ProductVariantDtos;
 
 namespace RookieEcommerce.SharedViewModels.ProductDtos
 {
@@ -9,8 +11,8 @@ namespace RookieEcommerce.SharedViewModels.ProductDtos
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public string? Details { get; set; }
-        public Category? Category { get; set; }
+        public CategoryDetailsDto? Category { get; set; }
         public ICollection<ProductImageDetailsDto>? Images { get; set; }
-        public ICollection<ProductVariant>? Variants { get; set;}
+        public ICollection<ProductVariantDetailsDto>? Variants { get; set;}
     }
 }

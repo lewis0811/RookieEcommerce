@@ -22,7 +22,10 @@ namespace RookieEcommerce.Application.Features.Products.Queries
             // Check if the product exist
             var product = await productRepository
                 .GetByIdAsync(request.Id,
-                filter => filter.Include(c => c.Variants).Include(c => c.Images), 
+                filter => filter
+                    .Include(c => c.Category)
+                    .Include(c => c.Variants)
+                    .Include(c => c.Images), 
                 cancellationToken)
                 ?? throw new InvalidOperationException($"Product Id {request.Id} not found.");
 

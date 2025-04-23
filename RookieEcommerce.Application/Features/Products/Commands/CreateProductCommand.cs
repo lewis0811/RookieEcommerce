@@ -10,7 +10,7 @@ namespace RookieEcommerce.Application.Features.Products.Commands
     {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public decimal Price { get; set; }
+        public decimal Price { get; set; } = 1; 
         public Guid CategoryId { get; set; }
         public string? Details { get; set; }
     }
@@ -24,6 +24,10 @@ namespace RookieEcommerce.Application.Features.Products.Commands
             if (productExist) { throw new ArgumentException($"Product name {request.Name} already exist."); }
             // Create product instance
             var product = Product.Create(request.Name, request.Description, request.Price, request.CategoryId, request.Details);
+
+            // Generate Sku number
+            var existingSkus = await productRepository.ListAllAsync(c => c.Sku.Contains(product.Sku), cancellationToken);
+            product.Sku += $"-{existingSkus.Count + 1}";
 
             // Add product via Repository
             await productRepository.AddAsync(product, cancellationToken);
