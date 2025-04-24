@@ -4,17 +4,15 @@ using RookieEcommerce.SharedViewModels.ProductRatingDtos;
 
 namespace RookieEcommerce.Application.Mappers
 {
-    [Mapper]
+    [Mapper(RequiredMappingStrategy = RequiredMappingStrategy.None)]
     public static partial class ProductRatingMapper
     {
         public static partial List<ProductRatingDetailsDto> ProductRatingListToProductRatingDetailsDto(List<ProductRating> items);
         
-        [MapperIgnoreSource(nameof(Product))]
-        [MapperIgnoreSource(nameof(Customer))]
         public static partial ProductRatingDetailsDto ProductRatingToProductRatingDetailsDto(ProductRating productRating);
         
-        [MapperIgnoreSource(nameof(Product))]
-        [MapperIgnoreSource(nameof(Customer))]
         public static partial ProductRatingCreateDto ProductRatingToProductRatingCreateDto(ProductRating productRating);
+
+        public static partial ProductRating CreateProductRatingDtoToProductRating(CreateProductRatingDto dto);
     }
 }

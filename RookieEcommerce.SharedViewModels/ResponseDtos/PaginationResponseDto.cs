@@ -4,9 +4,10 @@ namespace RookieEcommerce.SharedViewModels.ResponseDtos
 {
     public class PaginationResponseDto<T>
     {
-        // Constructor không tham số
         public PaginationResponseDto()
-        { }
+        {
+            
+        }
 
         [JsonPropertyName("items")]
         public List<T> Items { get; set; }

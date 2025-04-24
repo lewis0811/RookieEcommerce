@@ -16,15 +16,15 @@ namespace RookieEcommerce.Api.Controllers
         public async Task<IActionResult> GetProductRatings([FromQuery] GetProductRatingQuery query, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(query, cancellationToken);
-            return Ok(result);
+            return Ok(result); 
         }
 
         [HttpGet("{rating-id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetProductRatingById([FromRoute] Guid ratingId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetProductRatingById([FromRoute(Name = "rating-id")] Guid ratingId, bool isIncludedItems, CancellationToken cancellationToken)
         {
-            var query = new GetProductRatingByIdQuery { Id = ratingId };
+            var query = new GetProductRatingByIdQuery { Id = ratingId, IsIncludeItems = isIncludedItems };
             var result = await mediator.Send(query, cancellationToken);
             return Ok(result);
         }
@@ -43,7 +43,7 @@ namespace RookieEcommerce.Api.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> UpdateProductRating([FromRoute] Guid ratingId, [FromBody] UpdateProductRatingCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateProductRating([FromRoute(Name = "rating-id")] Guid ratingId, [FromBody] UpdateProductRatingCommand command, CancellationToken cancellationToken)
         {
             command.Id = ratingId;
             await mediator.Send(command, cancellationToken);

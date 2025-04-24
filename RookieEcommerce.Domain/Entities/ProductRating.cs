@@ -10,9 +10,9 @@
         public Guid CustomerId { get; set; }
 
         // Navigation Properties
-        public virtual Product Product { get; set; } = new();
+        public virtual Product? Product { get; set; }
 
-        public virtual Customer Customer { get; set; } = new();
+        public virtual Customer? Customer { get; set; }
 
         public static ProductRating Create(Guid productId, Guid customerId, double ratingValue, string? comment)
         {

@@ -13,6 +13,6 @@ namespace RookieEcommerce.SharedViewModels.ProductDtos
         public string? Details { get; set; }
         public CategoryDetailsDto? Category { get; set; }
         public ICollection<ProductImageDetailsDto>? Images { get; set; }
-        public ICollection<ProductVariantDetailsDto>? Variants { get; set;}
+        public ICollection<ProductVariantDetailsDto>? Variants { get; set; }
     }
 }

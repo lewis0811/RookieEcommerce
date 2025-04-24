@@ -1,4 +1,6 @@
-﻿using RookieEcommerce.Application.Common;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using RookieEcommerce.Application.Common;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Application.Features.ProductRatings.Queries;
 using RookieEcommerce.Domain.Entities;
@@ -8,12 +10,13 @@ namespace RookieEcommerce.Infrastructure.Persistence
 {
     public class ProductRatingRepository(ApplicationDbContext context) : BaseRepository<ProductRating>(context.ProductRatings), IProductRatingRepository
     {
-        public Task<PaginationList<ProductRating>> GetPaginated(GetProductRatingQuery query)
+        public Task<PaginationList<ProductRating>> GetPaginated(GetProductRatingQuery query, Func<IQueryable<ProductRating>, IIncludableQueryable<ProductRating, object>>? include)
         {
             var instance = context.ProductRatings.AsQueryable();
 
             // Apply include query if includeProperties is not null
             instance = ApplyInclude(query, instance);
+            instance = ApplyInclude2(include, instance);
 
             // Apply filter if it is not null
             instance = ApplyFilter(query, instance);
@@ -25,6 +28,16 @@ namespace RookieEcommerce.Infrastructure.Persistence
             instance = ApplySort(query, instance);
 
             return Task.FromResult(PaginationList<ProductRating>.Create(instance, query.PageSize, query.PageNumber));
+        }
+
+        private static IQueryable<ProductRating> ApplyInclude2(Func<IQueryable<ProductRating>, IIncludableQueryable<ProductRating, object>>? include, IQueryable<ProductRating> instance)
+        {
+            if (include != null)
+            {
+                instance = include(instance);
+            }
+
+            return instance;
         }
 
         private static IQueryable<ProductRating> ApplySort(GetProductRatingQuery query, IQueryable<ProductRating> instance)

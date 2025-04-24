@@ -54,7 +54,8 @@ namespace RookieEcommerce.Application.Features.ProductRatings.Commands
                 request.CustomerId,
                 filter => filter
                     .Include(c => c.Orders)
-                        .ThenInclude(c => c.OrderItems),
+                        .ThenInclude(c => c.OrderItems)
+                            .ThenInclude(c => c.ProductVariant!),
                 cancellationToken);
             if (customerExist == null) { throw new InvalidOperationException($"Customer Id {request.ProductId} not found."); }
             // check if the customer has bought the product.
