@@ -25,14 +25,16 @@ namespace RookieEcommerce.Application.Features.Orders.Queries
             Func<IQueryable<Order>, IIncludableQueryable<Order, object>>? includeExpression = null;
             if ( request.IsIncludeItems)
             {
-                includeExpression = query => query.Include(c => c.OrderItems).ThenInclude(c => c.ProductVariant);
+                includeExpression = query => query
+                    .Include(c => c.OrderItems!)
+                        .ThenInclude(c => c.ProductVariant!);
             }
 
             // Get order via repository
             var order = await orderRepository.GetByAttributeAsync(c => c.CustomerId == request.CustomerId,
                 includeExpression,
                 cancellationToken) 
-                ?? throw new InvalidOperationException("Order not found");
+                ?? throw new InvalidOperationException($"Customer Id {request.CustomerId} doesn't have any order.");
 
             // Mapping to dto and return
             return OrderMapper.OrderToOrderDetailsDto(order);

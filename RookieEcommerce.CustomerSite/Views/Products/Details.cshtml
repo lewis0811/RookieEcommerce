@@ -5,9 +5,17 @@
     ViewData["Title"] = Model.ProductDetails.Name;
     var productDetails = Model.ProductDetails;
     var productRatings = Model.ProductRatings;
+
     var createModel = Model.CreateProductRating;
     createModel.ProductId = productDetails.Id;
     createModel.CustomerId = productRatings.Items[0].CustomerId; // Change to get from cookie later
+
+    var orderItem = Model.OrderDetails!.OrderItems!.FirstOrDefault(c => c.ProductId == productDetails.Id);
+    var idToFind = orderItem!.ProductVariantId != null
+        ? orderItem.ProductVariantId 
+        : productDetails.Id;
+
+    var totalRating = Math.Round(productRatings.Items.Select(c => c.RatingValue).Average(), 1);
 }
 
 <div class="container mt-5">
@@ -34,7 +42,7 @@
             }
         </div>
 
-        @* LEFT COL: PRODUCT DETAILS*@
+        @* Right col: Product details*@
         <div class="col-md-6">
             <h3 class="mb-3">@productDetails.Name</h3>
 
@@ -106,7 +114,7 @@
         </div>
     </div>
 
-    @* Product details *@
+    @* Product details and ratings *@
     <nav class="text-center">
         <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
             <button class="nav-link active text-black-50 fw-bold" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">THÔNG TIN SẢN PHẨM</button>
@@ -114,6 +122,7 @@
         </div>
 
         <div class="tab-content" id="nav-tabContent">
+            @* Product details *@
             <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                 @if (!string.IsNullOrEmpty(productDetails.Details))
                 {
@@ -131,11 +140,11 @@
             @* Product rating *@
             <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                 <div class="container py-4">
-                    
+
                     @* Total rating - Refined *@
                     <div class="d-flex align-items-center mb-4 justify-content-center">
                         <span class="text-warning h4 mb-0 me-2">⭐</span>
-                        <span class="h4 mb-0 me-2">@productRatings.Items.Select(c => c.RatingValue).Average() /5</span>
+                        <span class="h4 mb-0 me-2">@totalRating /5</span>
                         <span class="text-muted mb-0">(@productRatings.Items.Count đánh giá)</span>
                     </div>
 
@@ -149,6 +158,18 @@
                                     <div class="d-flex align-items-center mb-1">
                                         <strong class="me-auto">@item.Customer!.FirstName @item.Customer.LastName</strong>
                                         <small class="text-muted">@item.CreatedDate</small>
+                                    </div>
+                                    <div class="d-flex align-items-start mb-1">
+                                        @{
+                                            var matchedType = item.Product!.Variants!.FirstOrDefault(c => c.Id == idToFind)?.Name
+                                                            ?? item.Product.Name;
+
+                                            // Prevent case matchedType equal product's name
+                                            var responseType = matchedType != item.Product.Name
+                                                ? item.Product.Name + " - " + matchedType
+                                                : matchedType;
+                                        }
+                                        <small class="text-muted">Phân loại: @responseType</small>
                                     </div>
                                     <div class="text-warning text-center">
                                         @for (int i = 1; i <= 5; i++)

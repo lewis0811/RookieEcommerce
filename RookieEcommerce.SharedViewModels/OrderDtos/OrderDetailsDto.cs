@@ -1,5 +1,6 @@
 ﻿using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.Domain.Enums;
+using RookieEcommerce.SharedViewModels.OrderItemDtos;
 
 namespace RookieEcommerce.SharedViewModels.OrderDtos
 {
@@ -20,6 +21,6 @@ namespace RookieEcommerce.SharedViewModels.OrderDtos
         // Foreign Key
         public Guid CustomerId { get; set; }
 
-        public virtual ICollection<OrderItem> OrderItems { get; set; } = [];
+        public virtual ICollection<OrderItemDetailsDto>? OrderItems { get; set; }
     }
 }

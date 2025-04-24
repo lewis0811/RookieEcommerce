@@ -18,6 +18,8 @@ namespace RookieEcommerce.CustomerSite
                 .ConfigureRookieEcommerceApi(configuration);
             services.AddHttpClient<ProductRatingApiClient>()
                 .ConfigureRookieEcommerceApi(configuration);
+            services.AddHttpClient<OrderApiClient>()
+                .ConfigureRookieEcommerceApi(configuration);
             return services;
         }
 

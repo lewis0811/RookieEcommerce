@@ -5,7 +5,10 @@ using RookieEcommerce.SharedViewModels.ProductRatingDtos;
 
 namespace RookieEcommerce.CustomerSite.Controllers
 {
-    public class ProductsController(ProductApiClient productApiClient, ProductRatingApiClient productRatingApiClient) : Controller
+    public class ProductsController(
+        ProductApiClient productApiClient,
+        ProductRatingApiClient productRatingApiClient,
+        OrderApiClient orderApiClient) : Controller
     {
         public IActionResult Index()
         {
@@ -21,8 +24,9 @@ namespace RookieEcommerce.CustomerSite.Controllers
 
             var product = await productApiClient.GetProductByIdAsync(productId);
             var rating = await productRatingApiClient.GetProductRatingsAsync(productId);
+            var order = await orderApiClient.GetOrderItemAsync(rating.Items.FirstOrDefault().CustomerId); // Change to get customerId from cookie later // Please check if customer have order please Lewis
 
-            return View(new HomeProductDetailsViewModel { ProductDetails = product, ProductRatings = rating});
+            return View(new HomeProductDetailsViewModel { ProductDetails = product, ProductRatings = rating, OrderDetails = order});
         }
 
         [HttpPost]
