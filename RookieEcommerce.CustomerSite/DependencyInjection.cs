@@ -14,8 +14,9 @@ namespace RookieEcommerce.CustomerSite
             // Register HttpClient
             services.AddHttpClient<ProductApiClient>()
                 .ConfigureRookieEcommerceApi(configuration);
-
             services.AddHttpClient<CategoryApiClient>()
+                .ConfigureRookieEcommerceApi(configuration);
+            services.AddHttpClient<ProductRatingApiClient>()
                 .ConfigureRookieEcommerceApi(configuration);
             return services;
         }

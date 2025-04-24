@@ -1,21 +1,26 @@
 ﻿@using System.Globalization
-@model RookieEcommerce.SharedViewModels.ProductDtos.ProductDetailsDto
+@model RookieEcommerce.CustomerSite.Models.HomeProductDetailsViewModel
 
 @{
-    ViewData["Title"] = Model.Name; // Đặt tiêu đề trang là tên sản phẩm
+    ViewData["Title"] = Model.ProductDetails.Name;
+    var productDetails = Model.ProductDetails;
+    var productRatings = Model.ProductRatings;
+    var createModel = Model.CreateProductRating;
+    createModel.ProductId = productDetails.Id;
+    createModel.CustomerId = productRatings.Items[0].CustomerId; // Change to get from cookie later
 }
 
 <div class="container mt-5">
     <div class="row mb-3">
         @* Left col: Product images*@
         <div class="col-md-6">
-            @if (Model.Images != null && Model.Images.Any())
+            @if (productDetails.Images != null && productDetails.Images.Any())
             {
                 @* Show first image to be base image *@
-                <img src="@Model.Images.FirstOrDefault()?.ImageUrl" class="img-fluid rounded" alt="@Model.Name" width="500" height="500" />
+                <img src="@productDetails.Images.FirstOrDefault()?.ImageUrl" class="img-fluid rounded" alt="@productDetails.Name" width="500" height="500" />
 
                 <div class="row mt-3">
-                    @foreach (var image in Model.Images.OrderBy(c => c.SortOrder))
+                    @foreach (var image in productDetails.Images.OrderBy(c => c.SortOrder))
                     {
                         <div class="col-3 col-md-2 mb-3">
                             <img src="@image.ImageUrl" class="img-thumbnail" alt="Product thumbnail" style="cursor: pointer;" />
@@ -25,19 +30,19 @@
             }
             else
             {
-                <img src="https://via.placeholder.com/500x500?text=No+Image" class="img-fluid rounded" alt="@Model.Name" />
+                <img src="https://via.placeholder.com/500x500?text=No+Image" class="img-fluid rounded" alt="@productDetails.Name" />
             }
         </div>
 
         @* LEFT COL: PRODUCT DETAILS*@
         <div class="col-md-6">
-            <h3 class="mb-3">@Model.Name</h3>
+            <h3 class="mb-3">@productDetails.Name</h3>
 
             @* Product price *@
             <div class="mb-3">
                 <h3>
                     <span style="color: #ffac4b; font-size: 30px; font-weight: 900">
-                        @Model.Price.ToString("C", new CultureInfo("vi-VN"))
+                        @productDetails.Price.ToString("C", new CultureInfo("vi-VN"))
                     </span>
                 </h3>
             </div>
@@ -45,21 +50,21 @@
             <hr/>
 
             @* Categories *@
-            @if (Model.Category != null)
+            @if (productDetails.Category != null)
             {
-                <p class="text-muted">Danh mục: @Model.Category.Name</p>
+                <p class="text-muted">Danh mục: @productDetails.Category.Name</p>
             }
 
             @* Description *@
             <div class="mb-3">
                 <h5>Mô tả:</h5>
-                <p class="form-text">@Model.Description</p>
+                <p class="form-text">@productDetails.Description</p>
             </div>
 
             @* Product varians*@
-            @if (Model.Variants != null && Model.Variants.Any())
+            @if (productDetails.Variants != null && productDetails.Variants.Any())
             {
-                var variantGroups = Model.Variants.GroupBy(c => c.VariantType);
+                var variantGroups = productDetails.Variants.GroupBy(c => c.VariantType);
 
                 foreach(var group in variantGroups)
                 {
@@ -97,6 +102,7 @@
                     Thêm vào giỏ hàng
                 </button>
             </div>
+
         </div>
     </div>
 
@@ -109,9 +115,9 @@
 
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                @if (!string.IsNullOrEmpty(Model.Details))
+                @if (!string.IsNullOrEmpty(productDetails.Details))
                 {
-                    <div class="mb-3">@Html.Raw(Model.Details)</div>
+                    <div class="mb-3">@Html.Raw(productDetails.Details)</div>
                 }
 
                 else
@@ -125,72 +131,81 @@
             @* Product rating *@
             <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                 <div class="container py-4">
+                    
+                    @* Total rating - Refined *@
+                    <div class="d-flex align-items-center mb-4 justify-content-center">
+                        <span class="text-warning h4 mb-0 me-2">⭐</span>
+                        <span class="h4 mb-0 me-2">@productRatings.Items.Select(c => c.RatingValue).Average() /5</span>
+                        <span class="text-muted mb-0">(@productRatings.Items.Count đánh giá)</span>
+                    </div>
 
+                    @* Customer rating *@
                     <div class="row ">
                         <div class="col-md-8">
                             <h4 class="text-center">Đánh giá của khách</h4>
-                            <div class="border-bottom pb-2 mb-3 mt-3">
-                                <div class="d-flex align-items-center mb-1">
-                                    <strong class="me-auto">Nguyễn Văn A</strong>
-                                    <small class="text-muted">Ngày 20/10/2023</small>
+                            @foreach (var item in productRatings.Items)
+                            {
+                                <div class="border-bottom pb-2 mb-3 mt-3">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <strong class="me-auto">@item.Customer!.FirstName @item.Customer.LastName</strong>
+                                        <small class="text-muted">@item.CreatedDate</small>
+                                    </div>
+                                    <div class="text-warning text-center">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= item.RatingValue)
+                                            {
+                                                <i class="bi bi-star-fill"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-star"></i>
+                                            }
+                                        }
+                                    </div>
+                                    <p class="mb-0 text-center">@item.Comment</p>
                                 </div>
-                                <div class="text-warning">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                </div>
-                                <p class="mb-0">Sản phẩm rất tốt, đúng như mô tả. Giao hàng nhanh chóng.</p>
-                            </div>
-
-                            <div class="border-bottom pb-2 mb-3">
-                                <div class="d-flex align-items-center mb-1">
-                                    <strong class="me-auto">Trần Thị B</strong>
-                                    <small class="text-muted">Ngày 19/10/2023</small>
-                                </div>
-                                <div class="text-warning">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-half"></i>
-                                    <i class="bi bi-star"></i>
-                                </div>
-                                <p class="mb-0">Sản phẩm dùng ổn, nhưng đóng gói hơi sơ sài. Hy vọng lần sau tốt hơn.</p>
-                            </div>
+                            }
                         </div>
 
+                        @* Rating form *@
                         <div class="col-md-4 border-start">
-                            <h5 class="text-center">Viết đánh giá của bạn</h5>
-                            <form>
-                                <div class="mb-3">
-                                    <p for="reviewerName" class="form-label">Đánh giá</p>
-                                    <div class="star-rating animated-stars">
-                                        <input type="radio" id="star5" name="rating" value="5">
-                                        <label for="star5" class="bi bi-star-fill"><span hidden>5</span></label>
-                                        <input type="radio" id="star4" name="rating" value="4">
-                                        <label for="star4" class="bi bi-star-fill"><span hidden>4</span></label>
-                                        <input type="radio" id="star3" name="rating" value="3">
-                                        <label for="star3" class="bi bi-star-fill"><span hidden>3</span></label>
-                                        <input type="radio" id="star2" name="rating" value="2">
-                                        <label for="star2" class="bi bi-star-fill"><span hidden>2</span></label>
-                                        <input type="radio" id="star1" name="rating" value="1">
-                                        <label for="star1" class="bi bi-star-fill"><span hidden>1</span></label>
+                            <form asp-controller="Products" asp-action="Rating" method="post" >
+                                <h4 class="text-center">Viết đánh giá của bạn</h4>
+                                    <div class="mb-3">
+                                        <p class="form-label">Đánh giá</p>
+                                        <div class="star-rating animated-stars">
+                                            <input asp-for=CreateProductRating.CustomerId value=@createModel.CustomerId hidden/>
+                                            <input asp-for=CreateProductRating.ProductId value=@createModel.ProductId hidden />
+
+                                            <input type="radio" id="star5" asp-for=CreateProductRating.RatingValue value="5">
+                                            <label for="star5" class="bi bi-star-fill"><span hidden>5</span></label>
+                                            <input type="radio" id="star4" asp-for=CreateProductRating.RatingValue value="4">
+                                            <label for="star4" class="bi bi-star-fill"><span hidden>4</span></label>
+                                            <input type="radio" id="star3" asp-for=CreateProductRating.RatingValue value="3">
+                                            <label for="star3" class="bi bi-star-fill"><span hidden>3</span></label>
+                                            <input type="radio" id="star2" asp-for=CreateProductRating.RatingValue value="2">
+                                            <label for="star2" class="bi bi-star-fill"><span hidden>2</span></label>
+                                            <input type="radio" id="star1" asp-for=CreateProductRating.RatingValue value="1">
+                                            <label for="star1" class="bi bi-star-fill"><span hidden>1</span></label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="reviewText" class="form-label">Nội dung đánh giá</label>
-                                    <textarea class="form-control" id="reviewText" rows="4" required></textarea>
-                                </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nội dung đánh giá
+                                            <textarea asp-for=CreateProductRating.Comment class="form-control" rows="4" required></textarea>
+                                        </label>
+                                    </div>
                                 <button type="submit" class="btn btn-primary mt-2">Gửi đánh giá</button>
                             </form>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </nav>
 </div>
+
 @section Scripts {
     @* Product detail image script *@
     <script>
