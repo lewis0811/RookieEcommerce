@@ -1,0 +1,217 @@
+﻿﻿@using System.Globalization
+@model CartViewModel
+@{
+	var cart = Model.CartDetails!;
+	decimal totalPrice = (decimal)cart.TotalPrice!;
+}
+
+<section class="py-4" id="cartIndex" data-cart-id="@cart.Id">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<div class="mb-3">
+					<h1>
+						<span>Giỏ hàng của bạn</span>
+					</h1>
+					<div class="d-none d-sm-block">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row d-none d-sm-flex">
+			<div class="col-12">
+					<div class="table-responsive">
+						<table class="table table-bordered table-striped">
+							<thead class="thead-light">
+								<tr>
+									<th style="width: 18%" class="text-center">Ảnh sản phẩm</th>
+									<th style="width: 32%" class="text-center">Tên sản phẩm</th>
+									<th style="width: 17%" class="text-center">Đơn giá</th>
+									<th style="width: 14%" class="text-center">Số lượng</th>
+									<th style="width: 14%" class="text-center">Thành tiền</th>
+									<th style="width: 5%" class="text-center">Xóa</th>
+								</tr>
+							</thead>
+							<tbody>
+								@if (cart!.Items != null && cart.Items.Count > 0)
+								{
+									@foreach(var item in cart.Items)
+									{
+										@* --- Initialize value --- *@
+											var productImage = item.Product?.Images?.FirstOrDefault(c => c.IsPrimary)?.ImageUrl;
+											var productName = item.Product?.Name;
+											var productVariantName = item.ProductVariant?.Name;
+											decimal productPrice = item.ProductVariant != null
+												? item.ProductVariant.Price
+												: (decimal)item.Product?.Price!;
+										decimal lineTotal = (decimal)item.LineTotal!;
+										@* --- end --- *@
+
+
+										<tr>
+											<td style="width: 18%" class="align-middle text-center">
+												<a class="product-image" title="@productName" href="/clay-1821">
+													<img width="75"  alt="@productName" src="@productImage">
+												</a>
+											</td>
+											<td style="width: 32%" class="align-middle text-center">
+												<h3> <a href="/clay-1821" title="@productName">@productName</a> </h3>
+												@if(productVariantName != null)
+												{
+													<span>@productVariantName</span>
+												}
+											</td>
+											<td style="width: 17%" class="align-middle text-center">
+												<span>
+													<span class="price">@productPrice.ToString("C", new CultureInfo("vi-VN"))</span>
+												</span>
+											</td>
+											<td style="width: 14%" class="align-middle text-center">
+											<div class="input-group input-group-sm justify-content-center" data-item-id="@item.Id">
+													<button class="btn btn-outline-secondary btn-minus" type="submit">-</button>
+												<input type="number" min="0" class="form-control text-center cart-item-quantity" value="@item.Quantity" style="max-width: 60px;">
+													<button class="btn btn-outline-secondary btn-plus" type="submit">+</button>
+												</div>
+											</td>
+											<td style="width: 14%" class="align-middle text-center">
+												<span>
+													<span class="price">@lineTotal.ToString("C", new CultureInfo("vi-VN"))</span>
+												</span>
+											</td>
+											<td style="width: 5%" class="align-middle text-center">
+												<form asp-controller="Cart" asp-action="HandleCartItem" method="post" class="mb-0">
+													<input type="hidden" name="cartItemId" value="@item.Id" />
+													<button class="text-danger" type="submit">
+														<span><i class="bi bi-trash-fill"></i></span>
+													</button>
+												</form>
+											</td>
+										 </tr>
+									}
+								} 
+							</tbody>
+						</table>
+					</div>
+
+				<div class="row mt-3">
+					<div class="col-md-7">
+						<a href="/" class="btn btn-secondary">Tiếp tục mua hàng</a>
+					</div>
+					<div class="col-md-5">
+						<div class="text-end">
+							<div>
+								<h4>Tổng tiền thanh toán: </h4>
+								<span class="text-right fw-bold fs-4">@totalPrice.ToString("C", new CultureInfo("vi-VN"))</span>
+							</div>
+						</div>
+						<div class="mt-3 text-end">
+							<a asp-action="Checkout"  class="btn btn-primary btn-block">Tiến hành thanh toán</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+@section Scripts {
+	@* Number input spinner  & PUT Method*@
+	<script>
+		$(function() {
+			const $btnMinus = $('.btn-minus');
+			const $btnPlus = $('.btn-plus');
+			const cartId = $('#cartIndex').data('cart-id');
+
+			// --- Hàm gửi yêu cầu PUT ---
+		function updateCartItem(itemId, newQuantity) {
+			if (!cartId) {
+				 console.error('Không tìm thấy Cart ID!');
+				 return; // Dừng nếu không có cartId
+			}
+
+			const baseUrl = 'https://localhost:7143';
+			const updateUrl = `${baseUrl}/api/v1/carts/${cartId}/items/${itemId}`;
+
+			$.ajax({
+				url: updateUrl,
+				method: 'PUT', // Sử dụng phương thức PUT
+				contentType: 'application/json', // Kiểu nội dung gửi đi
+				data: JSON.stringify({ quantity: newQuantity }), // Dữ liệu gửi đi (khớp với curl)
+				success: function(response) {
+					// Xử lý khi thành công
+					console.log('Cập nhật thành công:', response);
+					location.reload();
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					// Xử lý khi có lỗi
+					console.error('Lỗi cập nhật:', textStatus, errorThrown, jqXHR.responseText);
+					let errorMsg = `Lỗi khi cập nhật sản phẩm ${itemId}. Vui lòng thử lại.`;
+					if(jqXHR.responseText) {
+						try {
+							// Thử parse lỗi từ server nếu có response body
+							const errorResponse = JSON.parse(jqXHR.responseText);
+							errorMsg += ` (Server: ${errorResponse.message || jqXHR.statusText})`;
+						} catch (e) {
+							 errorMsg += ` (Status: ${jqXHR.status} ${errorThrown})`;
+						}
+					} else {
+						 errorMsg += ` (Status: ${jqXHR.status} ${errorThrown})`;
+					}
+				}
+			});
+		}
+
+			// --- Handle minus button ---
+		$btnMinus.on('click', function() {
+			// 'this' refers to the specific button that was clicked.
+			const $inputGroup = $(this).closest('.input-group');
+			const $currentQuantityInput = $inputGroup.find('input[type="number"]');
+			const itemId = $inputGroup.data('item-id');
+
+			if ($currentQuantityInput.length && itemId) {
+				const currentValue = parseInt($currentQuantityInput.val(), 10);
+				const minValue = parseInt($currentQuantityInput.attr('min') || '0', 10);
+
+				if (currentValue > minValue) {
+						$currentQuantityInput[0].stepDown();
+						const newQuantity = $currentQuantityInput.val();
+						updateCartItem(itemId, newQuantity);
+				} else {
+					console.log("Đã đạt giá trị tối thiểu.");
+					// Optional: Logic xóa item nếu về 0
+				}
+			}
+		});
+
+		// --- Handle plus button ---
+		$btnPlus.on('click', function() {
+			// 'this' refers to the specific button that was clicked.
+			const $inputGroup = $(this).closest('.input-group');
+			const $currentQuantityInput = $inputGroup.find('input[type="number"]');
+			const itemId = $inputGroup.data('item-id'); // Lấy ID item
+
+			if ($currentQuantityInput.length && itemId) {
+				$currentQuantityInput[0].stepUp(); // Tăng giá trị input
+				const newQuantity = $currentQuantityInput.val(); // Lấy giá trị mới
+				updateCartItem(itemId, newQuantity); // Gọi hàm cập nhật
+			}
+		});
+
+		// --- Handle manual input cáe---
+		$('.cart-item-quantity').on('change', function() {
+				const $currentQuantityInput = $(this);
+				const $inputGroup = $currentQuantityInput.closest('.input-group');
+				const itemId = $inputGroup.data('item-id');
+				const newQuantity = $currentQuantityInput.val();
+				const minValue = parseInt($currentQuantityInput.attr('min'));
+
+				// Check validation
+				if (itemId && !isNaN(newQuantity) && parseInt(newQuantity, 10) >= minValue) {
+					updateCartItem(itemId, parseInt(newQuantity, 10));
+				}
+		});
+	});
+	</script>
+
+}

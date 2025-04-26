@@ -20,6 +20,10 @@ namespace RookieEcommerce.CustomerSite
                 .ConfigureRookieEcommerceApi(configuration);
             services.AddHttpClient<OrderApiClient>()
                 .ConfigureRookieEcommerceApi(configuration);
+            services.AddHttpClient<CartApiClient>()
+                .ConfigureRookieEcommerceApi(configuration);
+            services.AddHttpClient<CartItemApiClient>()
+    .ConfigureRookieEcommerceApi(configuration);
             return services;
         }
 
