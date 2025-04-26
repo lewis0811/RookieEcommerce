@@ -50,7 +50,7 @@ namespace RookieEcommerce.Application.Features.CartItems.Queries.Command
             if (cartItem != null)
             {
                 // Update existing item quantity
-                cartItem.Update(request.Quantity);
+                cartItem.UpdateExist(request.Quantity);
             }
             else
             {

@@ -4,7 +4,7 @@ using RookieEcommerce.Application.Features.CartItems.Queries.Command;
 
 namespace RookieEcommerce.Api.Controllers
 {
-    [Route("api/v{version:apiVersion}/{cart-id}/items")]
+    [Route("api/v{version:apiVersion}/carts/{cart-id}/items")]
     [ApiController]
     public class CartItemsController(IMediator mediator) : ControllerBase
     {

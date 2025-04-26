@@ -22,7 +22,12 @@ namespace RookieEcommerce.Application.Features.Carts.Queries
             Func<IQueryable<Cart>, IIncludableQueryable<Cart, object>>? includeExpression = null;
             if (request.IsIncludeItems)
             {
-                includeExpression = query => query.Include(c => c.Items);
+                includeExpression = query => query
+                    .Include(c => c.Items)
+                        .ThenInclude(c => c.Product)
+                            .ThenInclude(c => c!.Images)
+                    .Include(c => c.Items)
+                        .ThenInclude(c => c.ProductVariant!);
             }
 
             // Get cart via repository

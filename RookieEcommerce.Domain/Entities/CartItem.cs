@@ -28,10 +28,17 @@
             };
         }
 
-        public void Update(int quantity)
+        public void UpdateExist(int quantity)
         {
-            if (quantity != Quantity) { Quantity = quantity; }
+            Quantity += quantity;
             ModifiedDate = DateTime.Now;
         }
+
+        public void Update(int quantity)
+        {
+            if (Quantity != quantity) { Quantity = quantity; }
+            ModifiedDate = DateTime.Now;
+        }
+
     }
 }

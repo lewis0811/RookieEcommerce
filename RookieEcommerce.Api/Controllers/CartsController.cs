@@ -27,9 +27,9 @@ namespace RookieEcommerce.Api.Controllers
 
         // GET: api/carts
         [HttpGet]
-        public async Task<IActionResult> GetCartByCustomer([FromQuery(Name = "customer-id")] Guid customerId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCartByCustomer([FromQuery(Name = "customer-id")] Guid customerId, bool isIncludeItems, CancellationToken cancellationToken)
         {
-            var query = new GetCartByCustomerIdQuery { CustomerId = customerId };
+            var query = new GetCartByCustomerIdQuery { CustomerId = customerId, IsIncludeItems = isIncludeItems };
             var result = await mediator.Send(query, cancellationToken);
             return Ok(result);
         }

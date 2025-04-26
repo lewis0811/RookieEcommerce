@@ -27,8 +27,8 @@ namespace RookieEcommerce.Application.Features.CartItems.Queries.Command
             var cart = await _cartRepository.GetByIdAsync(
                 request.CartId,
                 c => c
-                    .Include(c => c.Items)
-                        .ThenInclude(i => i.ProductVariant),
+                    .Include(c => c.Items!)
+                        .ThenInclude(i => i.ProductVariant!),
                 cancellationToken
              )
                 ?? throw new InvalidOperationException($"Cart Id {request.CartId} not found.");
