@@ -12,5 +12,7 @@ namespace RookieEcommerce.Application.Mappers
         public static partial OrderCreateDto OrderToOrderCreateDto(Order order);
 
         public static partial ICollection<OrderItem> ListOrderItemDtoToListOrderItem(List<CreateOrderItemDto> orderItems);
+
+        public static partial CreateOrderDto CreateOrderDtoToOrder(CreateOrderDto dto);
     }
 }

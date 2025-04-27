@@ -11,12 +11,14 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.15" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.15" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.4" />
     <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="6.2.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RookieEcommerce.Application\RookieEcommerce.Application.csproj" />
+    <ProjectReference Include="..\RookieEcommerce.Domain\RookieEcommerce.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,5 +11,11 @@ namespace RookieEcommerce.CustomerSite.Services
 
             return orderItem!;
         }
+
+        public async Task CreateOrderAsync(CreateOrderDto dto)
+        {
+            var response = await httpClient.PostAsJsonAsync("api/v1/orders", dto);
+            response.EnsureSuccessStatusCode();
+        }
     }
 }
