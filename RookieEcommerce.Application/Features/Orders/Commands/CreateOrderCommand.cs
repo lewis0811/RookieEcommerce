@@ -9,6 +9,7 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
 {
     public class CreateOrderCommand : IRequest<OrderCreateDto>
     {
+        public string Email { get; set; }
         public Guid CustomerId { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public Address ShippingAddress { get; set; } = new();
@@ -18,7 +19,8 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
     public class CreateOrderCommandHandler(IUnitOfWork unitOfWork,
         IOrderRepository orderRepository, 
         IProductVariantRepository productVariantRepository,
-        IProductRepository productRepository) 
+        IProductRepository productRepository,
+        IEmailService emailService)
         : IRequestHandler<CreateOrderCommand, OrderCreateDto>
     {
         public async Task<OrderCreateDto> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
@@ -78,6 +80,9 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
 
             // Save changes
             await unitOfWork.SaveChangesAsync(cancellationToken);
+
+            // Send Order Confirmation Email
+            await emailService.SendEmailAsync(request.Email, "Order Confirmation", "Your order has been placed successfully!");
 
             // Map to DTO and return
             var orderDto = OrderMapper.OrderToOrderCreateDto(order);

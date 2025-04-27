@@ -63,7 +63,8 @@ namespace RookieEcommerce.Application.Features.ProductRatings.Commands
             {
                 var orderItems = customerExist.Orders
                     .SelectMany(c => c.OrderItems).Select(c => c.ProductVariant)
-                    .Any(c => c.ProductId == request.ProductId);
+                    .Where(c => c != null)
+                    .Any(c => c!.ProductId == request.ProductId);
                 if (!orderItems)
                 {
                     throw new InvalidOperationException($"Customer hadn't bought a product Id{request.ProductId}.");
