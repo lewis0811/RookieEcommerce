@@ -19,6 +19,7 @@
     <PackageReference Include="OpenIddict.AspNetCore" Version="6.2.0" />
     <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="6.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="VNPAY.NET" Version="8.5.0" />
   </ItemGroup>
 
   <ItemGroup>

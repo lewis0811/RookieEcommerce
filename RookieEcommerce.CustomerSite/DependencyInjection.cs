@@ -23,7 +23,9 @@ namespace RookieEcommerce.CustomerSite
             services.AddHttpClient<CartApiClient>()
                 .ConfigureRookieEcommerceApi(configuration);
             services.AddHttpClient<CartItemApiClient>()
-    .ConfigureRookieEcommerceApi(configuration);
+                .ConfigureRookieEcommerceApi(configuration);
+            services.AddHttpClient<VnPayApiClient>()
+                .ConfigureRookieEcommerceApi(configuration);
             return services;
         }
 

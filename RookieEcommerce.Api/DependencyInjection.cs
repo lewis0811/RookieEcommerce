@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using RookieEcommerce.Api.Configurations;
 using RookieEcommerce.Infrastructure;
+using VNPAY.NET;
 
 namespace RookieEcommerce.Api
 {
@@ -83,6 +84,9 @@ namespace RookieEcommerce.Api
                 });
             });
 
+            // --- Add Vnpay Service ---
+            services.AddScoped<IVnpay, Vnpay>();
+
             return services;
         }
 
@@ -101,38 +105,6 @@ namespace RookieEcommerce.Api
             .AddEntityFrameworkStores<ApplicationDbContext>() // This method is defined in Microsoft.AspNetCore.Identity.EntityFrameworkCore
             .AddDefaultTokenProviders();
 
-            // --- Add OpenIddict ---
-            services.AddOpenIddict()
-                .AddCore(options =>
-                {
-                    options.UseEntityFrameworkCore()
-                           .UseDbContext<ApplicationDbContext>();
-                })
-                .AddServer(options =>
-                {
-                    options.SetAuthorizationEndpointUris("/connect/authorize")
-                           .SetTokenEndpointUris("/connect/token")
-                           .SetUserInfoEndpointUris("/connect/userinfo");
-
-                    options.AllowAuthorizationCodeFlow().RequireProofKeyForCodeExchange();
-                    options.AllowClientCredentialsFlow();
-                    options.AllowRefreshTokenFlow();
-
-                    options.AddDevelopmentEncryptionCertificate()
-                           .AddDevelopmentSigningCertificate();
-
-                    options.UseAspNetCore()
-                           .EnableAuthorizationEndpointPassthrough()
-                           .EnableTokenEndpointPassthrough()
-                           .EnableUserInfoEndpointPassthrough();
-
-                    options.RegisterScopes("openid", "profile", "email", "roles", "api");
-                })
-                .AddValidation(options =>
-                {
-                    options.UseLocalServer();
-                    options.UseAspNetCore();
-                });
 
             return services;
         }
