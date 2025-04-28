@@ -10,7 +10,7 @@ namespace RookieEcommerce.Infrastructure.Persistence
 {
     public class CategoryRepository(ApplicationDbContext context) : BaseRepository<Category>(context.Categories), ICategoryRepository
     {
-        public Task<PaginationList<Category>> GetPaginated(GetCategoriesQuery query, Func<IQueryable<Category>, IIncludableQueryable<Category, object>>? include = null)
+        public Task<PaginationList<Category>> GetPaginated(GetPCategoriesQuery query, Func<IQueryable<Category>, IIncludableQueryable<Category, object>>? include = null)
         {
             var categories = context.Categories.AsQueryable();
 
@@ -40,7 +40,7 @@ namespace RookieEcommerce.Infrastructure.Persistence
             return categories;
         }
 
-        private static IQueryable<Category> ApplySort(GetCategoriesQuery query, IQueryable<Category> categories)
+        private static IQueryable<Category> ApplySort(GetPCategoriesQuery query, IQueryable<Category> categories)
         {
             if (!string.IsNullOrEmpty(query.SortBy))
             {
@@ -50,7 +50,7 @@ namespace RookieEcommerce.Infrastructure.Persistence
             return categories;
         }
 
-        private static IQueryable<Category> ApplySearch(GetCategoriesQuery query, IQueryable<Category> categories)
+        private static IQueryable<Category> ApplySearch(GetPCategoriesQuery query, IQueryable<Category> categories)
         {
             if (query.SearchTerm != null)
             {
@@ -61,7 +61,7 @@ namespace RookieEcommerce.Infrastructure.Persistence
             return categories;
         }
 
-        private static IQueryable<Category> ApplyFilter(GetCategoriesQuery query, IQueryable<Category> categories)
+        private static IQueryable<Category> ApplyFilter(GetPCategoriesQuery query, IQueryable<Category> categories)
         {
             if (query.ParentCategoryId != null)
             {
@@ -71,7 +71,7 @@ namespace RookieEcommerce.Infrastructure.Persistence
             return categories;
         }
 
-        private static IQueryable<Category> ApplyInclude(GetCategoriesQuery query, IQueryable<Category> categories)
+        private static IQueryable<Category> ApplyInclude(GetPCategoriesQuery query, IQueryable<Category> categories)
         {
             if (!string.IsNullOrEmpty(query.IncludeProperties))
             {

@@ -8,6 +8,6 @@ namespace RookieEcommerce.Application.Contacts.Persistence
 {
     public interface ICategoryRepository : IBaseRepository<Category>
     {
-        Task<PaginationList<Category>> GetPaginated(GetCategoriesQuery query, Func<IQueryable<Category>, IIncludableQueryable<Category, object>>? include = null);
+        Task<PaginationList<Category>> GetPaginated(GetPCategoriesQuery query, Func<IQueryable<Category>, IIncludableQueryable<Category, object>>? include = null);
     }
 }

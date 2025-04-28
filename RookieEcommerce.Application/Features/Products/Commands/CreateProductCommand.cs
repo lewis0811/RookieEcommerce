@@ -27,7 +27,7 @@ namespace RookieEcommerce.Application.Features.Products.Commands
             var product = Product.Create(request.Name, request.Description, request.Price, request.CategoryId, request.Details);
 
             // Generate Sku number
-            var existingSkus = await productRepository.ListAllAsync(c => c.Sku.Contains(product.Sku), cancellationToken);
+            var existingSkus = await productRepository.ListAllAsync(c => c.Sku.Contains(product.Sku), null, cancellationToken);
             product.Sku += $"-{existingSkus.Count + 1}";
 
             // Add product via Repository

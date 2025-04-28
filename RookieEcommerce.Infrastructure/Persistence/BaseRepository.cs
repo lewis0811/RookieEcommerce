@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Domain.Entities;
+using StackExchange.Redis;
 using System.Linq.Expressions;
 
 namespace RookieEcommerce.Infrastructure.Persistence
@@ -36,13 +37,18 @@ namespace RookieEcommerce.Infrastructure.Persistence
 
             return await query.FirstOrDefaultAsync<T>(cancellationToken);
         }
-        public virtual async Task<List<T>> ListAllAsync(Expression<Func<T, bool>>? filter, CancellationToken cancellationToken = default)
+        public virtual async Task<List<T>> ListAllAsync(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = dbSet;
 
             if (filter != null)
             {
                 query = query.Where(filter);
+            }
+
+            if (include != null)
+            {
+                query = include(query);
             }
 
             return await query.ToListAsync(cancellationToken);

@@ -10,7 +10,7 @@ namespace RookieEcommerce.Application.Contacts.Persistence
 
         Task<T?> GetByAttributeAsync(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, CancellationToken cancellationToken = default);
 
-        Task<List<T>> ListAllAsync(Expression<Func<T, bool>>? filter, CancellationToken cancellationToken = default);
+        Task<List<T>> ListAllAsync(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, CancellationToken cancellationToken = default);
 
         Task<T> AddAsync(T entity, CancellationToken cancellationToken = default);
 

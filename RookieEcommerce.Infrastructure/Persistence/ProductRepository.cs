@@ -71,7 +71,7 @@ namespace RookieEcommerce.Infrastructure.Persistence
             {
                 products = products.Where(c => c.Price >= query.MinPrice);
             }
-            else if (query.MaxPrice != null)
+            if (query.MaxPrice != null)
             {
                 products = products.Where(c => c.Price <= query.MaxPrice);
             }

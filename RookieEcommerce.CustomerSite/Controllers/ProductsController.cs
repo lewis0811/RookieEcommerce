@@ -29,8 +29,8 @@ namespace RookieEcommerce.CustomerSite.Controllers
                 ?? throw new InvalidOperationException($"Product Id {productId} not found.");
             var rating = await productRatingApiClient.GetProductRatingsAsync(productId) 
                 ?? throw new InvalidOperationException($"Rating for product Id {productId} not found.");
-            
-            var customerId = rating.Items.FirstOrDefault()!.CustomerId;
+
+            var customerId = Guid.Parse("4C1E0C92-0BEA-A47A-6C8A-59E397F632F2"); // Change to get from cookie later
             var order = await orderApiClient.GetOrderItemAsync(customerId)
                 ?? throw new InvalidOperationException($"Order for customer Id {customerId}"); // Change to get customerId from cookie later // Please check if customer have order please Lewis
 

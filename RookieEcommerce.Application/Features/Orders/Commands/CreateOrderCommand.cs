@@ -9,7 +9,7 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
 {
     public class CreateOrderCommand : IRequest<OrderCreateDto>
     {
-        public string Email { get; set; }
+        public string Email { get; set; } = "";
         public Guid CustomerId { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public Address ShippingAddress { get; set; } = new();
@@ -40,7 +40,7 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
                 if (productVariantId.HasValue && productVariantId.Value != Guid.Empty)
                 {
                     // Use Product Variant
-                    var variant = await productVariantRepository.GetByIdAsync(productVariantId.Value);
+                    var variant = await productVariantRepository.GetByIdAsync(productVariantId.Value, null, cancellationToken);
 
                     // Check if variant exists AND belongs to the base product
                     if (variant == null || variant.ProductId != productId)
@@ -52,7 +52,7 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
                 else
                 {
                     // Use Base Product
-                    var product = await productRepository.GetByIdAsync(productId) 
+                    var product = await productRepository.GetByIdAsync(productId, null, cancellationToken) 
                         ?? throw new InvalidOperationException($"Product with ID {productId} not found.");
                     
                     unitPrice = product.Price; // Get price from product
