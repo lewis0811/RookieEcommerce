@@ -8,14 +8,16 @@
 
     var createModel = Model.CreateProductRating;
     createModel.ProductId = productDetails.Id;
-    createModel.CustomerId = productRatings.Items[0].CustomerId; // Change to get from cookie later
+    createModel.CustomerId = Guid.Parse("4C1E0C92-0BEA-A47A-6C8A-59E397F632F2"); // Change to get from cookie later
 
     var orderItem = Model.OrderDetails!.OrderItems!.FirstOrDefault(c => c.ProductId == productDetails.Id);
-    var idToFind = orderItem!.ProductVariantId != null
+    var idToFind = orderItem?.ProductVariantId != null
         ? orderItem.ProductVariantId 
         : productDetails.Id;
 
-    var totalRating = Math.Round(productRatings.Items.Select(c => c.RatingValue).Average(), 1);
+    var totalRating = productRatings.Items.Count > 0
+    ? Math.Round(productRatings.Items.Select(c => c.RatingValue).Average(), 1)
+    : 0;
 }
 
 <div class="container mt-5">
@@ -38,7 +40,7 @@
             }
             else
             {
-                <img src="https://via.placeholder.com/500x500?text=No+Image" class="img-fluid rounded" alt="@productDetails.Name" />
+                <img src="https://dummyimage.com/500x500/55595c/fff&text=No+Image" class="img-fluid rounded" alt="@productDetails.Name" />
             }
         </div>
 
@@ -46,7 +48,7 @@
         <div class="col-md-6">
             <form asp-controller="Products" asp-action="AddToCart" method="post">
                 <input asp-for=CartItem.ProductId value="@createModel.ProductId" hidden/>
-            
+
                 <h3 class="mb-3">@productDetails.Name</h3>
 
                 @* Product price *@
@@ -113,7 +115,7 @@
                     </button>
                 </div>
 
-        </form>
+            </form>
         </div>
     </div>
 
@@ -147,7 +149,7 @@
                     @* Total rating - Refined *@
                     <div class="d-flex align-items-center mb-4 justify-content-center">
                         <span class="text-warning h4 mb-0 me-2">⭐</span>
-                        <span class="h4 mb-0 me-2">@totalRating /5</span>
+                        <span class="h4 mb-0 me-2">@(totalRating > 0 ? totalRating : "-") /5</span>
                         <span class="text-muted mb-0">(@productRatings.Items.Count đánh giá)</span>
                     </div>
 
@@ -155,40 +157,46 @@
                     <div class="row ">
                         <div class="col-md-8">
                             <h4 class="text-center">Đánh giá của khách</h4>
-                            @foreach (var item in productRatings.Items)
+                            @if (productRatings.Items.Count > 0)
                             {
-                                <div class="border-bottom pb-2 mb-3 mt-3">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <strong class="me-auto">@item.Customer!.FirstName @item.Customer.LastName</strong>
-                                        <small class="text-muted">@item.CreatedDate</small>
-                                    </div>
-                                    <div class="d-flex align-items-start mb-1">
-                                        @{
-                                            var matchedType = item.Product!.Variants!.FirstOrDefault(c => c.Id == idToFind)?.Name
-                                                            ?? item.Product.Name;
+                                @foreach (var item in productRatings.Items)
+                                {
+                                    <div class="border-bottom pb-2 mb-3 mt-3">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <strong class="me-auto">@item.Customer!.FirstName @item.Customer.LastName</strong>
+                                            <small class="text-muted">@item.CreatedDate</small>
+                                        </div>
+                                        <div class="d-flex align-items-start mb-1">
+                                            @{
+                                                var matchedType = item.Product!.Variants!.FirstOrDefault(c => c.Id == idToFind)?.Name
+                                                ?? item.Product.Name;
 
-                                            // Prevent case matchedType equal product's name
-                                            var responseType = matchedType != item.Product.Name
+                                                // Prevent case matchedType equal product's name
+                                                var responseType = matchedType != item.Product.Name
                                                 ? item.Product.Name + " - " + matchedType
                                                 : matchedType;
-                                        }
-                                        <small class="text-muted">Phân loại: @responseType</small>
-                                    </div>
-                                    <div class="text-warning text-center">
-                                        @for (int i = 1; i <= 5; i++)
-                                        {
-                                            if (i <= item.RatingValue)
-                                            {
-                                                <i class="bi bi-star-fill"></i>
                                             }
-                                            else
+                                            <small class="text-muted">Phân loại: @responseType</small>
+                                        </div>
+                                        <div class="text-warning text-center">
+                                            @for (int i = 1; i <= 5; i++)
                                             {
-                                                <i class="bi bi-star"></i>
+                                                if (i <= item.RatingValue)
+                                                {
+                                                    <i class="bi bi-star-fill"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="bi bi-star"></i>
+                                                }
                                             }
-                                        }
+                                        </div>
+                                        <p class="mb-0 text-center">@item.Comment</p>
                                     </div>
-                                    <p class="mb-0 text-center">@item.Comment</p>
-                                </div>
+                                }
+                            } else
+                            {
+                                <span class="text-center h6">Chưa có đánh giá</span>
                             }
                         </div>
 
