@@ -1,4 +1,25 @@
-﻿<!DOCTYPE html>
+﻿@using RookieEcommerce.CustomerSite.Services
+@using RookieEcommerce.SharedViewModels.CartDtos
+@{
+    var customerId = Guid.Parse("4C1E0C92-0BEA-A47A-6C8A-59E397F632F2");
+    var includeItems = true;
+    CartDetailsDto? cart = null;
+    int totalCartItem = 0;
+
+    using var httpClient = new HttpClient();
+    string requestUri = $"https://localhost:7143/api/v1/carts?customer-id={customerId}&isIncludeItems={includeItems}";
+
+    try
+    {
+        cart = await httpClient.GetFromJsonAsync<CartDetailsDto>(requestUri);
+        totalCartItem = cart?.Items?.Count ?? 0;
+    }
+    catch (HttpRequestException e)
+    {
+        throw new HttpRequestException($"Error fetching cart data: {e.Message}");
+    }
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -63,7 +84,7 @@
                                 <a class="nav-link position-relative" asp-controller="Cart" asp-action="Index" title="Giỏ hàng">
                                     <img src="//bizweb.dktcdn.net/100/189/335/themes/822894/assets/i_hcart.png?1673929959248" alt="Giỏ hàng" height="20">
                                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        0 <span class="visually-hidden">items in cart</span>
+                                        @totalCartItem <span class="visually-hidden">items in cart</span>
                                     </span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end p-3" style="min-width: 250px;">
