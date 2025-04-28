@@ -8,6 +8,7 @@ namespace RookieEcommerce.CustomerSite.Services
     public class VnPayApiClient(HttpClient httpClient)
     {
         public sealed class VnPayReturnUrl { public string Url { get; set; } = ""; }
+
         public  async Task<string> CreatePaymentUrlAsync(CreatePaymentDto dto)
         {
             var response = await httpClient.PostAsJsonAsync($"api/v1/vnpay/payment-url", dto);
@@ -28,7 +29,7 @@ namespace RookieEcommerce.CustomerSite.Services
                 }
             }
 
-            return null;
+            return String.Empty;
         }
     }
 }

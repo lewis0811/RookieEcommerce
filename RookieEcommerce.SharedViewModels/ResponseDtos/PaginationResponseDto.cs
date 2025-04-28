@@ -10,7 +10,7 @@ namespace RookieEcommerce.SharedViewModels.ResponseDtos
         }
 
         [JsonPropertyName("items")]
-        public List<T> Items { get; set; }
+        public List<T> Items { get; set; } = [];
 
         [JsonPropertyName("totalCount")]
         public int TotalCount { get; set; }

@@ -67,26 +67,31 @@ namespace RookieEcommerce.CustomerSite.Controllers
             }).ToList();
 
             // Create order
-            CreateOrderDto dto = new CreateOrderDto
+            CreateOrderDto dto = new ()
             {
                 Email = model.Email,
+                CustomerName = model.Name,
+                ShippingPhoneNumber = model.ShippingPhoneNumber,
                 TotalAmount = (decimal)currentCart.TotalPrice!,
                 CustomerId = Guid.Parse("4C1E0C92-0BEA-A47A-6C8A-59E397F632F2"), // Change to get from cookie later
-                CityProvince = model.ShippingCity,
-                District = model.ShippingDistrict,
-                Ward = model.ShippingWard,
-                StreetAddress = model.ShippingStreetAddress,
+                ShippingAddress = new Domain.Entities.Address
+                {
+                    CityProvince = model.ShippingCity,
+                    District = model.ShippingDistrict,
+                    Ward = model.ShippingWard,
+                    StreetAddress = model.ShippingStreetAddress,
+                },
                 PaymentMethod = (PaymentMethod)Enum.Parse(typeof(PaymentMethod), model.PaymentMethod),
                 OrderItems = cartItems
             };
 
             // Call API to create order
-            await orderApiClient.CreateOrderAsync(dto);
+            var order = await orderApiClient.CreateOrderAsync(dto);
 
             // Redirect if using EWallet payment method
             if (dto.PaymentMethod == PaymentMethod.VNPay)
             {
-                CreatePaymentDto paymentDto = new() { TotalAmount = (decimal)currentCart.TotalPrice, Description = $"Thanh toán đơn hàng NashLux"};
+                CreatePaymentDto paymentDto = new() { TotalAmount = (decimal)currentCart.TotalPrice, Description = $"{order.Id}"};
                 string vnPayUrl = await vnPayApiClient.CreatePaymentUrlAsync(paymentDto);
 
                 return Redirect(vnPayUrl);
@@ -98,16 +103,20 @@ namespace RookieEcommerce.CustomerSite.Controllers
         }
 
         [HttpGet]
-        public IActionResult OrderConfirmation(bool? success)
+        public async Task<IActionResult> OrderConfirmation(string? orderId, string? transactionId)
         {
             var successMessage = TempData["SuccessMessage"] as string;
 
             // Nếu không có thông báo (ví dụ: người dùng truy cập trực tiếp URL)
             // thì chuyển hướng về trang chủ hoặc trang giỏ hàng.
-            if (string.IsNullOrEmpty(successMessage) && success == null)
+            if (string.IsNullOrEmpty(successMessage) && orderId == null)
             {
-                // Bạn có thể chuyển hướng về trang chủ hoặc trang giỏ hàng
                 return RedirectToAction("Index", "Home");      
+            }
+
+            if (orderId != null && transactionId != null)
+            {
+                await orderApiClient.UpdateOrderAsync(orderId, transactionId);
             }
 
             ViewBag.SuccessMessage = successMessage;

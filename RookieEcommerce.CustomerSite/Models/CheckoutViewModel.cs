@@ -20,16 +20,16 @@ namespace RookieEcommerce.CustomerSite.Models
         [Display(Name = "Số Điện Thoại")]
         public string ShippingPhoneNumber { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Vui lòng nhập thành phố")]
+        [Required(ErrorMessage = "Vui lòng nhập thành phố / tỉnh")]
         [Display(Name = "Thành phố / Tỉnh")]
         public string ShippingCity { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Vui lòng nhập quận")]
-        [Display(Name = "Quận")]
-        public string ShippingDistrict { get; set; }
+        [Required(ErrorMessage = "Vui lòng nhập quận / huyện / thị xã")]
+        [Display(Name = "Quận / Huyện / Thị xã")]
+        public string ShippingDistrict { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Vui lòng nhập phường")]
-        [Display(Name = "Phường")]
+        [Required(ErrorMessage = "Vui lòng nhập phường / xã")]
+        [Display(Name = "Phường / Xã")]
         public string ShippingWard { get; set; } = string.Empty;
 
 

@@ -10,7 +10,7 @@ namespace RookieEcommerce.Infrastructure
     {
         public static IServiceCollection AddInfrastructureService(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<RookieEcommerce.Application.IEmailService, EmailService>();
+            services.AddScoped<IEmailService, EmailService>();
             // --- Retrieve Connection Strings ---
             var connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");

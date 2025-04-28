@@ -1,4 +1,4 @@
-namespace RookieEcommerce.Application
+namespace RookieEcommerce.Application.Contacts.Persistence
 {
     public interface IEmailService
     {

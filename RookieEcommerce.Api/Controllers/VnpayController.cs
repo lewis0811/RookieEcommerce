@@ -20,7 +20,7 @@ namespace RookieEcommerce.Api.Controllers
             _vnpay = vnPayservice;
             _configuration = configuration;
 
-            _vnpay.Initialize(_configuration["Vnpay:TmnCode"], _configuration["Vnpay:HashSecret"], _configuration["Vnpay:BaseUrl"], _configuration["Vnpay:CallbackUrl"]);
+            _vnpay.Initialize(_configuration["Vnpay:TmnCode"]!, _configuration["Vnpay:HashSecret"]!, _configuration["Vnpay:BaseUrl"]!, _configuration["Vnpay:CallbackUrl"]!);
         }
 
         [HttpPost("payment-url")]
@@ -55,7 +55,7 @@ namespace RookieEcommerce.Api.Controllers
         [HttpGet("callback")]
         public ActionResult<PaymentResult> Callback()
         {
-            string callbackUrlBase = "https://localhost:7101/Checkout/OrderConfirmation";
+            string callbackUrlBase = _configuration["Vnpay:CallbackUrlBase"]! ;
             if (Request.QueryString.HasValue)
             {
                 try
@@ -64,8 +64,7 @@ namespace RookieEcommerce.Api.Controllers
 
                     if (paymentResult.IsSuccess)
                     {
-                        //return Ok(paymentResult);
-                        return Redirect($"{callbackUrlBase}?success=true");
+                        return Redirect($"{callbackUrlBase}?orderId={paymentResult.Description}&transactionId={paymentResult.VnpayTransactionId}");
                     }
 
                     return BadRequest(paymentResult);
