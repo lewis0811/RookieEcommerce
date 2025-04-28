@@ -400,3 +400,5 @@ RookieEcommerce.Api/appsettings.Development.json
 RookieEcommerce.Api/appsettings.json
 RookieEcommerce.CustomerSite/appsettings.json
 RookieEcommerce.CustomerSite/appsettings.Development.json
+/RookieEcommerce.CustomerSite/appsettings.Development.json
+/RookieEcommerce.CustomerSite/appsettings.json
