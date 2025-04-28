@@ -39,23 +39,32 @@
                     </div>
 
                     @* --- Province --- *@
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            @* *@
-                            <label asp-for="ShippingCity" class="form-label"></label>
-                            <input asp-for="ShippingCity" class="form-control" placeholder="Nhập Tỉnh / Thành phố" /> 
-                            <span asp-validation-for="ShippingCity" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <label asp-for="ShippingDistrict" class="form-label"></label>
-                            <input asp-for="ShippingDistrict" class="form-control" placeholder="Nhập Quận / Huyện" /> 
-                            <span asp-validation-for="ShippingDistrict" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <label asp-for="ShippingWard" class="form-label"></label>
-                            <input asp-for="ShippingWard" class="form-control" placeholder="Nhập Phường / Xã" /> 
-                            <span asp-validation-for="ShippingWard" class="text-danger"></span>
-                        </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ShippingCity" class="form-label"></label>
+                        <select id="city" class="form-select" required>
+                            <option value="" selected disabled>Chọn Tỉnh/Thành phố</option>
+                        </select>
+                        <input type="hidden" asp-for="ShippingCity" id="hiddenCity" />
+                        <span asp-validation-for="ShippingCity" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ShippingDistrict" class="form-label"></label>
+                        <select id="district" class="form-select" required disabled>
+                            <option value="" selected disabled>Chọn Quận/Huyện</option>
+                        </select>
+                        <input type="hidden" asp-for="ShippingDistrict" id="hiddenDistrict" />
+                        <span asp-validation-for="ShippingDistrict" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ShippingWard" class="form-label"></label>
+                        <select id="ward" class="form-select" required disabled>
+                            <option value="" selected disabled>Chọn Phường/Xã</option>
+                        </select>
+                        <input type="hidden" asp-for="ShippingWard" id="hiddenWard" />
+                        <span asp-validation-for="ShippingWard" class="text-danger"></span>
                     </div>
 
                     @* --- Address --- *@
@@ -175,5 +184,121 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    @* Thêm script nếu cần (ví dụ: ẩn/hiện thông tin chuyển khoản) *@
+
+    @* --- Province Api Load & Select Option Logic *@
+    <script>
+        $(document).ready(function () {
+            const citySelect = $('#city');
+            const districtSelect = $('#district');
+            const wardSelect = $('#ward');
+            const hiddenCityInput = $('#hiddenCity');
+            const hiddenDistrictInput = $('#hiddenDistrict');
+            const hiddenWardInput = $('#hiddenWard');
+
+            const provinceApiUrl = '/Checkout/GetVnProvinces';
+            const districtApiUrlBase = '/Checkout/GetVnDistricts';
+            const wardApiUrlBase = '/Checkout/GetVnWards';
+
+            // Reset and disabled default option function
+            function resetDropdown(dropdown, defaultText) {
+                dropdown.empty().append(`<option value="" selected disabled>${defaultText}</option>`).prop('disabled', true);
+            }
+
+            // Load province from provinceApiUrl
+            $.getJSON(provinceApiUrl)
+                .done(function (data) {
+                     if (data && data.data && data.data.data) {
+                         citySelect.empty().append('<option value="" selected disabled>Chọn Tỉnh/Thành phố</option>');
+
+                         $.each(data.data.data, function (index, province) {
+                            citySelect.append($('<option>', {
+                                value: province.code, // Store code in value
+                                text: province.name_with_type // Store name with typeof in text
+                            }));
+                        });
+
+                        citySelect.prop('disabled', false); // Active select option when data loaded
+                     } else {
+                         console.error("Province data structure incorrect", data);
+                         alert("Không thể tải danh sách Tỉnh/Thành phố.");
+                     }
+                });
+
+            // Handle logic when city is selected
+            citySelect.change(function () {
+                const selectedProvinceCode = $(this).val();
+                const selectedProvinceName = $(this).find('option:selected').text();
+
+                hiddenCityInput.val(selectedProvinceName);
+                hiddenDistrictInput.val('');
+                hiddenWardInput.val('');
+
+                // Reset dropdown of district and ward to disabled when re-choosing city
+                resetDropdown(districtSelect, 'Chọn Quận/Huyện');
+                resetDropdown(wardSelect, 'Chọn Phường/Xã');
+
+                if (selectedProvinceCode) {
+                    $.getJSON(`${districtApiUrlBase}?provinceCode=${selectedProvinceCode}`)
+                        .done(function (data) {
+                             if (data && data.data && data.data.data) {
+                                districtSelect.empty().append('<option value="" selected disabled>Chọn Quận/Huyện</option>');
+
+                                $.each(data.data.data, function (index, district) {
+                                    districtSelect.append($('<option>', {
+                                        value: district.code, // Store district code in value
+                                        text: district.name_with_type // Store district name with type in text
+                                    }));
+                                });
+
+                                districtSelect.prop('disabled', false);  // Active select option when data loaded
+                            } else {
+                                 console.error("Wrong district data structure", data);
+                                 alert("Không thể tải danh sách Quận/Huyện.");
+                            }
+                        });
+                }
+            });
+
+            // Handle logic when district is selected
+            districtSelect.change(function () {
+                const selectedDistrictCode = $(this).val();
+                 const selectedDistrictName = $(this).find('option:selected').text();
+
+                hiddenDistrictInput.val(selectedDistrictName);
+                 hiddenWardInput.val('');
+
+                 // Reset dropdown of ward to disabled when re-choosing district
+                resetDropdown(wardSelect, 'Chọn Phường/Xã');
+
+                if (selectedDistrictCode) {
+                     $.getJSON(`${wardApiUrlBase}?districtCode=${selectedDistrictCode}`)
+                        .done(function (data) {
+                            if (data && data.data && data.data.data) {
+                                wardSelect.empty().append('<option value="" selected disabled>Chọn Phường/Xã</option>');
+
+                                $.each(data.data.data, function (index, ward) {
+                                    wardSelect.append($('<option>', {
+                                        value: ward.code, // Store ward code in value
+                                        text: ward.name_with_type // Store ward name with type in text
+                                    }));
+                                });
+
+                                wardSelect.prop('disabled', false); // Active option when ward is selected
+                             } else {
+                                 console.error("Wrong ward data structure", data);
+                                 alert("Không thể tải danh sách Phường/Xã.");
+                             }
+                        });
+                }
+            });
+
+             // Handle logic when ward is selected
+            wardSelect.change(function () {
+                 const selectedWardName = $(this).find('option:selected').text();
+
+                 hiddenWardInput.val(selectedWardName);
+            });
+
+        });
+    </script>
 }

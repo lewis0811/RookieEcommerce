@@ -6,13 +6,15 @@ using RookieEcommerce.Domain.Enums;
 using RookieEcommerce.SharedViewModels.CartDtos;
 using RookieEcommerce.SharedViewModels.OrderDtos;
 using RookieEcommerce.SharedViewModels.PaymentDtos;
+using RookieEcommerce.SharedViewModels.VnApiDtos;
 using System.Threading.Tasks;
 
 namespace RookieEcommerce.CustomerSite.Controllers
 {
     public class CheckoutController(CartApiClient cartApiClient,
         OrderApiClient orderApiClient,
-        VnPayApiClient vnPayApiClient) : Controller
+        VnPayApiClient vnPayApiClient,
+        VnPublicApiClient vnPublicApiClient) : Controller
     {
         public async Task<IActionResult> IndexAsync()
         {
@@ -44,11 +46,37 @@ namespace RookieEcommerce.CustomerSite.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetVnProvinces()
+        {
+            var provinces = await vnPublicApiClient.GetProvincesAsync();
+            return Json(provinces);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetVnDistricts(string provinceCode)
+        {
+            var districts = await vnPublicApiClient.GetDistrictsAsync(provinceCode);
+            if (districts != null)
+            {
+                var orderedDatas = districts.Data!.Data!.OrderBy(c => c.Name).ToList();
+                districts.Data.Data = orderedDatas;
+            }
+            return Json(districts);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetVnWards(string districtCode)
+        {
+            var wards = await vnPublicApiClient.GetWardsAsync(districtCode);
+            return Json(wards);
+        }
+
         [HttpPost]
         public async Task<IActionResult> PlaceOrder(CheckoutViewModel model)
         {
             // Validate model
-            var customerId = Guid.Parse("4C1E0C92-0BEA-A47A-6C8A-59E397F632F2"); // Change to get from cookie later
+            var customerId = Guid.Parse("4C1E0C92-0BEA-A47A-6C8A-59E397F632F2");
 
             // Mock data
             var currentCart = await cartApiClient.GetCustomerCartAsync(customerId);

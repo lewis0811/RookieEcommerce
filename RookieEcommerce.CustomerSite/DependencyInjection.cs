@@ -26,6 +26,10 @@ namespace RookieEcommerce.CustomerSite
                 .ConfigureRookieEcommerceApi(configuration);
             services.AddHttpClient<VnPayApiClient>()
                 .ConfigureRookieEcommerceApi(configuration);
+            services.AddHttpClient<VnPublicApiClient>(client =>
+            {
+                client.BaseAddress = new Uri(configuration["VnPublicApi:BaseUrl"]!);
+            });
             return services;
         }
 
