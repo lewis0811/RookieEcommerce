@@ -6,7 +6,7 @@ namespace RookieEcommerce.CustomerSite.Models
 {
     public class HomeViewModel
     {
-        public PaginationResponseDto<CategoryDetailsDto>? Categories { get; set; }
+        public List<CategoryDetailsDto>? Categories { get; set; }
         public PaginationResponseDto<ProductDetailsDto>? Products { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿@using System.Globalization
 @using RookieEcommerce.Domain.Entities
 @using RookieEcommerce.SharedViewModels.ProductImageDtos
+@model RookieEcommerce.CustomerSite.Models.HomeViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -14,43 +15,48 @@
 <div class="container">
 
     @* --- Sắp xếp --- *@
-    <div class="d-flex fw-bold m-4 row text-center">
-        <div class="col">
-            <i class="bi bi-sort-alpha-down fs-4"></i>
-            <span class="col-form-label me-2">Sắp xếp theo:</span>
+    <form method="get" asp-controller="Home" asp-action="Index">
+        <div class="d-flex fw-bold m-4 row text-center">
+            <div class="col">
+                <i class="bi bi-sort-alpha-down fs-4"></i>
+                <span class="col-form-label me-2">Sắp xếp theo:</span>
 
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="sortOption" id="sortNewest" value="createdDate desc">
-                <label class="form-check-label" for="sortNewest">Mới nhất</label>
+                @* Các div chứa radio button *@
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input sort-radio" type="radio" name="sortOrder" id="sortNewest" value="createdDate desc" @(ViewData["CurrentSort"] as string == "createdDate desc" ? "checked" : "")>
+                    <label class="form-check-label" for="sortNewest">Mới nhất</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input sort-radio" type="radio" name="sortOrder" id="sortOldest" value="createdDate asc" @(ViewData["CurrentSort"] as string == "createdDate asc" ? "checked" : "")>
+                    <label class="form-check-label" for="sortOldest">Cũ nhất</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input sort-radio" type="radio" name="sortOrder" id="sortAlphaAsc" value="name asc" @(ViewData["CurrentSort"] as string == "name asc" ? "checked" : "")>
+                    <label class="form-check-label" for="sortAlphaAsc">Từ A-Z</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input sort-radio" type="radio" name="sortOrder" id="sortAlphaDesc" value="name desc" @(ViewData["CurrentSort"] as string == "name desc" ? "checked" : "")>
+                    <label class="form-check-label" for="sortAlphaDesc">Từ Z-A</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input sort-radio" type="radio" name="sortOrder" id="sortPriceAsc" value="price asc" @(ViewData["CurrentSort"] as string == "price asc" ? "checked" : "")>
+                    <label class="form-check-label" for="sortPriceAsc">Giá tăng dần</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input sort-radio" type="radio" name="sortOrder" id="sortPriceDesc" value="price desc" @(ViewData["CurrentSort"] as string == "price desc" ? "checked" : "")>
+                    <label class="form-check-label" for="sortPriceDesc">Giá giảm dần</label>
+                </div>
+                @* Mặc định nếu không có sortOrder nào được chọn (lần đầu vào trang) *@
+                <div class="form-check form-check-inline" style="display: none;">
+                    <input class="form-check-input" type="radio" name="sortOrder" id="defaultSort" value="" @(string.IsNullOrEmpty(ViewData["CurrentSort"] as string) ? "checked" : "")>
+                </div>
+
+                @* Thêm các input hidden khác nếu cần giữ lại tham số (ví dụ: categoryId, searchString, pageNumber) *@
+                @* <input type="hidden" name="categoryId" value="@Model.CurrentCategoryId" /> *@
+                @* <input type="hidden" name="searchString" value="@Model.CurrentSearchString" /> *@
             </div>
-
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="sortOption" id="sortOldest" value="createdDate asc">
-                <label class="form-check-label" for="sortOldest">Cũ nhất</label>
-            </div>
-
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="sortOption" id="sortAlphaAsc" value="name asc">
-                <label class="form-check-label" for="sortAlphaAsc">Từ A-Z</label>
-            </div>
-
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="sortOption" id="sortAlphaDesc" value="name desc">
-                <label class="form-check-label" for="sortAlphaDesc">Từ Z-A</label>
-            </div>
-
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="sortOption" id="sortPriceAsc" value="price asc">
-                <label class="form-check-label" for="sortPriceAsc">Giá tăng dần</label>
-            </div>
-
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="sortOption" id="sortPriceDesc" value="price desc">
-                <label class="form-check-label" for="sortPriceDesc">Giá giảm dần</label>
-            </div>
-
         </div>
-    </div>
+    </form>
 
     @* --- Lọc --- *@
     <div class="d-flex fw-bold m-4 row align-items-center text-center p-3" style="background-color: #ebebeb">
@@ -67,10 +73,20 @@
                 </button>
 
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    @if(Model.Categories != null && Model.Categories.Count > 0)
+                    {
+                        foreach(var item in Model.Categories)
+                        {
+                            <li><a class="dropdown-item category-filter-item" data-id="@item.Id" href="#">@item.Name</a></li>
+                        }
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item category-filter-item" href="#" data-id="">Bỏ lọc phân loại</a></li>
+                    } else
+                    {
+                        <li><a class="dropdown-item" href="#">-</a></li>
+                    }
                 </ul>
+                
             </div>
         </div>
 
@@ -80,16 +96,25 @@
                     Mức giá
                 </button>
 
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                <ul class="dropdown-menu" id="priceFilterMenu">
+                    <li><a class="dropdown-item price-filter-item" href="#" data-min="1" data-max="100000">Giá dưới 100.000đ</a></li>
+                    <li><a class="dropdown-item price-filter-item" href="#" data-min="100000" data-max="200000">100.000 - 200.000đ</a></li>
+                    <li><a class="dropdown-item price-filter-item" href="#" data-min="200000" data-max="300000">200.000 - 300.000đ</a></li>
+                    <li><a class="dropdown-item price-filter-item" href="#" data-min="300000" data-max="500000">300.000 - 500.000đ</a></li>
+                    <li><a class="dropdown-item price-filter-item" href="#" data-min="500000" data-max="1000000">500.000 - 1.000.000đ</a></li>
+                    <li><a class="dropdown-item price-filter-item" href="#" data-min="1000000" data-max="">Giá trên 1.000.000đ</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item price-filter-item" href="#" data-min="" data-max="">Bỏ lọc giá</a></li>
                 </ul>
+
             </div>
         </div>
 
-
-
+        <div class="col-auto">
+            <button class="btn bg-transparent border-0 text-black fw-bold default-filter" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Mặc định
+            </button>
+        </div>
     </div>
 </div>
 
@@ -98,7 +123,7 @@
 <div class="container">
 
     <div class="row">
-        @if (Model != null)
+        @if (Model.Products?.Items != null && Model.Products.Items.Count > 0)
         {
             @foreach (var item in Model.Products.Items)
             {
@@ -108,7 +133,7 @@
 
                             @* --- Image --- *@ 
                             @{
-                                var image = ((IEnumerable<ProductImageDetailsDto>)item.Images)?.FirstOrDefault(c => c.IsPrimary);
+                                var image = ((IEnumerable<ProductImageDetailsDto>)item.Images!)?.FirstOrDefault(c => c.IsPrimary);
                             }
                             <div class="position-relative">
                                 @if (image != null)
@@ -123,7 +148,7 @@
                                 {
                                     <a asp-controller="Products" asp-action="Details" asp-route-productId="@item.Id" class="d-block">
                                         <img class="card-img-top img-fluid lazyload loaded"
-                                        src="https://dummyimage.com/400x400/55595c/fff"
+                                        src="https://dummyimage.com/400x400/55595c/fff&text=No+Image"
                                         alt=@item.Name
                                         data-was-processed="true"/>
                                     </a>
@@ -149,54 +174,174 @@
                                 </div>
                             </form>
                         </div>
-                    }
+            }
 
-                    @* --- Pagination --- *@
-                    <div class="col-12">
-                        <nav aria-label="...">
+            @* --- Pagination --- *@
+            <div class="col-12">
+                <nav aria-label="...">
 
-                            <ul class="pagination justify-content-center">
+                    <ul class="pagination justify-content-center">
 
-                                <li class="page-item {@Model.Products.HasPreviousPage ? disabled : null}">
+                        <li class="page-item {@Model.Products.HasPreviousPage ? disabled : null}">
 
-                                    <a class="page-link" href="#" >&lt;</a>
+                            <a class="page-link" href="#" >&lt;</a>
 
-                                </li>
+                        </li>
 
-                                @for (int pageNumber = 1; pageNumber <= Model.Products.TotalPages; pageNumber++)
-                                {
-                                    <li class="page-item @(pageNumber == Model.Products.PageNumber ? "active" : "")">
-                                         <a class="page-link" href=@($"/Home/Index?pageNumber={pageNumber}")
-                                            @(pageNumber == Model.Products.PageNumber ? "aria-current=page" : null)
-                                         >
-                                            @pageNumber
-                                        </a>
-                                    </li>
-                                }
+                        @for (int pageNumber = 1; pageNumber <= Model.Products.TotalPages; pageNumber++)
+                        {
+                            <li class="page-item @(pageNumber == Model.Products.PageNumber ? "active" : "")">
+                                    <a class="page-link" href=@($"/Home/Index?pageNumber={pageNumber}")
+                                    @(pageNumber == Model.Products.PageNumber ? "aria-current=page" : null)
+                                    >
+                                    @pageNumber
+                                </a>
+                            </li>
+                        }
 
-                                <li class="page-item {@Model.Products.HasNextPage ? disabled : null}">
+                        <li class="page-item {@Model.Products.HasNextPage ? disabled : null}">
 
-                                    <a class="page-link" href="@(Model.Products.HasNextPage 
-                                        ? $"/Home/Index?pageNumber={Model.Products.PageNumber + 1}" 
-                                        : "#")">
-                                        &gt;
-                                    </a>
+                            <a class="page-link" href="@(Model.Products.HasNextPage 
+                                ? $"/Home/Index?pageNumber={Model.Products.PageNumber + 1}" 
+                                : "#")">
+                                &gt;
+                            </a>
 
-                                </li>
+                        </li>
 
-                            </ul>
+                    </ul>
 
-                        </nav>
-
-                    </div>
-
-                } else
-                {
-                    <span class="text-black text-center">Chưa có sản phẩm</span>
-                }
+                </nav>
 
             </div>
 
-        </div>
+        } else
+        {
+            <span class="text-black text-center">Chưa có sản phẩm</span>
+        }
+    </div>
 
+</div>
 
+@section Scripts {
+    @* --- Sorting --- *@
+    <script>
+        $(document).ready(function () {
+            $('.sort-radio').on('change', function () {
+                $(this).closest('form').submit();
+            });
+
+         
+        });
+    </script>
+
+    @* --- Filtering --- *@
+    <script>
+        $(document).ready(function() {
+
+            // --- Script mới cho lọc giá ---
+           $('.price-filter-item').on('click', function (e) {
+               e.preventDefault(); // Ngăn hành vi mặc định của thẻ <a>
+
+               const minPrice = $(this).data('min');
+               const maxPrice = $(this).data('max');
+
+               // Lấy URL hiện tại và các tham số của nó
+               const currentUrl = new URL(window.location.href);
+               const params = currentUrl.searchParams;
+
+               // Xóa các tham số giá cũ (nếu có)
+               params.delete('minPrice');
+               params.delete('maxPrice');
+
+               // Thêm tham số giá mới (nếu có giá trị)
+               if (minPrice !== "" && minPrice !== undefined) {
+                   params.set('minPrice', minPrice);
+               }
+               if (maxPrice !== "" && maxPrice !== undefined) {
+                   params.set('maxPrice', maxPrice);
+               }
+
+               // Cập nhật tham số trang (nếu có phân trang, nên reset về trang 1 khi lọc)
+               params.delete('pageNumber'); // Bỏ comment nếu muốn reset về trang 1
+
+               // Tạo URL mới và điều hướng
+               currentUrl.search = params.toString();
+               window.location.href = currentUrl.toString();
+           });
+
+           // --- Category filtering ---
+           $('.category-filter-item').on('click', function (e) {
+               e.preventDefault(); // prevent href behavior
+
+               const categoryId = $(this).data('id');
+
+               // Get current url and params
+               const currentUrl = new URL(window.location.href);
+               const params = currentUrl.searchParams;
+
+               // Delete old param
+               params.delete('categoryId');
+
+               // Add new param if have value
+               if (categoryId !== "" && categoryId !== undefined) {
+                   params.set('categoryId', categoryId);
+               }
+
+                params.delete('pageNumber'); // Bỏ comment nếu muốn reset về trang 1
+
+               // Create url with params and redirect to it
+               currentUrl.search = params.toString();
+               window.location.href = currentUrl.toString();
+           });
+
+           // --- Default filtering ---
+           $('.default-filter').on('click', function(e) {
+               e.preventDefault();
+
+                // Get current url
+               const currentUrl = new URL(window.location.href);
+
+               // Create default url include origin and pathnam
+                const defaultUrl = currentUrl.origin + currentUrl.pathname;
+
+               // Return default url
+                window.location.href = defaultUrl.toString();
+           });
+        });
+    </script>
+
+    @* --- Auto scrolling *@
+    <script>
+        $(document).ready(function() {
+
+            // --- Script cho phân trang (Cách 2: Scroll Restoration) ---
+              const scrollPositionKey = 'pageScrollPos';
+              // Khôi phục vị trí cuộn khi trang tải xong
+              const savedPosition = sessionStorage.getItem(scrollPositionKey);
+              if (savedPosition) {
+                setTimeout(function() {
+                    window.scrollTo(0, parseInt(savedPosition, 10));
+                }, 100);
+                  sessionStorage.removeItem(scrollPositionKey); // Xóa đi sau khi dùng
+              }
+
+             // --- Hàm lưu vị trí cuộn ---
+            function saveScrollPosition() {
+                sessionStorage.setItem(scrollPositionKey, window.scrollY);
+            }
+
+            $('.category-filter-item').on('click', function (e) {
+                saveScrollPosition();
+            });
+
+            $('.price-filter-item').on('click', function (e) {
+                saveScrollPosition();
+            });
+
+            $('body').on('click', 'ul.pagination a.page-link', function() {
+                    saveScrollPosition();
+            });
+        });
+    </script>
+}

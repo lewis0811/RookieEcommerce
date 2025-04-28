@@ -6,10 +6,10 @@ namespace RookieEcommerce.CustomerSite.Services
 {
     public class CategoryApiClient(HttpClient httpClient)
     {
-        public async Task<PaginationResponseDto<CategoryDetailsDto>> GetCategoriesAsync()
+        public async Task<List<CategoryDetailsDto>> GetCategoriesAsync()
         {
             var categories = await httpClient
-                .GetFromJsonAsync<PaginationResponseDto<CategoryDetailsDto>>("api/v1/categories?IsIncludeItems=true");
+                .GetFromJsonAsync<List<CategoryDetailsDto>>("api/v1/categories?IsIncludeItems=true");
             return categories!;
         }
     }

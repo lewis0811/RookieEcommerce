@@ -12,6 +12,16 @@ namespace RookieEcommerce.Api.Controllers
     [ApiVersion(1)]
     public class CategoriesController(IMediator mediator) : ControllerBase
     {
+        // GET: pcategories
+        [HttpGet("pagination")]
+        [AllowAnonymous]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> GetPCategories([FromQuery] GetPCategoriesQuery query, CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(query, cancellationToken);
+            return Ok(result);
+        }
+
         // GET: categories
         [HttpGet]
         [AllowAnonymous]
