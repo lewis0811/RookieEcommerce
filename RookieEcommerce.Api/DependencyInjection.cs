@@ -103,7 +103,8 @@ namespace RookieEcommerce.Api
                 options.User.RequireUniqueEmail = true;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>() // This method is defined in Microsoft.AspNetCore.Identity.EntityFrameworkCore
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddDefaultUI();
 
 
             return services;

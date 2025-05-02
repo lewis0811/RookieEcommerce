@@ -16,14 +16,14 @@ namespace RookieEcommerce.Application.Features.Carts.Commands
         public async Task<CartCreateDto> Handle(CreateCartCommand request, CancellationToken cancellationToken)
         {
             // Check if customer exist
-            var existCustomer = await customerRepository.AnyAsync(c => c.Id == request.CustomerId, cancellationToken);
+            var existCustomer = await customerRepository.AnyAsync(c => c.Id == request.CustomerId.ToString(), cancellationToken);
             if (!existCustomer)
             {
                 throw new InvalidOperationException($"Customer with id {request.CustomerId} does not exist.");
             }
 
             // Create new cart
-            var cart = Cart.Create(request.CustomerId);
+            var cart = Cart.Create(request.CustomerId.ToString());
 
             // Add cart to repository
             await cartRepository.AddAsync(cart, cancellationToken);

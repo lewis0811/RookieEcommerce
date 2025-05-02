@@ -7,7 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="OpenIddict" Version="6.2.1" />
+    <PackageReference Include="OpenIddict.Client.AspNetCore" Version="6.2.1" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="6.2.1" />
+    <PackageReference Include="OpenIddict.Quartz" Version="6.2.1" />
+    <PackageReference Include="OpenIddict.Server.AspNetCore" Version="6.2.1" />
+    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="6.2.1" />
+    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.14.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RookieEcommerce.Application\RookieEcommerce.Application.csproj" />
+    <ProjectReference Include="..\RookieEcommerce.Infrastructure\RookieEcommerce.Infrastructure.csproj" />
     <ProjectReference Include="..\RookieEcommerce.SharedViewModels\RookieEcommerce.SharedViewModels.csproj" />
   </ItemGroup>
 

@@ -1,10 +1,9 @@
-﻿namespace RookieEcommerce.Domain.Entities
-{
-    public class Customer : BaseEntity
-    {
-        // Link to IdentityUser
-        public string IdentityUserId { get; set; } = string.Empty;
+﻿using Microsoft.AspNetCore.Identity;
 
+namespace RookieEcommerce.Domain.Entities
+{
+    public class Customer : IdentityUser
+    {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
 

@@ -32,7 +32,7 @@ namespace RookieEcommerce.Application.Features.Carts.Queries
 
             // Get cart via repository
             var cart = await cartRepository.GetByAttributeAsync(
-                    c => c.CustomerId == request.CustomerId,
+                    c => c.CustomerId == request.CustomerId.ToString(),
                     includeExpression,
                     cancellationToken)
                 ?? throw new InvalidOperationException($"Cart for Customer {request.CustomerId} not found.");

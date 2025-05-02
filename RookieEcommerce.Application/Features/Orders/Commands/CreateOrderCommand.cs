@@ -87,7 +87,7 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
             }
 
             // Create the Order 
-            var order = Order.Create(request.CustomerId, calculatedTotalAmount, request.PaymentMethod, request.ShippingAddress, orderItemsEntities);
+            var order = Order.Create(request.CustomerId.ToString(), calculatedTotalAmount, request.PaymentMethod, request.ShippingAddress, orderItemsEntities);
 
             // Add to repository
             await orderRepository.AddAsync(order, cancellationToken);

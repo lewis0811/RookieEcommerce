@@ -15,15 +15,15 @@ namespace RookieEcommerce.Domain.Entities
         public PaymentStatus PaymentStatus { get; set; }
         public string? TransactionId { get; set; } // ID from payment gateway
         public DateTime? PaymentDate { get; set; }
-        
+
         // Foreign Key
-        public Guid CustomerId { get; set; }
+        public string CustomerId { get; set; } = "";
 
         // Navigation Properties
         public virtual Customer? Customer { get; set; } = null;
         public virtual ICollection<OrderItem> OrderItems { get; set; } = [];
 
-        public static Order Create(Guid customerId, decimal calculatedTotalAmount, PaymentMethod paymentMethod, Address shippingAddress, List<OrderItem> orderItemsEntities)
+        public static Order Create(string customerId, decimal calculatedTotalAmount, PaymentMethod paymentMethod, Address shippingAddress, List<OrderItem> orderItemsEntities)
         {
             return new Order
             {

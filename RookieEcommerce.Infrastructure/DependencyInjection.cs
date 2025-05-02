@@ -15,7 +15,7 @@ namespace RookieEcommerce.Infrastructure
             var connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-            // --- Add DbContext, Database Provider, OpenIddict ---
+            // --- Add DbContext, OpenIddict---
             services.AddDbContext<ApplicationDbContext>( options => {
                 options.UseSqlServer(connectionString);
                 options.UseOpenIddict();

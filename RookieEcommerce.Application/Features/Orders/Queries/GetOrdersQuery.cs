@@ -31,7 +31,7 @@ namespace RookieEcommerce.Application.Features.Orders.Queries
             }
 
             // Get order via repository
-            var order = await orderRepository.GetByAttributeAsync(c => c.CustomerId == request.CustomerId,
+            var order = await orderRepository.GetByAttributeAsync(c => c.CustomerId == request.CustomerId.ToString(),
                 includeExpression,
                 cancellationToken) 
                 ?? throw new InvalidOperationException($"Customer Id {request.CustomerId} doesn't have any order.");

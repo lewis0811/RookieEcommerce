@@ -22,10 +22,5 @@ namespace RookieEcommerce.CustomerSite.Controllers
 
             return View(model);
         }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
     }
 }

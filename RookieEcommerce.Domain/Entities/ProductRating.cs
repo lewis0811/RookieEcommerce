@@ -7,14 +7,14 @@
 
         // Foreign Keys
         public Guid ProductId { get; set; }
-        public Guid CustomerId { get; set; }
+        public string CustomerId { get; set; } = "";
 
         // Navigation Properties
         public virtual Product? Product { get; set; }
 
         public virtual Customer? Customer { get; set; }
 
-        public static ProductRating Create(Guid productId, Guid customerId, double ratingValue, string? comment)
+        public static ProductRating Create(Guid productId, string customerId, double ratingValue, string? comment)
         {
             return new ProductRating
             {

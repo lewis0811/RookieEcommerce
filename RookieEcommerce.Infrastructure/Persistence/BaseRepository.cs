@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Query;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Domain.Entities;
-using StackExchange.Redis;
 using System.Linq.Expressions;
 
 namespace RookieEcommerce.Infrastructure.Persistence

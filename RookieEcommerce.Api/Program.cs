@@ -22,7 +22,7 @@ builder.Services.AddApiServices(builder.Configuration);
 
 
 // Retrieve BaseAddress from configuration
-var baseAddress = builder.Configuration.GetValue<string>("HttpClient:BaseAddress");
+//var baseAddress = builder.Configuration.GetValue<string>("HttpClient:BaseAddress");
 
 // Register CORS
 builder.Services.AddCors(options =>

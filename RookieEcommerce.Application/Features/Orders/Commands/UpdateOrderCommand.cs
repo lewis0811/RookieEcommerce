@@ -31,7 +31,7 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
             {
                 // Get the cart of order's customer via Repository
                 var cart = await cartRepository
-                    .GetByAttributeAsync(c => c.CustomerId == order.CustomerId,
+                    .GetByAttributeAsync(c => c.CustomerId == order.CustomerId.ToString(),
                     filter => filter.Include(c => c.Items)
                     , cancellationToken)
                     ?? throw new InvalidOperationException($"Cart Id {order.CustomerId} not found.");

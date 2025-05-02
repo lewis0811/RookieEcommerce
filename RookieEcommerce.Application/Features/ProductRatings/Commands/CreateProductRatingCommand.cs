@@ -32,7 +32,7 @@ namespace RookieEcommerce.Application.Features.ProductRatings.Commands
             await CheckIfCustomerBoughtProduct(request, cancellationToken);
 
             // Create product rating instance
-            var productRating = ProductRating.Create(request.ProductId, request.CustomerId, request.RatingValue, request.Comment);
+            var productRating = ProductRating.Create(request.ProductId, request.CustomerId.ToString(), request.RatingValue, request.Comment);
 
             // Add product rating via repo
             await productRatingRepository.AddAsync(productRating, cancellationToken);

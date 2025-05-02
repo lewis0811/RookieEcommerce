@@ -38,7 +38,7 @@ namespace RookieEcommerce.Api.Middleware
                     break;
 
                 case InvalidOperationException invalidOperationException:
-                    statusCode = HttpStatusCode.BadRequest;
+                    statusCode = HttpStatusCode.NotFound;
                     responsePayload = new
                     {
                         error = "An invalid operation error occurred.",
