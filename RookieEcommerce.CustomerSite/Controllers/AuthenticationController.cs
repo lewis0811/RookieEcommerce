@@ -4,6 +4,10 @@ using OpenIddict.Abstractions;
 using OpenIddict.Client.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using System.Security.Claims;
+using System.Net.Http;
+using System.Text.Json;
+using RookieEcommerce.CustomerSite.Models;
+using RookieEcommerce.CustomerSite.Services;
 
 namespace RookieEcommerce.CustomerSite.Controllers
 {
@@ -21,6 +25,38 @@ namespace RookieEcommerce.CustomerSite.Controllers
             // Ask the OpenIddict client middleware to redirect the user agent to the identity provider.
             return Challenge(properties, OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
         }
+
+        [HttpGet]
+        public IActionResult Register(string? returnUrl = null)
+        {
+            var properties = new AuthenticationProperties
+            {
+                // Only allow local return URLs to prevent open redirect attacks.
+                RedirectUri = Url.IsLocalUrl(returnUrl) ? returnUrl : "/",
+                
+            };
+            properties.Parameters["action"] = "register";
+
+            // Ask the OpenIddict client middleware to redirect the user agent to the identity provider.
+            return Challenge(properties, OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
+        }
+
+        // POST: /Account/Register
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Register(RegisterViewModel model, string? returnUrl = null)
+        //{
+        //    ViewData["ReturnUrl"] = returnUrl;
+        //    if (User.Identity != null && User.Identity.IsAuthenticated) { return RedirectToAction("Index", "Home"); }
+
+        //    if( ModelState.IsValid)
+        //    {
+        //        await identityService.RegisterAsync(model);
+        //    }
+            
+        //    return Redirect(returnUrl ?? "/");
+        //}
+
 
         [HttpGet("~/callback/login/{provider}"), HttpPost("~/callback/login/{provider}"), IgnoreAntiforgeryToken]
         public async Task<ActionResult> LogInCallback()

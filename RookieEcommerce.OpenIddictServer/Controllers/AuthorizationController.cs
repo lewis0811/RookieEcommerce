@@ -9,6 +9,7 @@ using OpenIddict.Server.AspNetCore;
 using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.OpenIddictServer.Helpers;
 using RookieEcommerce.OpenIddictServer.Models;
+using System.Net;
 using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -19,7 +20,8 @@ namespace RookieEcommerce.OpenIddictServer.Controllers
         IOpenIddictApplicationManager applicationManager,
         IOpenIddictAuthorizationManager authorizationManager,
         IOpenIddictScopeManager scopeManager,
-        SignInManager<Customer> signInManager
+        SignInManager<Customer> signInManager,
+        IConfiguration configuration
         ) : Controller
     {
         [HttpGet("~/connect/authorize")]
@@ -61,7 +63,30 @@ namespace RookieEcommerce.OpenIddictServer.Controllers
                         }));
                 }
 
+                // If have register prompt, then redirect to register page
+                string? promptValue = request.GetParameter("action")?.ToString();
+                if (promptValue == "register")
+                {
+                    var registerUrl = 
+                        "/connect/authorize?" +
+                        $"client_id={request.ClientId}" +
+                        $"&redirect_uri={request.RedirectUri}" +
+                        $"&response_type={request.ResponseType}" +
+                        $"&scope={request.Scope}" +
+                        $"&nonce={request.Nonce}" +
+                        $"&code_challenge={request.CodeChallenge}" +
+                        $"&code_challenge_method={request.CodeChallengeMethod}" +
+                        $"&state={request.State}";
+
+                    registerUrl = configuration["OpenIddict:BaseUrl"] +
+                        "/Identity/Account/Register?returnUrl=" + WebUtility.UrlEncode(registerUrl);
+
+                    return Redirect(registerUrl);
+                }
+
                 TempData["IgnoreAuthenticationChallenge"] = true;
+
+
 
                 return Challenge(new AuthenticationProperties
                 {
@@ -216,9 +241,6 @@ namespace RookieEcommerce.OpenIddictServer.Controllers
                     .SetClaim(Claims.PreferredUsername, await userManager.GetUserNameAsync(user))
                     .SetClaims(Claims.Role, [.. (await userManager.GetRolesAsync(user))]);
 
-            // Note: in this sample, the granted scopes match the requested scope
-            // but you may want to allow the user to uncheck specific scopes.
-            // For that, simply restrict the list of scopes before calling SetScopes.
             identity.SetScopes(request.GetScopes());
             identity.SetResources(await scopeManager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
 

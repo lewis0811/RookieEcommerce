@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using OpenIddict.Abstractions;
-using RookieEcommerce.Api.Constants;
 using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.Infrastructure;
-using StackExchange.Redis;
 using System.Data;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -61,7 +59,7 @@ namespace RookieEcommerce.OpenIddictServer
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             // Add roles if they don't exist
-            foreach (var roleName in new[] { ApplicationRole.Admin, ApplicationRole.User })
+            foreach (var roleName in new[] { "Admin", "User"})
             {
                 if (!await roleManager.RoleExistsAsync(roleName))
                 {
@@ -94,7 +92,7 @@ namespace RookieEcommerce.OpenIddictServer
                 if (result.Succeeded)
                 {
                     // Assign the admin role to the user
-                    await userManager.AddToRoleAsync(adminUser, ApplicationRole.Admin);
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
                 }
                 else
                 {
