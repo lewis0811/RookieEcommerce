@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using RookieEcommerce.Api.Configurations;
+using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.Infrastructure;
 using VNPAY.NET;
 
@@ -97,12 +98,12 @@ namespace RookieEcommerce.Api
 #pragma warning restore IDE0060 // Remove unused parameter
         {
             // --- Add ASP.NET Core Identity ---
-            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            services.AddIdentity<Customer, IdentityRole>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
                 options.User.RequireUniqueEmail = true;
             })
-            .AddEntityFrameworkStores<ApplicationDbContext>() // This method is defined in Microsoft.AspNetCore.Identity.EntityFrameworkCore
+            .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders()
             .AddDefaultUI();
 

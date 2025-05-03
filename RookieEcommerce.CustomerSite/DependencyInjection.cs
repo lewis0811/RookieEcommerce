@@ -95,10 +95,11 @@ namespace RookieEcommerce.CustomerSite
 
                 options.UseAspNetCore()
                     .EnableStatusCodePagesIntegration()
-                    .EnableRedirectionEndpointPassthrough();
+                    .EnableRedirectionEndpointPassthrough()
+                    .EnablePostLogoutRedirectionEndpointPassthrough();
 
                 options.UseSystemNetHttp()
-                    .SetProductInformation(typeof(Program).Assembly);
+                    .SetProductInformation(typeof(DependencyInjection).Assembly);
 
                 options.AddRegistration(new OpenIddictClientRegistration
                 {
@@ -107,8 +108,8 @@ namespace RookieEcommerce.CustomerSite
                     ClientSecret = configuration["OpenIddict:ClientSecret"],
                     Scopes = { Scopes.Email, Scopes.Profile },
 
-                    RedirectUri = new Uri(configuration["OpenIddict:RedirectUri"]!, UriKind.Relative),
-                    PostLogoutRedirectUri = new Uri(configuration["OpenIddict:PostLogoutRedirectUri"]!, UriKind.Relative)
+                    RedirectUri = new Uri(configuration["OpenIddict:RedirectUri"]!),
+                    PostLogoutRedirectUri = new Uri(configuration["OpenIddict:PostLogoutRedirectUri"]!)
                 });
             })
             // Register the OpenIddict server components.

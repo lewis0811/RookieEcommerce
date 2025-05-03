@@ -26,11 +26,11 @@ namespace RookieEcommerce.OpenIddictServer
                     DisplayName = "MVC client application",
                     RedirectUris =
                 {
-                    new Uri(configuration["OpenIddict:RedirectUris"]!)
+                    new Uri(configuration["OpenIddict:RedirectUri"]!)
                 },
                     PostLogoutRedirectUris =
                 {
-                    new Uri(configuration["OpenIddict:PostLogoutRedirectUris"]!)
+                    new Uri(configuration["OpenIddict:PostLogoutRedirectUri"]!)
                 },
                     Permissions =
                 {
