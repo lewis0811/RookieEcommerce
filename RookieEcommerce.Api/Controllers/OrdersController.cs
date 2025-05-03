@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using RookieEcommerce.Application.Features.Orders.Commands;
 using RookieEcommerce.Application.Features.Orders.Queries;
 
@@ -31,7 +30,7 @@ namespace RookieEcommerce.Api.Controllers
         }
 
         [HttpPut("{order-id}")]
-        public async Task<IActionResult> UpdateOrder([FromRoute(Name = "order-id")]Guid orderId, UpdateOrderCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateOrder([FromRoute(Name = "order-id")] Guid orderId, UpdateOrderCommand command, CancellationToken cancellationToken)
         {
             command.OrderId = orderId;
             await mediator.Send(command, cancellationToken);

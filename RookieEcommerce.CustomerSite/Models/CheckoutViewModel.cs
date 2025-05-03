@@ -1,5 +1,4 @@
-﻿using RookieEcommerce.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace RookieEcommerce.CustomerSite.Models
 {
@@ -31,7 +30,6 @@ namespace RookieEcommerce.CustomerSite.Models
         [Required(ErrorMessage = "Vui lòng nhập phường / xã")]
         [Display(Name = "Phường / Xã")]
         public string ShippingWard { get; set; } = string.Empty;
-
 
         [Required(ErrorMessage = "Vui lòng nhập tên đường/ số nhà")]
         [Display(Name = "Tên đường/ số nhà")]

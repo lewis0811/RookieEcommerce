@@ -7,6 +7,7 @@
 
         // Foreign Keys
         public Guid ProductId { get; set; }
+
         public string CustomerId { get; set; } = "";
 
         // Navigation Properties

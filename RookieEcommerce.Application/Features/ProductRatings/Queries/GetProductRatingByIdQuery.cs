@@ -13,16 +13,16 @@ namespace RookieEcommerce.Application.Features.ProductRatings.Queries
     {
         [JsonIgnore]
         public Guid Id { get; set; }
+
         public bool IsIncludeItems { get; set; }
     }
 
-    public class GetProductRatingByIdQueryHandler(IProductRatingRepository productRatingRepository) : IRequestHandler<GetProductRatingByIdQuery , ProductRatingDetailsDto>
+    public class GetProductRatingByIdQueryHandler(IProductRatingRepository productRatingRepository) : IRequestHandler<GetProductRatingByIdQuery, ProductRatingDetailsDto>
     {
-
         public async Task<ProductRatingDetailsDto> Handle(GetProductRatingByIdQuery request, CancellationToken cancellationToken)
         {
             Func<IQueryable<ProductRating>, IIncludableQueryable<ProductRating, object>>? filter = null;
-            
+
             // Check if the request is include items
             if (request.IsIncludeItems)
             {
@@ -31,7 +31,7 @@ namespace RookieEcommerce.Application.Features.ProductRatings.Queries
                         .ThenInclude(c => c.Variants)
                     .Include(c => c.Customer)!;
             }
-            
+
             // Check if the rating exist
             var instance = await productRatingRepository.GetByIdAsync(request.Id, filter, cancellationToken)
                 ?? throw new InvalidOperationException($"Produce Rating Id {request.Id} not found.");

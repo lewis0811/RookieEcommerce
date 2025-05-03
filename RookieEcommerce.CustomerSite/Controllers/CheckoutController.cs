@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RookieEcommerce.Application.Mappers;
 using RookieEcommerce.CustomerSite.Models;
 using RookieEcommerce.CustomerSite.Services;
 using RookieEcommerce.Domain.Enums;
-using RookieEcommerce.SharedViewModels.CartDtos;
 using RookieEcommerce.SharedViewModels.OrderDtos;
 using RookieEcommerce.SharedViewModels.PaymentDtos;
-using RookieEcommerce.SharedViewModels.VnApiDtos;
-using System.Threading.Tasks;
 
 namespace RookieEcommerce.CustomerSite.Controllers
 {
@@ -95,7 +91,7 @@ namespace RookieEcommerce.CustomerSite.Controllers
             }).ToList();
 
             // Create order
-            CreateOrderDto dto = new ()
+            CreateOrderDto dto = new()
             {
                 Email = model.Email,
                 CustomerName = model.Name,
@@ -119,7 +115,7 @@ namespace RookieEcommerce.CustomerSite.Controllers
             // Redirect if using EWallet payment method
             if (dto.PaymentMethod == PaymentMethod.VNPay)
             {
-                CreatePaymentDto paymentDto = new() { TotalAmount = (decimal)currentCart.TotalPrice, Description = $"{order.Id}"};
+                CreatePaymentDto paymentDto = new() { TotalAmount = (decimal)currentCart.TotalPrice, Description = $"{order.Id}" };
                 string vnPayUrl = await vnPayApiClient.CreatePaymentUrlAsync(paymentDto);
 
                 return Redirect(vnPayUrl);
@@ -139,7 +135,7 @@ namespace RookieEcommerce.CustomerSite.Controllers
             // thì chuyển hướng về trang chủ hoặc trang giỏ hàng.
             if (string.IsNullOrEmpty(successMessage) && orderId == null)
             {
-                return RedirectToAction("Index", "Home");      
+                return RedirectToAction("Index", "Home");
             }
 
             if (orderId != null && transactionId != null)

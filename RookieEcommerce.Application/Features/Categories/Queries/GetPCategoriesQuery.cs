@@ -30,7 +30,7 @@ namespace RookieEcommerce.Application.Features.Categories.Queries
             // Get paginated of categories
             var categories = await categoryRepository.GetPaginated(request,
                 query);
-            
+
             // Map to dto
             var dtos = Mappers.CategoryMapper.CategoryListToCategoryDetailsDtoList(categories.Items);
 

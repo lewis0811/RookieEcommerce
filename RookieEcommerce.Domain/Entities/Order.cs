@@ -21,6 +21,7 @@ namespace RookieEcommerce.Domain.Entities
 
         // Navigation Properties
         public virtual Customer? Customer { get; set; } = null;
+
         public virtual ICollection<OrderItem> OrderItems { get; set; } = [];
 
         public static Order Create(string customerId, decimal calculatedTotalAmount, PaymentMethod paymentMethod, Address shippingAddress, List<OrderItem> orderItemsEntities)

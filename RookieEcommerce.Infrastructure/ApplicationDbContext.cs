@@ -5,7 +5,7 @@ using RookieEcommerce.Domain.Entities;
 
 namespace RookieEcommerce.Infrastructure
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : IdentityDbContext<IdentityUser>(options)
     {
         public DbSet<Cart> Carts { get; set; }
@@ -137,7 +137,7 @@ namespace RookieEcommerce.Infrastructure
 
             builder.Entity<OrderItem>()
                 .Property(oi => oi.Price)
-                .HasColumnType("decimal(18, 2)"); 
+                .HasColumnType("decimal(18, 2)");
             builder.Entity<OrderItem>()
                 .HasOne(oi => oi.Order)
                 .WithMany(o => o.OrderItems)
@@ -147,7 +147,7 @@ namespace RookieEcommerce.Infrastructure
                 .HasOne(oi => oi.ProductVariant)
                 .WithMany()
                 .HasForeignKey(oi => oi.ProductVariantId)
-                .OnDelete(DeleteBehavior.NoAction); 
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<OrderItem>()
                 .HasOne(oi => oi.Product)

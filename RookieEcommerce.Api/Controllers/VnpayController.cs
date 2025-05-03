@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using RookieEcommerce.SharedViewModels.PaymentDtos;
+using VNPAY.NET;
 using VNPAY.NET.Enums;
 using VNPAY.NET.Models;
 using VNPAY.NET.Utilities;
-using VNPAY.NET;
-using RookieEcommerce.SharedViewModels.PaymentDtos;
 
 namespace RookieEcommerce.Api.Controllers
 {
@@ -55,7 +54,7 @@ namespace RookieEcommerce.Api.Controllers
         [HttpGet("callback")]
         public ActionResult<PaymentResult> Callback()
         {
-            string callbackUrlBase = _configuration["Vnpay:CallbackUrlBase"]! ;
+            string callbackUrlBase = _configuration["Vnpay:CallbackUrlBase"]!;
             if (Request.QueryString.HasValue)
             {
                 try

@@ -20,7 +20,7 @@ namespace RookieEcommerce.Application.Features.Products.Commands
         {
             // Check if the product exist
             var product = await productRepository.GetByIdAsync(request.Id, null, cancellationToken)
-                ?? throw new InvalidOperationException ($"Product Id {request.Id} not found.");
+                ?? throw new InvalidOperationException($"Product Id {request.Id} not found.");
 
             // Map request to product
             product.Update(request.Name, request.Description, request.Price, null);

@@ -27,7 +27,7 @@ namespace RookieEcommerce.CustomerSite.Services
             {
                 queryBuilder.Append($"&CategoryId={categoryId.Value}");
             }
-            if(pageNumber.HasValue)
+            if (pageNumber.HasValue)
             {
                 queryBuilder.Append($"&PageNumber={pageNumber.Value}");
             }

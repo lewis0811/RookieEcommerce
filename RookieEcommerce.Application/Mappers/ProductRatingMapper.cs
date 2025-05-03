@@ -8,9 +8,9 @@ namespace RookieEcommerce.Application.Mappers
     public static partial class ProductRatingMapper
     {
         public static partial List<ProductRatingDetailsDto> ProductRatingListToProductRatingDetailsDto(List<ProductRating> items);
-        
+
         public static partial ProductRatingDetailsDto ProductRatingToProductRatingDetailsDto(ProductRating productRating);
-        
+
         public static partial ProductRatingCreateDto ProductRatingToProductRatingCreateDto(ProductRating productRating);
 
         public static partial ProductRating CreateProductRatingDtoToProductRating(CreateProductRatingDto dto);

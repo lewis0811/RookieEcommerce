@@ -2,12 +2,11 @@
 using Microsoft.EntityFrameworkCore.Query;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Domain.Entities;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace RookieEcommerce.Infrastructure.Persistence
 {
-    public class CustomerRepository(ApplicationDbContext context): ICustomerRepository
+    public class CustomerRepository(ApplicationDbContext context) : ICustomerRepository
     {
         public async Task<bool> AnyAsync(Expression<Func<Customer, bool>> filter, CancellationToken cancellationToken = default)
         {

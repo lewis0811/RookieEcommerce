@@ -6,7 +6,6 @@ namespace RookieEcommerce.SharedViewModels.ResponseDtos
     {
         public PaginationResponseDto()
         {
-            
         }
 
         [JsonPropertyName("items")]

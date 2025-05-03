@@ -19,8 +19,6 @@ builder.Services.AddIdentityServices(builder.Configuration);
 // Register API specific services (Controllers, Swagger, etc.)
 builder.Services.AddApiServices(builder.Configuration);
 
-
-
 // Retrieve BaseAddress from configuration
 //var baseAddress = builder.Configuration.GetValue<string>("HttpClient:BaseAddress");
 

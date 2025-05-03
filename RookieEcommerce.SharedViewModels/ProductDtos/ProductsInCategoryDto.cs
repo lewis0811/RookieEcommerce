@@ -10,6 +10,6 @@ namespace RookieEcommerce.SharedViewModels.ProductDtos
         public decimal Price { get; }
         public string? Details { get; }
         public Guid? CategoryId { get; }
-        public List<ProductImageDetailsDto>? Images { get; set; } 
+        public List<ProductImageDetailsDto>? Images { get; set; }
     }
 }

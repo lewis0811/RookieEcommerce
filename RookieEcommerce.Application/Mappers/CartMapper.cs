@@ -10,9 +10,11 @@ namespace RookieEcommerce.Application.Mappers
         public static partial CartDetailsDto CartToCartDetailsDto(Cart cart);
 
         public static partial CartItemDto CartItemToCartItemDto(CartItem cartItem);
+
         public static partial CartCreateDto CartToCartCreateDto(Cart cart);
 
         public static partial CartItemCreateDto CartItemToCartItemCreateDto(CartItem cartItem);
-        public static partial CreateCartItemDto CreateCartItemDtoToCartItem (CreateCartItemDto cartItem);
+
+        public static partial CreateCartItemDto CreateCartItemDtoToCartItem(CreateCartItemDto cartItem);
     }
 }

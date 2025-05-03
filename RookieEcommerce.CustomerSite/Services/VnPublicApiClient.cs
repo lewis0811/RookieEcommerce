@@ -1,6 +1,4 @@
-﻿
-using RookieEcommerce.SharedViewModels.VnApiDtos;
-using System.Net.Http;
+﻿using RookieEcommerce.SharedViewModels.VnApiDtos;
 
 namespace RookieEcommerce.CustomerSite.Services
 {

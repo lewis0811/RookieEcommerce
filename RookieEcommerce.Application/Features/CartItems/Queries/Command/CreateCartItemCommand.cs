@@ -12,6 +12,7 @@ namespace RookieEcommerce.Application.Features.CartItems.Queries.Command
     {
         [JsonIgnore]
         public Guid CartId { get; set; }
+
         public Guid ProductId { get; set; }
         public Guid? ProductVariantId { get; set; }
         public int Quantity { get; set; }

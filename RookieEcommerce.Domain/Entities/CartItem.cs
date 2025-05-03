@@ -39,6 +39,5 @@
             if (Quantity != quantity) { Quantity = quantity; }
             ModifiedDate = DateTime.Now;
         }
-
     }
 }

@@ -17,7 +17,7 @@ namespace RookieEcommerce.SharedViewModels.VnApiDtos
         public string? Slug { get; set; }
 
         [JsonPropertyName("name_with_type")]
-        public string? NameWithType { get; set; } 
+        public string? NameWithType { get; set; }
 
         [JsonPropertyName("path")]
         public string? Path { get; set; }

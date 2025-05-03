@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace RookieEcommerce.Domain.Entities
+﻿namespace RookieEcommerce.Domain.Entities
 {
     public class Cart : BaseEntity
     {

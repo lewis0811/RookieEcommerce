@@ -30,7 +30,7 @@ namespace RookieEcommerce.Application.Features.ProductVariants.Commands
 
             // Update the product quantity
             product.Update(null, null, null, totalStockQuantity);
-            
+
             // Update the product via Repository
             await productRepository.UpdateAsync(product, cancellationToken);
 

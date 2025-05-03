@@ -10,6 +10,7 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
     {
         [JsonIgnore]
         public Guid OrderId { get; set; }
+
         public string? TransactionId { get; set; }
         public PaymentStatus? PaymentStatus { get; set; }
     }
@@ -19,10 +20,10 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
         public async Task Handle(UpdateOrderCommand request, CancellationToken cancellationToken)
         {
             var order = await orderRepository.GetByIdAsync(request.OrderId,
-                filter => filter.Include(c => c.OrderItems), 
-                cancellationToken) 
+                filter => filter.Include(c => c.OrderItems),
+                cancellationToken)
                 ?? throw new InvalidOperationException($"Order Id {request.OrderId} not found.");
-            
+
             order.Update(request.TransactionId, null, request.PaymentStatus);
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -49,7 +50,7 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
                 // Update order's status
                 order.Update(null, OrderStatus.Ordered, null);
 
-                // Save changes 
+                // Save changes
                 await unitOfWork.SaveChangesAsync(cancellationToken);
             }
         }

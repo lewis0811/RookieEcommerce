@@ -26,7 +26,7 @@ namespace RookieEcommerce.Application.Features.Categories.Queries
                     .ThenInclude(c => c.Images);
             }
             // Get paginated of categories
-            var categories = await categoryRepository.ListAllAsync(null, query ,cancellationToken);
+            var categories = await categoryRepository.ListAllAsync(null, query, cancellationToken);
             // Map to dto
             var dtos = Mappers.CategoryMapper.CategoryListToCategoryDetailsDtoList(categories);
             return dtos;

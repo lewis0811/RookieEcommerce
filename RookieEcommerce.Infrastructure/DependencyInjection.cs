@@ -16,10 +16,11 @@ namespace RookieEcommerce.Infrastructure
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
             // --- Add DbContext, OpenIddict---
-            services.AddDbContext<ApplicationDbContext>( options => {
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
                 options.UseSqlServer(connectionString);
                 options.UseOpenIddict();
-                });
+            });
 
             // -- Add Repository Registrations
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));

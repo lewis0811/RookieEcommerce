@@ -1,5 +1,4 @@
 ﻿using RookieEcommerce.Domain.Entities;
-using RookieEcommerce.Domain.Enums;
 
 namespace RookieEcommerce.SharedViewModels.ProductVariantDtos
 {

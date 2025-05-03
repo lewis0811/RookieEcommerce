@@ -16,7 +16,7 @@ namespace RookieEcommerce.Api.Controllers
         public async Task<IActionResult> GetProductRatings([FromQuery] GetProductRatingQuery query, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(query, cancellationToken);
-            return Ok(result); 
+            return Ok(result);
         }
 
         [HttpGet("{rating-id}")]

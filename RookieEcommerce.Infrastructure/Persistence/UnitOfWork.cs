@@ -11,7 +11,6 @@ namespace RookieEcommerce.Infrastructure.Persistence
             return await context.SaveChangesAsync(cancellationToken);
         }
 
-
         public void Dispose()
         {
             Dispose(true);

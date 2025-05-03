@@ -28,14 +28,14 @@
 
             generatedSku = string.Join("-", skuParts);
 
-            return new Product 
-            { 
+            return new Product
+            {
                 Name = name,
                 Description = description,
                 Price = price,
                 Sku = generatedSku,
                 Details = details,
-                CategoryId = categoryId 
+                CategoryId = categoryId
             };
         }
 
@@ -44,7 +44,7 @@
             if (name != null && name != Name) Name = name;
             if (description != null && description != Description) Description = description;
             if (price != null && price != Price) Price = (decimal)price;
-            if(totalQuantity != null && totalQuantity != TotalQuantity) TotalQuantity = (int)totalQuantity;
+            if (totalQuantity != null && totalQuantity != TotalQuantity) TotalQuantity = (int)totalQuantity;
             UpdateModifiedDate();
         }
     }

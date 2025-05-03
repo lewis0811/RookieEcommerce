@@ -1,9 +1,4 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RookieEcommerce.Application.Features.Orders.Commands
 {
@@ -21,8 +16,7 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
                 .NotNull().WithMessage("Shipping address is required.");
 
             RuleFor(x => x.OrderItems)
-                .NotEmpty().WithMessage("Order must contain at least one item."); // Check 
+                .NotEmpty().WithMessage("Order must contain at least one item."); // Check
         }
-
     }
 }

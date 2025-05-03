@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -25,7 +24,6 @@ namespace RookieEcommerce.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Customers");
-
 
             migrationBuilder.AlterColumn<string>(
                 name: "CustomerId",

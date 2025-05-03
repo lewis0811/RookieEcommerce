@@ -9,7 +9,7 @@ namespace RookieEcommerce.SharedViewModels.CategoryDtos
         public string Description { get; set; } = string.Empty;
         public Guid? ParentCategoryId { get; set; }
         public string? ParentCategoryName { get; set; }
-        
+
         public ICollection<SubCategoriesDto> SubCategories { get; set; } = [];
 
         public ICollection<ProductsInCategoryDto> Products { get; set; } = [];

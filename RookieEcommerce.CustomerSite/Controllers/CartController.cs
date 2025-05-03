@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RookieEcommerce.CustomerSite.Models;
 using RookieEcommerce.CustomerSite.Services;
-using System.Threading.Tasks;
 
 namespace RookieEcommerce.CustomerSite.Controllers
 {
@@ -14,7 +13,6 @@ namespace RookieEcommerce.CustomerSite.Controllers
 
             return View(new CartViewModel { CartDetails = cart });
         }
-    
 
         [HttpPost]
         public async Task<IActionResult> HandleCartItem(Guid? cartItemId)

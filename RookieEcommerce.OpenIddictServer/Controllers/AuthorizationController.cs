@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using OpenIddict.Server.AspNetCore;
-using static OpenIddict.Abstractions.OpenIddictConstants;
-using System.Security.Claims;
 using OpenIddict.Abstractions;
+using OpenIddict.Server.AspNetCore;
 using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.OpenIddictServer.Helpers;
 using RookieEcommerce.OpenIddictServer.Models;
-using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace RookieEcommerce.OpenIddictServer.Controllers
 {
@@ -238,7 +238,6 @@ namespace RookieEcommerce.OpenIddictServer.Controllers
             return SignIn(new ClaimsPrincipal(identity), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
 
-
         private static IEnumerable<string> GetDestinations(Claim claim)
         {
             // Note: by default, claims are NOT automatically included in the access and identity tokens.
@@ -280,4 +279,3 @@ namespace RookieEcommerce.OpenIddictServer.Controllers
         }
     }
 }
-

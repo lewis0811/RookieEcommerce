@@ -37,7 +37,7 @@ namespace RookieEcommerce.Api.Controllers
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetCategory([FromRoute(Name = "category-id")]Guid categoryId, bool isIncludeItems, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCategory([FromRoute(Name = "category-id")] Guid categoryId, bool isIncludeItems, CancellationToken cancellationToken)
         {
             var query = new GetCategoryByIdQuery { Id = categoryId, IsIncludeItems = isIncludeItems };
             var result = await mediator.Send(query, cancellationToken);

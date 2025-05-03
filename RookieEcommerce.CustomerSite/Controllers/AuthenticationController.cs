@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Client.AspNetCore;
-using System;
 
 namespace RookieEcommerce.CustomerSite.Controllers
 {

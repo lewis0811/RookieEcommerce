@@ -106,7 +106,6 @@ namespace RookieEcommerce.Api
             .AddDefaultTokenProviders()
             .AddDefaultUI();
 
-
             return services;
         }
     }

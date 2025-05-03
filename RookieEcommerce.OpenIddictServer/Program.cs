@@ -17,7 +17,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 // --- Add DbContext, Database Provider, OpenIddict ---
-builder.Services.AddDbContext<ApplicationDbContext>(options => {
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
     options.UseSqlServer(connectionString);
     options.UseOpenIddict();
 });
@@ -34,80 +35,80 @@ builder.Services.AddQuartz(options =>
     options.UseInMemoryStore();
 });
 
- builder.Services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
+builder.Services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
- builder.Services.AddOpenIddict()
-    // Register the OpenIddict core components.
-    .AddCore(options =>
-    {
-        // Configure OpenIddict to use the Entity Framework Core stores and models.
-        // Note: call ReplaceDefaultEntities() to replace the default OpenIddict entities.
-        options.UseEntityFrameworkCore()
-               .UseDbContext<ApplicationDbContext>();
+builder.Services.AddOpenIddict()
+   // Register the OpenIddict core components.
+   .AddCore(options =>
+   {
+       // Configure OpenIddict to use the Entity Framework Core stores and models.
+       // Note: call ReplaceDefaultEntities() to replace the default OpenIddict entities.
+       options.UseEntityFrameworkCore()
+              .UseDbContext<ApplicationDbContext>();
 
-        // Enable Quartz.NET integration.
-        options.UseQuartz();
-    })
+       // Enable Quartz.NET integration.
+       options.UseQuartz();
+   })
 
-    // Register the OpenIddict client components.
-    .AddClient(options =>
-    {
-        options.AllowAuthorizationCodeFlow();
+   // Register the OpenIddict client components.
+   .AddClient(options =>
+   {
+       options.AllowAuthorizationCodeFlow();
 
-        options.AddDevelopmentEncryptionCertificate()
-               .AddDevelopmentSigningCertificate();
+       options.AddDevelopmentEncryptionCertificate()
+              .AddDevelopmentSigningCertificate();
 
-        options.UseAspNetCore()
-               .EnableStatusCodePagesIntegration()
-               .EnableRedirectionEndpointPassthrough();
+       options.UseAspNetCore()
+              .EnableStatusCodePagesIntegration()
+              .EnableRedirectionEndpointPassthrough();
 
-        options.UseSystemNetHttp()
-               .SetProductInformation(typeof(Program).Assembly);
+       options.UseSystemNetHttp()
+              .SetProductInformation(typeof(Program).Assembly);
 
-        options.UseWebProviders()
-            .AddGitHub(options =>
-            {
-                options.SetClientId(builder.Configuration["Github:ClientId"]!)
-                        .SetClientSecret(builder.Configuration["Github:ClientSecret"]!)
-                        .SetRedirectUri(builder.Configuration["Github:RedirectUri"]!);
-            });
-    })
+       options.UseWebProviders()
+           .AddGitHub(options =>
+           {
+               options.SetClientId(builder.Configuration["Github:ClientId"]!)
+                       .SetClientSecret(builder.Configuration["Github:ClientSecret"]!)
+                       .SetRedirectUri(builder.Configuration["Github:RedirectUri"]!);
+           });
+   })
 
-    // Register the OpenIddict server
-    // components.
-    .AddServer(options =>
-    {
-        options.SetAuthorizationEndpointUris("connect/authorize")
-               .SetEndSessionEndpointUris("connect/logout")
-               .SetTokenEndpointUris("connect/token")
-               .SetUserInfoEndpointUris("connect/userinfo");
+   // Register the OpenIddict server
+   // components.
+   .AddServer(options =>
+   {
+       options.SetAuthorizationEndpointUris("connect/authorize")
+              .SetEndSessionEndpointUris("connect/logout")
+              .SetTokenEndpointUris("connect/token")
+              .SetUserInfoEndpointUris("connect/userinfo");
 
-        options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
+       options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
 
-        options.AllowAuthorizationCodeFlow();
+       options.AllowAuthorizationCodeFlow();
 
-        // Register the signing and encryption credentials.
-        options.AddDevelopmentEncryptionCertificate()
-               .AddDevelopmentSigningCertificate();
+       // Register the signing and encryption credentials.
+       options.AddDevelopmentEncryptionCertificate()
+              .AddDevelopmentSigningCertificate();
 
-        // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
-        options.UseAspNetCore()
-               .EnableAuthorizationEndpointPassthrough()
-               .EnableEndSessionEndpointPassthrough()
-               .EnableTokenEndpointPassthrough()
-               .EnableUserInfoEndpointPassthrough()
-               .EnableStatusCodePagesIntegration();
-    })
+       // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
+       options.UseAspNetCore()
+              .EnableAuthorizationEndpointPassthrough()
+              .EnableEndSessionEndpointPassthrough()
+              .EnableTokenEndpointPassthrough()
+              .EnableUserInfoEndpointPassthrough()
+              .EnableStatusCodePagesIntegration();
+   })
 
-    // Register the OpenIddict validation components.
-    .AddValidation(options =>
-    {
-        // Import the configuration from the local OpenIddict server instance.
-        options.UseLocalServer();
+   // Register the OpenIddict validation components.
+   .AddValidation(options =>
+   {
+       // Import the configuration from the local OpenIddict server instance.
+       options.UseLocalServer();
 
-        // Register the ASP.NET Core host.
-        options.UseAspNetCore();
-    });
+       // Register the ASP.NET Core host.
+       options.UseAspNetCore();
+   });
 
 // Register the worker responsible for seeding the database.
 builder.Services.AddHostedService<Worker>();

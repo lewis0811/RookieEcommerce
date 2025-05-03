@@ -11,7 +11,7 @@ namespace RookieEcommerce.Application.Mappers
     {
         // GET
         public static partial CategoryDetailsDto CategoryToCategoryDetailsDtoList(Category category);
-        
+
         public static partial List<CategoryDetailsDto> CategoryListToCategoryDetailsDtoList(List<Category> categories);
 
         public static partial SubCategoriesDto CategoryToSubCategoriesDto(Category category);
@@ -22,6 +22,5 @@ namespace RookieEcommerce.Application.Mappers
 
         // POST
         public static partial CategoryCreateDto CategoryToCategoryCreateDto(Category category);
-
     }
 }

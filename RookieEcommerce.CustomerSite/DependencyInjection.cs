@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using OpenIddict.Client;
 using Quartz;
 using RookieEcommerce.CustomerSite.Services;
 using RookieEcommerce.Infrastructure;
 using System.Net.Http.Headers;
-using Microsoft.Extensions.DependencyInjection;
 using static OpenIddict.Abstractions.OpenIddictConstants;
-using OpenIddict.Client;
 
 namespace RookieEcommerce.CustomerSite
 {
@@ -14,9 +13,9 @@ namespace RookieEcommerce.CustomerSite
     {
         public static IServiceCollection AddWebServices(
             this IServiceCollection services,
-        #pragma warning disable IDE0060 // Remove unused parameter
+#pragma warning disable IDE0060 // Remove unused parameter
             IConfiguration configuration) // configuration might be needed for some services
-        #pragma warning restore IDE0060 // Remove unused parameter
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             // Register HttpClient
             services.AddHttpClient<ProductApiClient>()
@@ -44,7 +43,8 @@ namespace RookieEcommerce.CustomerSite
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
             // Add DbContext, use SqlServer, OpenIddict
-            services.AddDbContext<ApplicationDbContext>(options => {
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
                 options.UseSqlServer(connectionString);
                 options.UseOpenIddict();
             });
@@ -114,26 +114,26 @@ namespace RookieEcommerce.CustomerSite
             // Register the OpenIddict server components.
             .AddServer(options =>
             {
-            options.SetAuthorizationEndpointUris("connect/authorize")
-               .SetEndSessionEndpointUris("connect/logout")
-               .SetTokenEndpointUris("connect/token")
-               .SetUserInfoEndpointUris("connect/userinfo");
+                options.SetAuthorizationEndpointUris("connect/authorize")
+                   .SetEndSessionEndpointUris("connect/logout")
+                   .SetTokenEndpointUris("connect/token")
+                   .SetUserInfoEndpointUris("connect/userinfo");
 
-            options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
+                options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
 
-            options.AllowAuthorizationCodeFlow();
+                options.AllowAuthorizationCodeFlow();
 
                 // Register the signing and encryption credentials.
-            options.AddDevelopmentEncryptionCertificate()
-               .AddDevelopmentSigningCertificate();
+                options.AddDevelopmentEncryptionCertificate()
+                   .AddDevelopmentSigningCertificate();
 
                 // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
-            options.UseAspNetCore()
-               .EnableAuthorizationEndpointPassthrough()
-               .EnableEndSessionEndpointPassthrough()
-               .EnableTokenEndpointPassthrough()
-               .EnableUserInfoEndpointPassthrough()
-               .EnableStatusCodePagesIntegration();
+                options.UseAspNetCore()
+                   .EnableAuthorizationEndpointPassthrough()
+                   .EnableEndSessionEndpointPassthrough()
+                   .EnableTokenEndpointPassthrough()
+                   .EnableUserInfoEndpointPassthrough()
+                   .EnableStatusCodePagesIntegration();
             })
             // Register the OpenIddict validation components
             .AddValidation(options =>

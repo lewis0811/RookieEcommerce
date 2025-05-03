@@ -16,11 +16,11 @@ namespace RookieEcommerce.Application.Features.CartItems.Queries.Command
         {
             // Check if cart item exits
             // Get the specific Cart aggregate root (including items)
-            var cart = await cartRepository.GetByIdAsync(request.CartId, query => query.Include(c => c.Items), cancellationToken) 
+            var cart = await cartRepository.GetByIdAsync(request.CartId, query => query.Include(c => c.Items), cancellationToken)
                 ?? throw new InvalidOperationException($"Cart ID {request.CartId} not found.");
 
             // Find the specific CartItem within the aggregate
-            var itemToRemove = cart.Items.FirstOrDefault(item => item.Id == request.ItemId) 
+            var itemToRemove = cart.Items.FirstOrDefault(item => item.Id == request.ItemId)
                 ?? throw new InvalidOperationException($"CartItem {request.ItemId} not found in Cart {request.CartId}.");
 
             // Remove the item from the aggregate's collection

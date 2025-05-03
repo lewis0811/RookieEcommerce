@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -30,14 +29,11 @@ namespace RookieEcommerce.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "OpenIddictApplications");
-
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
-
             migrationBuilder.DropColumn(
                 name: "Sku",
                 table: "Products");

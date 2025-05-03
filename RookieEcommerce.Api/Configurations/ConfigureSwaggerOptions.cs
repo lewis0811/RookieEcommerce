@@ -9,6 +9,7 @@ namespace RookieEcommerce.Api.Configurations
      * Configurate template, shout out to the owner
      * Reference: https://referbruv.com/blog/working-with-options-pattern-in-aspnet-core-the-complete-guide/
      **/
+
     public class ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) : IConfigureOptions<SwaggerGenOptions>
     {
         private readonly IApiVersionDescriptionProvider _provider = provider;

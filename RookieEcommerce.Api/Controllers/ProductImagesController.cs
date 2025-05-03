@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RookieEcommerce.Application.Features.ProductImages.Commands;
 using RookieEcommerce.Application.Features.ProductImages.Queries;
-using RookieEcommerce.Application.Features.Products.Queries;
 
 namespace RookieEcommerce.Api.Controllers
 {
@@ -18,7 +17,7 @@ namespace RookieEcommerce.Api.Controllers
         public async Task<IActionResult> GetProductImages([FromQuery] GetProductImagesQuery query, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(query, cancellationToken);
-            
+
             return Ok(result);
         }
 
@@ -28,7 +27,7 @@ namespace RookieEcommerce.Api.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetProductImage([FromRoute(Name = "image-id")] Guid imageId, CancellationToken cancellationToken)
         {
-            var query = new GetProductImageByIdQuery { Id = imageId};
+            var query = new GetProductImageByIdQuery { Id = imageId };
             var result = await mediator.Send(query, cancellationToken);
 
             return Ok(result);

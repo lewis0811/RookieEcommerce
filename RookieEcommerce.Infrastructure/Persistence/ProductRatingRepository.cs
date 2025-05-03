@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
+﻿using Microsoft.EntityFrameworkCore.Query;
 using RookieEcommerce.Application.Common;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Application.Features.ProductRatings.Queries;

@@ -1,8 +1,6 @@
 ﻿using RookieEcommerce.Application.Mappers;
-using RookieEcommerce.SharedViewModels.ProductDtos;
 using RookieEcommerce.SharedViewModels.ProductRatingDtos;
 using RookieEcommerce.SharedViewModels.ResponseDtos;
-using System.Net.Http;
 
 namespace RookieEcommerce.CustomerSite.Services
 {

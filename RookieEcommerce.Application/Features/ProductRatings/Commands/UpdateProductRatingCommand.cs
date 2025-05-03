@@ -13,7 +13,7 @@ namespace RookieEcommerce.Application.Features.ProductRatings.Commands
         public string? Comment { get; set; }
     }
 
-    public class UpdateProductRatingCommandHandler(IUnitOfWork unitOfWork, IProductRatingRepository productRatingRepository) 
+    public class UpdateProductRatingCommandHandler(IUnitOfWork unitOfWork, IProductRatingRepository productRatingRepository)
         : IRequestHandler<UpdateProductRatingCommand>
     {
         public async Task Handle(UpdateProductRatingCommand request, CancellationToken cancellationToken)

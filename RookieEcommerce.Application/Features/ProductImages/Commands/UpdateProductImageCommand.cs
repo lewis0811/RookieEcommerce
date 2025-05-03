@@ -56,7 +56,7 @@ namespace RookieEcommerce.Application.Features.ProductImages.Commands
                 var existingImageAtTargetOrder = await productImageRepository
                     .GetByAttributeAsync(
                     img => img.ProductId == productImage.ProductId
-                    && img.SortOrder == request.SortOrder && img.Id != productImage.Id, 
+                    && img.SortOrder == request.SortOrder && img.Id != productImage.Id,
                     null, // Exclude self
                     cancellationToken);
 

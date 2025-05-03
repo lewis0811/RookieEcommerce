@@ -1,5 +1,4 @@
 ﻿using RookieEcommerce.Domain.Entities;
-using RookieEcommerce.Domain.Enums;
 
 namespace RookieEcommerce.SharedViewModels.OrderDtos
 {
@@ -13,6 +12,5 @@ namespace RookieEcommerce.SharedViewModels.OrderDtos
 
         public Address ShippingAddress { get; set; } = new();
         public List<CreateOrderItemDto> OrderItems { get; set; } = [];
-
     }
 }

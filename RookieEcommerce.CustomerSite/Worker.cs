@@ -14,5 +14,4 @@ namespace RookieEcommerce.CustomerSite
 
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
-
 }

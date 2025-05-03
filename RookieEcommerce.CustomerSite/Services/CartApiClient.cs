@@ -1,8 +1,5 @@
-﻿
-using RookieEcommerce.Domain.Entities;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+﻿using RookieEcommerce.SharedViewModels.CartDtos;
 using System.Text.Json;
-using RookieEcommerce.SharedViewModels.CartDtos;
 
 namespace RookieEcommerce.CustomerSite.Services
 {
@@ -19,7 +16,6 @@ namespace RookieEcommerce.CustomerSite.Services
             return result;
         }
 
-
         public async Task<Guid?> CreateCustomerCartAsync(Guid customerId)
         {
             var response = await httpClient.PostAsJsonAsync($"api/v1/carts", customerId);
@@ -35,7 +31,7 @@ namespace RookieEcommerce.CustomerSite.Services
                 {
                     throw new JsonException($"Json deserialize error: {jsonEx.Message}");
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     throw new InvalidOperationException($"Error: {ex.Message}");
                 }
@@ -43,7 +39,6 @@ namespace RookieEcommerce.CustomerSite.Services
 
             return null;
         }
-    
 
         public async Task RemoveCartItemAsync(Guid cartId, Guid cartItemId)
         {

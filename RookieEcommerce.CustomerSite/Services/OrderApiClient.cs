@@ -19,7 +19,7 @@ namespace RookieEcommerce.CustomerSite.Services
             var response = await httpClient.PostAsJsonAsync("api/v1/orders", dto);
             response.EnsureSuccessStatusCode();
 
-            if(response.IsSuccessStatusCode && response.StatusCode == System.Net.HttpStatusCode.Created)
+            if (response.IsSuccessStatusCode && response.StatusCode == System.Net.HttpStatusCode.Created)
             {
                 try
                 {
@@ -36,12 +36,12 @@ namespace RookieEcommerce.CustomerSite.Services
                 }
             }
 
-            return new ();
+            return new();
         }
 
         public async Task UpdateOrderAsync(string orderId, string transactionId)
         {
-            var command = new UpdateOrderCommand { OrderId = Guid.Parse(orderId), PaymentStatus = Domain.Enums.PaymentStatus.Succeed, TransactionId =  transactionId};
+            var command = new UpdateOrderCommand { OrderId = Guid.Parse(orderId), PaymentStatus = Domain.Enums.PaymentStatus.Succeed, TransactionId = transactionId };
             var response = await httpClient.PutAsJsonAsync($"api/v1/orders/{orderId}", command);
             response.EnsureSuccessStatusCode();
         }

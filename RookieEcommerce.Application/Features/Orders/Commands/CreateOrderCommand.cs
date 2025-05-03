@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Application.Mappers;
 using RookieEcommerce.Domain.Entities;
@@ -22,7 +21,7 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
     }
 
     public class CreateOrderCommandHandler(IUnitOfWork unitOfWork,
-        IOrderRepository orderRepository, 
+        IOrderRepository orderRepository,
         IProductVariantRepository productVariantRepository,
         IProductRepository productRepository,
         IEmailService emailService)
@@ -43,7 +42,6 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
                 int quantity = itemDto.Quantity;
                 string productName = "";
                 string? variantInfo = null;
-
 
                 // Use Base Product
                 var product = await productRepository.GetByIdAsync(productId, null, cancellationToken)
@@ -86,7 +84,7 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
                 });
             }
 
-            // Create the Order 
+            // Create the Order
             var order = Order.Create(request.CustomerId.ToString(), calculatedTotalAmount, request.PaymentMethod, request.ShippingAddress, orderItemsEntities);
 
             // Add to repository
@@ -133,7 +131,7 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
             html.Append($"<h1>Cảm ơn bạn đã đặt hàng, {customerEmail}!</h1>"); // Vietnamese greeting
             html.Append($"<p>Đơn hàng <strong>#{order.Id}</strong> của bạn đặt vào ngày {order.CreatedDate.ToString("dd/MM/yyyy HH:mm", culture)} đã được xác nhận.</p>"); // Vietnamese confirmation
 
-            html.Append("<h2>Địa chỉ giao hàng</h2>"); 
+            html.Append("<h2>Địa chỉ giao hàng</h2>");
 
             html.Append("<p>");
             if (!string.IsNullOrEmpty(customerName)) html.Append($"<strong>{customerName}</strong><br>");
@@ -183,6 +181,5 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
 
             return html.ToString();
         }
-
     }
 }

@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Application.Mappers;
-using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.SharedViewModels.ProductDtos;
 using System.Text.Json.Serialization;
 
@@ -12,6 +11,7 @@ namespace RookieEcommerce.Application.Features.Products.Queries
     {
         [JsonIgnore]
         public Guid Id { get; set; }
+
         public bool IsIncludeItems { get; set; }
     }
 
@@ -25,7 +25,7 @@ namespace RookieEcommerce.Application.Features.Products.Queries
                 filter => filter
                     .Include(c => c.Category)
                     .Include(c => c.Variants)
-                    .Include(c => c.Images), 
+                    .Include(c => c.Images),
                 cancellationToken)
                 ?? throw new InvalidOperationException($"Product Id {request.Id} not found.");
 

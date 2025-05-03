@@ -1,6 +1,4 @@
 ﻿using RookieEcommerce.SharedViewModels.CategoryDtos;
-using RookieEcommerce.SharedViewModels.ProductDtos;
-using RookieEcommerce.SharedViewModels.ResponseDtos;
 
 namespace RookieEcommerce.CustomerSite.Services
 {
