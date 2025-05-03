@@ -46,7 +46,7 @@ namespace RookieEcommerce.CustomerSite.Controllers
             identity.SetClaim(Claims.Private.RegistrationId, result.Principal.GetClaim(Claims.Private.RegistrationId))
                     .SetClaim(Claims.Private.ProviderName, result.Principal.GetClaim(Claims.Private.ProviderName));
 
-            var properties = new AuthenticationProperties(result.Properties.Items)
+            var properties = new AuthenticationProperties(result.Properties!.Items)
             {
                 RedirectUri = result.Properties.RedirectUri ?? "/"
             };
@@ -64,7 +64,7 @@ namespace RookieEcommerce.CustomerSite.Controllers
         public async Task<ActionResult> LogOutCallback()
         {
             var result = await HttpContext.AuthenticateAsync(OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
-            return Redirect(result!.Properties!.RedirectUri);
+            return Redirect(result!.Properties!.RedirectUri!);
         }
     }
 }
