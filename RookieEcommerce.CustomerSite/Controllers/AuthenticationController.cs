@@ -26,6 +26,30 @@ namespace RookieEcommerce.CustomerSite.Controllers
             return Challenge(properties, OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
         }
 
+        [HttpPost("~/logout"), ValidateAntiForgeryToken]
+        public async Task<ActionResult> LogOut(string returnUrl)
+        {
+            var result = await HttpContext.AuthenticateAsync();
+            if (result is not { Succeeded: true })
+            {
+                return Redirect(Url.IsLocalUrl(returnUrl) ? returnUrl : "/");
+            }
+
+            await HttpContext.SignOutAsync();
+
+            var properties = new AuthenticationProperties(new Dictionary<string, string?>
+            {
+                [OpenIddictClientAspNetCoreConstants.Properties.IdentityTokenHint] =
+                    result.Properties.GetTokenValue(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelIdentityToken)
+            })
+            {
+                RedirectUri = Url.IsLocalUrl(returnUrl) ? returnUrl : "/"
+            };
+
+            // Ask the OpenIddict client middleware to redirect the user agent to the identity provider.
+            return SignOut(properties, OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
+        }
+
         [HttpGet]
         public IActionResult Register(string? returnUrl = null)
         {
@@ -41,23 +65,6 @@ namespace RookieEcommerce.CustomerSite.Controllers
             return Challenge(properties, OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
         }
 
-        // POST: /Account/Register
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Register(RegisterViewModel model, string? returnUrl = null)
-        //{
-        //    ViewData["ReturnUrl"] = returnUrl;
-        //    if (User.Identity != null && User.Identity.IsAuthenticated) { return RedirectToAction("Index", "Home"); }
-
-        //    if( ModelState.IsValid)
-        //    {
-        //        await identityService.RegisterAsync(model);
-        //    }
-            
-        //    return Redirect(returnUrl ?? "/");
-        //}
-
-
         [HttpGet("~/callback/login/{provider}"), HttpPost("~/callback/login/{provider}"), IgnoreAntiforgeryToken]
         public async Task<ActionResult> LogInCallback()
         {
@@ -72,15 +79,15 @@ namespace RookieEcommerce.CustomerSite.Controllers
             // Build an identity based on the external claims and that will be used to create the authentication cookie.
             var identity = new ClaimsIdentity(
                 authenticationType: "ExternalLogin",
-                nameType: ClaimTypes.Name,
-                roleType: ClaimTypes.Role);
+                nameType: Claims.Name,
+                roleType: Claims.Role);
 
-            identity.SetClaim(ClaimTypes.Email, result.Principal.GetClaim(ClaimTypes.Email))
-                        .SetClaim(ClaimTypes.Name, result.Principal.GetClaim(ClaimTypes.Name))
-                        .SetClaim(ClaimTypes.NameIdentifier, result.Principal.GetClaim(ClaimTypes.NameIdentifier));
-
-            identity.SetClaim(Claims.Private.RegistrationId, result.Principal.GetClaim(Claims.Private.RegistrationId))
-                    .SetClaim(Claims.Private.ProviderName, result.Principal.GetClaim(Claims.Private.ProviderName));
+            identity
+                .SetClaim(Claims.Subject, result.Principal.GetClaim(Claims.Subject))
+                .SetClaim(Claims.Email, result.Principal.GetClaim(Claims.Email))
+                .SetClaim(Claims.Name, result.Principal.GetClaim(Claims.Name))
+                .SetClaim(Claims.PreferredUsername, result.Principal.GetClaim(Claims.PreferredUsername))
+                .SetClaim(Claims.Role, result.Principal.GetClaim(Claims.Role));
 
             var properties = new AuthenticationProperties(result.Properties!.Items)
             {

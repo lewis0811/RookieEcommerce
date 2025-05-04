@@ -317,7 +317,47 @@ namespace RookieEcommerce.OpenIddictServer.Controllers
                 return SignIn(new ClaimsPrincipal(identity), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
 
+            // Using for fetching API after login
+            if (request.IsClientCredentialsGrantType())
+            {
+                var userId = request["user_id"].ToString() ?? throw new InvalidOperationException("Failed to get user_id from client credentials flow");
+                var role = request["role"].ToString() ?? throw new InvalidOperationException("Failed to get role from client credentials flow");
+                // Create a new claims principal 
+                var claim = new List<Claim>
+                {
+                    new (Claims.Subject, userId),
+                    new (Claims.Role, "ADMIN"),
+                    new (Claims.Email, "tekato2002@gmail.com"),
+                    new (Claims.Role, role)
+                };
+
+                var identity = new ClaimsIdentity(claim,OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                identity.SetDestinations(GetDestinations);
+
+                var claimsPrincipal = new ClaimsPrincipal(identity);
+
+                claimsPrincipal.SetScopes(request.GetScopes());
+
+                return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            }
+
             throw new InvalidOperationException("The specified grant type is not supported.");
+        }
+
+        [HttpGet("~/connect/logout")]
+        public IActionResult Logout() => View();
+
+        [ActionName(nameof(Logout)), HttpPost("~/connect/logout"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogoutPost()
+        {
+            await signInManager.SignOutAsync();
+
+            return SignOut(
+                authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
+                properties: new AuthenticationProperties
+                {
+                    RedirectUri = "/"
+                });
         }
 
         private static IEnumerable<string> GetDestinations(Claim claim)

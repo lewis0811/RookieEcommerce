@@ -27,7 +27,7 @@ namespace RookieEcommerce.OpenIddictServer
                     ClientId = configuration["OpenIddict:ClientId"],
                     ClientSecret = configuration["OpenIddict:ClientSecret"],
                     ConsentType = ConsentTypes.Explicit,
-                    DisplayName = "MVC client application",
+                    DisplayName = "NashLux",
                     RedirectUris =
                 {
                     new Uri(configuration["OpenIddict:RedirectUri"]!)
@@ -42,10 +42,12 @@ namespace RookieEcommerce.OpenIddictServer
                     Permissions.Endpoints.EndSession,
                     Permissions.Endpoints.Token,
                     Permissions.GrantTypes.AuthorizationCode,
+                    Permissions.GrantTypes.ClientCredentials,
                     Permissions.ResponseTypes.Code,
                     Permissions.Scopes.Email,
                     Permissions.Scopes.Profile,
-                    Permissions.Scopes.Roles
+                    Permissions.Scopes.Roles,
+                    Permissions.Prefixes.Scope + "api"
                 },
                     Requirements =
                     {

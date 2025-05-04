@@ -83,8 +83,16 @@ builder.Services.AddOpenIddict()
               .SetTokenEndpointUris("connect/token")
               .SetUserInfoEndpointUris("connect/userinfo");
 
-       options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
+       options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles, "api");
 
+       // Add config keys for the authorization code flow.
+       options
+            .AddEphemeralEncryptionKey()
+            .AddEphemeralSigningKey()
+            .DisableAccessTokenEncryption();
+
+       // Register client credentials and authorization code flows.
+       options.AllowClientCredentialsFlow();
        options.AllowAuthorizationCodeFlow();
 
        // Register the signing and encryption credentials.
