@@ -36,23 +36,16 @@ namespace RookieEcommerce.OpenIddictServer.Controllers
                 [Claims.Subject] = await userManager.GetUserIdAsync(user)
             };
 
-            if (User.HasScope(Scopes.Email))
-            {
-                string? email = await userManager.GetEmailAsync(user!);
-                claims[Claims.Email] = email!;
-                claims[Claims.EmailVerified] = await userManager.IsEmailConfirmedAsync(user);
-            }
+            string? email = await userManager.GetEmailAsync(user!);
+            claims[Claims.Email] = email!;
+            claims[Claims.EmailVerified] = await userManager.IsEmailConfirmedAsync(user);
+            claims[Claims.Role] = await userManager.GetRolesAsync(user);
 
             if (User.HasScope(Scopes.Phone))
             {
                 string? phoneNumber = await userManager.GetPhoneNumberAsync(user);
                 claims[Claims.PhoneNumber] = phoneNumber!;
                 claims[Claims.PhoneNumberVerified] = await userManager.IsPhoneNumberConfirmedAsync(user);
-            }
-
-            if (User.HasScope(Scopes.Roles))
-            {
-                claims[Claims.Role] = await userManager.GetRolesAsync(user);
             }
 
             // Note: the complete list of standard claims supported by the OpenID Connect specification

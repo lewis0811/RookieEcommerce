@@ -1,11 +1,14 @@
 ﻿@using RookieEcommerce.CustomerSite.Services
 @using RookieEcommerce.SharedViewModels.CartDtos
+@using System.Security.Claims
+@using static OpenIddict.Abstractions.OpenIddictConstants
 @{
-    var customerId = Guid.Parse("cb276330-9e94-4563-865d-523012a76532");
+    var customerId = Context.User.Claims.FirstOrDefault(c => c.Type == Claims.Subject)?.Value;
     var error = "";
     var includeItems = true;
     CartDetailsDto? cart = null;
     int totalCartItem = 0;
+    
 
     using var httpClient = new HttpClient();
     string requestUri = $"https://localhost:7143/api/v1/carts?customer-id={customerId}&isIncludeItems={includeItems}";
@@ -86,29 +89,46 @@
                         </ul>
 
                         <div class="d-flex align-items-center">
-
-                            <div class="nav-item">
-                                <a class="nav-link position-relative" asp-controller="Cart" asp-action="Index" title="Giỏ hàng">
-                                    <img src="//bizweb.dktcdn.net/100/189/335/themes/822894/assets/i_hcart.png?1673929959248" alt="Giỏ hàng" height="20">
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        @totalCartItem <span class="visually-hidden">items in cart</span>
-                                    </span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end p-3" style="min-width: 250px;">
-                                    <p>Không có sản phẩm nào.</p>
+                            @if (User?.Identity is { IsAuthenticated: true })
+                            {
+                                @* --- Cart --- *@
+                                <div class="nav-item me-3">
+                                    <a class="nav-link position-relative" asp-controller="Cart" asp-action="Index" title="Giỏ hàng">
+                                        <img src="//bizweb.dktcdn.net/100/189/335/themes/822894/assets/i_hcart.png?1673929959248" alt="Giỏ hàng" height="20">
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            @totalCartItem <span class="visually-hidden">items in cart</span>
+                                        </span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end p-3" style="min-width: 250px;">
+                                        <p>Không có sản phẩm nào.</p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="nav-item dropdown me-3 d-none d-lg-block">
-                                <button class="nav-link dropdown-toggle" style="border: none; background-color: transparent" href="#" id="accountDropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="//bizweb.dktcdn.net/100/189/335/themes/822894/assets/i_user.png?1673929959248" alt="Account" height="20">
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="accountDropdown">
-                                    <li><a class="dropdown-item" asp-action="Login" asp-controller="Authentication">Đăng nhập</a></li>
-                                    <li><a class="dropdown-item" asp-action="Register" asp-controller="Authentication">Đăng ký</a></li>
-                                </ul>
-                            </div>
+                                @* --- Info --- *@
+                                <div class="nav-item dropdown me-3 d-none d-lg-block">
+                                    <button class="nav-link dropdown-toggle border-0 bg-transparent d-inline-flex align-items-center p-1" href="#" id="accountDropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="//bizweb.dktcdn.net/100/189/335/themes/822894/assets/i_user.png?1673929959248" alt="Account" height="20" class="me-2"> 
+                                        <span class="text-light">@User.Identity.Name</span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                                        <li>
+                                            <form asp-action="Logout" asp-controller="Authentication" method="post">
+                                                <button class="dropdown-item text-black" type="submit">Đăng xuất</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
 
+                            else
+                            {
+                                <div>
+                                    <a class="text-white text-decoration-none" asp-controller="Authentication" asp-action="Login">Đăng nhập |</a>
+                                    
+                                    <a class="text-white text-decoration-none" asp-controller="Authentication" asp-action="Register">Đăng ký</a>
+                                </div>
+                                   
+                            }
                         </div>
                     </div>
                 </div>

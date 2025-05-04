@@ -22,12 +22,15 @@ namespace RookieEcommerce.OpenIddictServer.Controllers
             // Build an identity based on the external claims and that will be used to create the authentication cookie.
             var identity = new ClaimsIdentity(
                 authenticationType: "ExternalLogin",
-                nameType: ClaimTypes.Name,
-                roleType: ClaimTypes.Role);
+                nameType: Claims.Name,
+                roleType: Claims.Role);
 
-            identity.SetClaim(ClaimTypes.Email, result.Principal.GetClaim(ClaimTypes.Email))
-                    .SetClaim(ClaimTypes.Name, result.Principal.GetClaim(ClaimTypes.Name))
-                    .SetClaim(ClaimTypes.NameIdentifier, result.Principal.GetClaim(ClaimTypes.NameIdentifier));
+            identity
+                .SetClaim(Claims.Subject, result.Principal.GetClaim(Claims.Subject))
+                .SetClaim(Claims.Email, result.Principal.GetClaim(Claims.Email))
+                .SetClaim(Claims.Name, result.Principal.GetClaim(Claims.Name))
+                .SetClaim(Claims.PreferredUsername, result.Principal.GetClaim(Claims.PreferredUsername))
+                .SetClaim(Claims.Role, result.Principal.GetClaim(Claims.Role));
 
             // Preserve the registration details to be able to resolve them later.
             identity.SetClaim(Claims.Private.RegistrationId, result.Principal.GetClaim(Claims.Private.RegistrationId))
