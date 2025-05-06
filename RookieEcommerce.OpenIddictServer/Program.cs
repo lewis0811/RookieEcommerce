@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Quartz;
-using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.Infrastructure;
 using RookieEcommerce.OpenIddictServer;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,17 +18,19 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 // --- Add DbContext, Database Provider, OpenIddict ---
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<OpenIddictApplicationDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
     options.UseOpenIddict();
 });
 
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<OpenIddictApplicationDbContext>();
+
 // Register the Identity services.
-builder.Services.AddIdentity<Customer, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders()
-    .AddDefaultUI();
+//builder.Services.AddIdentity<Customer, IdentityRole>()
+//    .AddEntityFrameworkStores<ApplicationDbContext>()
+//    .AddDefaultTokenProviders()
+//    .AddDefaultUI();
 
 builder.Services.AddQuartz(options =>
 {
@@ -44,7 +47,7 @@ builder.Services.AddOpenIddict()
        // Configure OpenIddict to use the Entity Framework Core stores and models.
        // Note: call ReplaceDefaultEntities() to replace the default OpenIddict entities.
        options.UseEntityFrameworkCore()
-              .UseDbContext<ApplicationDbContext>();
+              .UseDbContext<OpenIddictApplicationDbContext>();
 
        // Enable Quartz.NET integration.
        options.UseQuartz();
@@ -91,6 +94,9 @@ builder.Services.AddOpenIddict()
             .AddEphemeralSigningKey()
             .DisableAccessTokenEncryption();
 
+       options.AddEncryptionKey(new SymmetricSecurityKey(
+            Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")));
+
        // Register client credentials and authorization code flows.
        options.AllowClientCredentialsFlow();
        options.AllowAuthorizationCodeFlow();
@@ -111,8 +117,16 @@ builder.Services.AddOpenIddict()
    // Register the OpenIddict validation components.
    .AddValidation(options =>
    {
+       options.SetIssuer("https://localhost:7004/");
+
+       options.AddEncryptionKey(new SymmetricSecurityKey(
+           Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")));
+
        // Import the configuration from the local OpenIddict server instance.
        options.UseLocalServer();
+
+       // Register the System.Net.Http integration.
+       options.UseSystemNetHttp();
 
        // Register the ASP.NET Core host.
        options.UseAspNetCore();
@@ -131,11 +145,18 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseCors(builder => builder
+    .AllowAnyOrigin()
+    .AllowAnyHeader()
+    .AllowAnyMethod());
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

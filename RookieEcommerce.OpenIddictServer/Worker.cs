@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using OpenIddict.Abstractions;
-using RookieEcommerce.Domain.Entities;
+﻿using OpenIddict.Abstractions;
 using RookieEcommerce.Infrastructure;
-using System.Data;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace RookieEcommerce.OpenIddictServer
@@ -14,7 +11,7 @@ namespace RookieEcommerce.OpenIddictServer
             await using var scope = serviceProvider.CreateAsyncScope();
 
             // Create scope to resolve services
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationDbContext>();
             await context.Database.EnsureCreatedAsync(cancellationToken);
 
             // --- Seed OpenIddict Application/Scope ---
@@ -55,53 +52,6 @@ namespace RookieEcommerce.OpenIddictServer
                     }
                 }, cancellationToken);
             }
-
-            // --- Seed role and admin user for database ---
-            // Create the role manager
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-            // Add roles if they don't exist
-            foreach (var roleName in new[] { "Admin", "User"})
-            {
-                if (!await roleManager.RoleExistsAsync(roleName))
-                {
-                    var role = new IdentityRole { Name = roleName };
-                    await roleManager.CreateAsync(role);
-                }
-            }
-
-            // --- Seed admin user ---
-            // Create the user manager
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Customer>>();
-
-            // Check if the admin user already exists
-            var adminUser = await userManager.FindByEmailAsync(configuration["AdminSettings:Email"]!);
-
-            if (adminUser == null)
-            {
-                adminUser = new Customer
-                {
-                    UserName = configuration["AdminSettings:Username"]!,
-                    Email = configuration["AdminSettings:Email"]!,
-                    FirstName = configuration["AdminSettings:FirstName"]!,
-                    LastName = configuration["AdminSettings:LastName"]!,
-                    EmailConfirmed = true,
-                };
-
-                // Create the admin user with the specified password
-                var result = await userManager.CreateAsync(adminUser, configuration["AdminSettings:Password"]!);
-
-                if (result.Succeeded)
-                {
-                    // Assign the admin role to the user
-                    await userManager.AddToRoleAsync(adminUser, "Admin");
-                }
-                else
-                {
-                    throw new InvalidOperationException($"Error creating admin user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
-                }
-            }
-
         }
 
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
