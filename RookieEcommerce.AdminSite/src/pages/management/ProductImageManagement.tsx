@@ -21,7 +21,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate'; // Icon thêm ảnh
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import DeleteIcon from '@mui/icons-material/Delete';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import EditIcon from '@mui/icons-material/Edit';
@@ -47,7 +47,6 @@ const ProductImageManagementPage: React.FC<ProductImageManagementProps> = ({ pro
     imageToDelete,
     openUploadDialog,
     openConfirmDialog,
-    // fetchProductImages, // Only needed if you want a manual refresh button
     handleOpenUploadDialog,
     handleCloseUploadDialog,
     handleFileSelect,
@@ -79,7 +78,7 @@ const ProductImageManagementPage: React.FC<ProductImageManagementProps> = ({ pro
           variant="contained"
           startIcon={<AddPhotoAlternateIcon />}
           onClick={handleOpenUploadDialog}
-          disabled={loading || uploading || !productId} // Disable nếu đang tải hoặc chưa có productId
+          disabled={loading || uploading || !productId}
         >
           Thêm ảnh mới
         </Button>

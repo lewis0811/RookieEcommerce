@@ -8,7 +8,6 @@ import {
     UpdateProductImageCommand,
 } from '../api';
 import { authService } from '../auth/AuthConfig';
-import { BASE_PATH_API } from '../config/api';
 
 // ----- CLOUDINARY CONFIGURATION -----
 const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_REACT_APP_CLOUDINARY_CLOUD_NAME;
@@ -16,7 +15,7 @@ const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_REACT_APP_CLOUDINARY_UPLOA
 const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 // --------------------------------------------
 
-const apiConfig = new Configuration({ basePath: BASE_PATH_API });
+const apiConfig = new Configuration({ basePath: import.meta.env.VITE_BASE_PATH_API });
 const productImagesApi = new ProductImagesApi(apiConfig);
 
 interface UseProductImageManagementReturn {

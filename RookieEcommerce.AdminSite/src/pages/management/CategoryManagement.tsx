@@ -151,10 +151,10 @@ const CategoryManagementPage: React.FC = () => {
                         {loading && categories.length === 0 && !isModalOpen &&
                             Array.from(new Array(rowsPerPage)).map((_, index) => (
                                 <TableRow key={`skeleton-${index}`}>
-                                    <TableCell><Typography variant="body2"><Box sx={{ width: '100%', height: 20, backgroundColor: 'grey.200', borderRadius: 1 }} /></Typography></TableCell>
-                                    <TableCell><Typography variant="body2"><Box sx={{ width: '100%', height: 20, backgroundColor: 'grey.200', borderRadius: 1 }} /></Typography></TableCell>
-                                    <TableCell><Typography variant="body2"><Box sx={{ width: '100%', height: 20, backgroundColor: 'grey.200', borderRadius: 1 }} /></Typography></TableCell>
-                                    <TableCell><Typography variant="body2"><Box sx={{ width: '100%', height: 20, backgroundColor: 'grey.200', borderRadius: 1 }} /></Typography></TableCell>
+                                    <TableCell><Box sx={{ width: '100%', height: 20, backgroundColor: 'grey.200', borderRadius: 1 }} /></TableCell>
+                                    <TableCell><Box sx={{ width: '100%', height: 20, backgroundColor: 'grey.200', borderRadius: 1 }} /></TableCell>
+                                    <TableCell><Box sx={{ width: '100%', height: 20, backgroundColor: 'grey.200', borderRadius: 1 }} /></TableCell>
+                                    <TableCell><Box sx={{ width: '100%', height: 20, backgroundColor: 'grey.200', borderRadius: 1 }} /></TableCell>
                                     <TableCell align="right"><Box sx={{ display: 'flex', justifyContent: 'flex-end' }}><CircularProgress size={20} sx={{ mr: 1 }} /><CircularProgress size={20} /></Box></TableCell>
                                 </TableRow>
                             ))

@@ -48,11 +48,10 @@ import {
   Category, // Added Category type
 } from '../../api';
 import { authService } from '../../auth/AuthConfig';
-import { BASE_PATH_API } from '../../config/api';
 import { useNavigate } from 'react-router-dom';
 import $ from 'jquery';
 
-const apiConfig = new Configuration({ basePath: BASE_PATH_API });
+const apiConfig = new Configuration({ basePath: import.meta.env.VITE_BASE_PATH_API });
 const productsApi = new ProductsApi(apiConfig);
 const categoriesApi = new CategoriesApi(apiConfig);
 
