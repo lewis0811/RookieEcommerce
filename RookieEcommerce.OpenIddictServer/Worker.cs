@@ -11,7 +11,7 @@ namespace RookieEcommerce.OpenIddictServer
             await using var scope = serviceProvider.CreateAsyncScope();
 
             // Create scope to resolve services
-            var context = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationDbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             await context.Database.EnsureCreatedAsync(cancellationToken);
 
             // --- Seed OpenIddict Application/Scope ---

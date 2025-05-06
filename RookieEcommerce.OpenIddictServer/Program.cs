@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Quartz;
+using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.Infrastructure;
 using RookieEcommerce.OpenIddictServer;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -18,19 +19,19 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 // --- Add DbContext, Database Provider, OpenIddict ---
-builder.Services.AddDbContext<OpenIddictApplicationDbContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
     options.UseOpenIddict();
 });
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<OpenIddictApplicationDbContext>();
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Register the Identity services.
-//builder.Services.AddIdentity<Customer, IdentityRole>()
-//    .AddEntityFrameworkStores<ApplicationDbContext>()
-//    .AddDefaultTokenProviders()
-//    .AddDefaultUI();
+builder.Services.AddIdentity<Customer, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders()
+    .AddDefaultUI();
 
 builder.Services.AddQuartz(options =>
 {
@@ -47,7 +48,7 @@ builder.Services.AddOpenIddict()
        // Configure OpenIddict to use the Entity Framework Core stores and models.
        // Note: call ReplaceDefaultEntities() to replace the default OpenIddict entities.
        options.UseEntityFrameworkCore()
-              .UseDbContext<OpenIddictApplicationDbContext>();
+              .UseDbContext<ApplicationDbContext>();
 
        // Enable Quartz.NET integration.
        options.UseQuartz();
