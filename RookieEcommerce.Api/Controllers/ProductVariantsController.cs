@@ -1,8 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RookieEcommerce.Application.Common;
 using RookieEcommerce.Application.Features.Products.Queries;
 using RookieEcommerce.Application.Features.ProductVariants.Commands;
 using RookieEcommerce.Application.Features.ProductVariants.Queries;
+using RookieEcommerce.SharedViewModels.ProductDtos;
+using RookieEcommerce.SharedViewModels.ProductVariantDtos;
 
 namespace RookieEcommerce.Api.Controllers
 {
@@ -13,7 +16,7 @@ namespace RookieEcommerce.Api.Controllers
         // GET: product-variants
         [HttpGet]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> GetProductVariants([FromQuery] GetProductVariantsQuery query, CancellationToken cancellationToken)
+        public async Task<ActionResult<PaginationList<ProductVariantDetailsDto>>> GetProductVariants([FromQuery] GetProductVariantsQuery query, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(query, cancellationToken);
             return Ok(result);
@@ -23,7 +26,7 @@ namespace RookieEcommerce.Api.Controllers
         [HttpGet("{variant-id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetProductVariant([FromRoute(Name = "variant-id")] Guid productVariantId, bool isIncludeItems, CancellationToken cancellationToken)
+        public async Task<ActionResult<ProductDetailsDto>> GetProductVariant([FromRoute(Name = "variant-id")] Guid productVariantId, bool isIncludeItems, CancellationToken cancellationToken)
         {
             var query = new GetProductByIdQuery { Id = productVariantId, IsIncludeItems = isIncludeItems };
             var result = await mediator.Send(query, cancellationToken);
@@ -35,7 +38,7 @@ namespace RookieEcommerce.Api.Controllers
         [HttpPost]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> AddProductVariant(CreateVariantCommand command, CancellationToken cancellationToken)
+        public async Task<ActionResult<ProductVariantCreateDto>> AddProductVariant(CreateVariantCommand command, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(command, cancellationToken);
 
