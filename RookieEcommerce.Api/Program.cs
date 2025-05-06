@@ -1,4 +1,4 @@
-using RookieEcommerce.Api;
+﻿using RookieEcommerce.Api;
 using RookieEcommerce.Api.Middleware;
 using RookieEcommerce.Application;
 using RookieEcommerce.Infrastructure;
@@ -34,6 +34,8 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddHostedService<Worker>();
+
 var app = builder.Build();
 
 // Register error handling middleware
@@ -60,9 +62,9 @@ else
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseCors();
 
-app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 

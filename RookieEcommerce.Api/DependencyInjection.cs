@@ -1,7 +1,9 @@
 ﻿using Asp.Versioning;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OpenIddict.Validation.AspNetCore;
 using RookieEcommerce.Api.Configurations;
 using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.Infrastructure;
@@ -41,52 +43,77 @@ namespace RookieEcommerce.Api
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(options =>
             {
-                // Define the OAuth2.0 scheme that's compatible with OpenIddict
-                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                // Define the Bearer authentication scheme
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
-                    {
-                        AuthorizationCode = new OpenApiOAuthFlow
-                        {
-                            // URLs must match EXACTLY what you configured in AddOpenIddict().AddServer()
-                            AuthorizationUrl = new Uri("/connect/authorize", UriKind.Relative), // Relative URL to your auth endpoint
-                            TokenUrl = new Uri("/connect/token", UriKind.Relative),             // Relative URL to your token endpoint
-                            Scopes = new Dictionary<string, string>
-                            {
-                                // Scopes must match EXACTLY what you configured in AddOpenIddict().AddServer()
-                                { "openid", "OpenID Connect Scope" },
-                                { "profile", "User Profile Scope" },
-                                { "email", "User Email Scope" },
-                                { "roles", "User Roles Scope" },
-                                { "api", "API Access Scope" }
-                            }
-                        }
-                    }
+                    Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer {token}' (without quotes).",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT"
                 });
 
-                // Add a global security requirement to ensure endpoints use the defined scheme
+                // Add a global security requirement using the Bearer scheme
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
                 {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "oauth2" // Must match the name given in AddSecurityDefinition
-                            },
-                            Scheme = "oauth2",
-                            Name = "oauth2",
-                            In = ParameterLocation.Header
-                        },
-                        new List<string>()
-                    }
-                });
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer" // Must match the name defined in AddSecurityDefinition
+                },
+                Scheme = "bearer",
+                Name = "Bearer",
+                In = ParameterLocation.Header
+            },
+            new List<string>() // No scopes needed for JWT Bearer
+        }
+    });
             });
+
 
             // --- Add Vnpay Service ---
             services.AddScoped<IVnpay, Vnpay>();
+
+            // --- Add OpenIddict ---
+            services.AddOpenIddict()
+                .AddCore(options =>
+                {
+                    options.UseEntityFrameworkCore().UseDbContext<ApplicationDbContext>();
+                })
+                .AddServer(options =>
+                {
+                    options.RequireProofKeyForCodeExchange();
+
+                    options.AddEncryptionKey(new SymmetricSecurityKey(
+                               Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")));
+
+                    // Register the signing credentials.
+                    options.AddDevelopmentSigningCertificate();
+                })
+                .AddValidation(options =>
+                {
+                    // Note: the validation handler uses OpenID Connect discovery
+                    // to retrieve the issuer signing keys used to validate tokens.
+                    options.SetIssuer("https://localhost:7004/");
+
+                    // Register the encryption credentials. This sample uses a symmetric
+                    // encryption key that is shared between the server and the API project.
+                    //
+                    // Note: in a real world application, this encryption key should be
+                    // stored in a safe place (e.g in Azure KeyVault, stored as a secret).
+                    options.AddEncryptionKey(new SymmetricSecurityKey(
+                        Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")));
+
+                    // Register the System.Net.Http integration.
+                    options.UseSystemNetHttp();
+
+                    // Register the ASP.NET Core host.
+                    options.UseAspNetCore();
+                });
 
             return services;
         }
