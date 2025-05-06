@@ -20,7 +20,7 @@ namespace RookieEcommerce.Application.Features.Products.Queries
         [Range(typeof(decimal), "1", "79228162514264337593543950335")]
         public decimal? MinPrice { get; set; }
 
-        public bool IsIncludeItems { get; set; }
+        public bool IsIncludeItems { get; set; } = true;
     }
 
     public class GetProductsQueryHandler(IProductRepository productRepository) : IRequestHandler<GetProductsQuery, PaginationList<ProductDetailsDto>>
@@ -32,7 +32,9 @@ namespace RookieEcommerce.Application.Features.Products.Queries
             // Check if IsIncludeItems is true, then include products and images
             if (request.IsIncludeItems)
             {
-                query = filter => filter.Include(c => c.Images);
+                query = filter => filter
+                        .Include(c => c.Images)
+                        .Include(c => c.Category!);
             }
 
             // Get paginated of products

@@ -39,11 +39,12 @@
             };
         }
 
-        public void Update(string? name, string? description, decimal? price, int? totalQuantity)
+        public void Update(string? name, string? description, decimal? price, string? detail, int? totalQuantity)
         {
             if (name != null && name != Name) Name = name;
             if (description != null && description != Description) Description = description;
             if (price != null && price != Price) Price = (decimal)price;
+            if (detail != null && detail != Details) Details = detail;
             if (totalQuantity != null && totalQuantity != TotalQuantity) TotalQuantity = (int)totalQuantity;
             UpdateModifiedDate();
         }

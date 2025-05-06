@@ -12,10 +12,10 @@ namespace RookieEcommerce.Application.Features.ProductVariants.Queries
         public Guid? ProductId { get; set; }
         public string? VariantType { get; set; }
 
-        [Range(typeof(decimal), "1", "79228162514264337593543950335")]
-        public decimal? MinPrice { get; set; } = 1;
+        [Range(typeof(decimal), "0", "79228162514264337593543950335")]
+        public decimal? MinPrice { get; set; } = 0;
 
-        [Range(typeof(decimal), "1", "79228162514264337593543950335")]
+        [Range(typeof(decimal), "0", "79228162514264337593543950335")]
         public decimal? MaxPrice { get; set; }
     }
 

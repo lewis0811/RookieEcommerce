@@ -4,6 +4,7 @@ using RookieEcommerce.Application.Contacts.Persistence;
 using RookieEcommerce.Application.Mappers;
 using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.SharedViewModels.ProductVariantDtos;
+using System.ComponentModel.DataAnnotations;
 
 namespace RookieEcommerce.Application.Features.ProductVariants.Commands
 {
@@ -13,7 +14,9 @@ namespace RookieEcommerce.Application.Features.ProductVariants.Commands
 
         public string VariantType { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
+        [Range(1, int.MaxValue)]
         public int StockQuantity { get; set; }
+        [Range(typeof(decimal), "0", "79228162514264337593543950335")]
         public decimal Price { get; set; }
     }
 

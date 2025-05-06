@@ -16,7 +16,7 @@ namespace RookieEcommerce.Infrastructure.Persistence
             // Apply include query if includeProperties is not null
             variants = ApplyInclude(query, variants);
 
-            // Apply filtering if ParantCategoryId is not null
+            //// Apply filtering if ParantCategoryId is not null
             variants = ApplyFilter(query, variants);
 
             // Apply searching term if SearchTerm is not null
@@ -24,6 +24,7 @@ namespace RookieEcommerce.Infrastructure.Persistence
 
             // Apply sorting if SortBy is not null
             variants = ApplySort(query, variants);
+
             return Task.FromResult(PaginationList<ProductVariant>.Create(variants, query.PageSize, query.PageNumber));
         }
 
@@ -52,7 +53,19 @@ namespace RookieEcommerce.Infrastructure.Persistence
         {
             if (query.ProductId != null)
             {
-                variants = variants.Where(c => c.Id == query.ProductId);
+                variants = variants.Where(c => c.ProductId == query.ProductId);
+            }
+            if (query.MaxPrice != null)
+            {
+                variants = variants.Where(c => c.Price <= query.MaxPrice);
+            }
+            if (query.MinPrice != null)
+            {
+                variants = variants.Where(c => c.Price >= query.MinPrice);
+            }
+            if (query.MinPrice != null && query.MaxPrice != null)
+            {
+                variants = variants.Where(c => c.Price >= query.MinPrice && c.Price <= query.MaxPrice);
             }
 
             return variants;

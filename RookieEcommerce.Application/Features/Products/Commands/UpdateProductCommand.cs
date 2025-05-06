@@ -9,9 +9,11 @@ namespace RookieEcommerce.Application.Features.Products.Commands
         [JsonIgnore]
         public Guid Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string? Name { get; set; }
+        public string? Description { get; set; }
         public decimal Price { get; set; }
+        public string? Details { get; set; }
+        public int? TotalQuantity { get; set; }
     }
 
     public class UpdateProductCommandHandler(IUnitOfWork unitOfWork, IProductRepository productRepository) : IRequestHandler<UpdateProductCommand>
@@ -23,7 +25,7 @@ namespace RookieEcommerce.Application.Features.Products.Commands
                 ?? throw new InvalidOperationException($"Product Id {request.Id} not found.");
 
             // Map request to product
-            product.Update(request.Name, request.Description, request.Price, null);
+            product.Update(request.Name, request.Description, request.Price, request.Details, request.TotalQuantity);
 
             // Update via Repository
             await productRepository.UpdateAsync(product, cancellationToken);
