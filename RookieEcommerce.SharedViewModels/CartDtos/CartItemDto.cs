@@ -11,7 +11,7 @@ namespace RookieEcommerce.SharedViewModels.CartDtos
         public virtual ProductVariantDetailsDto? ProductVariant { get; set; }
 
         public decimal? LineTotal => ProductVariant != null
-            ? ProductVariant.Price * Quantity
+            ? ProductVariant.Price + Product!.Price * Quantity
             : Product?.Price * Quantity;
     }
 }
