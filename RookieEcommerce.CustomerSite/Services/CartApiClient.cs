@@ -1,4 +1,6 @@
-﻿using RookieEcommerce.SharedViewModels.CartDtos;
+﻿using OpenIddict.Client.AspNetCore;
+using RookieEcommerce.Application.Features.Carts.Commands;
+using RookieEcommerce.SharedViewModels.CartDtos;
 using System.Text.Json;
 
 namespace RookieEcommerce.CustomerSite.Services
@@ -10,17 +12,30 @@ namespace RookieEcommerce.CustomerSite.Services
             public Guid Id { get; init; } = Guid.Empty;
         }
 
-        public async Task<CartDetailsDto?> GetCustomerCartAsync(Guid customerId)
+        public async Task<CartDetailsDto?> GetCustomerCartAsync(Guid customerId, string? token)
         {
-            var result = await httpClient.GetFromJsonAsync<CartDetailsDto>($"api/v1/carts?customer-id={customerId}&isIncludeItems=true");
+            CartDetailsDto? result = null;
+            try
+            {
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                result = await httpClient.GetFromJsonAsync<CartDetailsDto>($"api/v1/carts?customer-id={customerId}&isIncludeItems=true");
+
+            }
+            catch (HttpRequestException)
+            {
+                return result;
+
+            }
             return result;
         }
 
         public async Task<Guid?> CreateCustomerCartAsync(Guid customerId)
         {
-            var response = await httpClient.PostAsJsonAsync($"api/v1/carts", customerId);
+            CreateCartCommand command = new CreateCartCommand { CustomerId = customerId };
+            var response = await httpClient.PostAsJsonAsync($"api/v1/carts", command);
 
-            if (response.IsSuccessStatusCode && response.StatusCode == System.Net.HttpStatusCode.Created)
+            if (response.IsSuccessStatusCode && response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 try
                 {

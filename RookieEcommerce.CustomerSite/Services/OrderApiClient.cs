@@ -6,12 +6,21 @@ namespace RookieEcommerce.CustomerSite.Services
 {
     public class OrderApiClient(HttpClient httpClient)
     {
-        public async Task<OrderDetailsDto> GetOrderItemAsync(Guid customerId)
+        public async Task<OrderDetailsDto?> GetOrderDetailAsync(Guid customerId)
         {
-            var orderItem = await httpClient
-                .GetFromJsonAsync<OrderDetailsDto>($"api/v1/orders/customer/{customerId}?isIncludeItems=true");
+            OrderDetailsDto? order = null;
+            try
+            {
+                order = await httpClient
+                    .GetFromJsonAsync<OrderDetailsDto>($"api/v1/orders/customer/{customerId}?isIncludeItems=true");
 
-            return orderItem!;
+            }
+            catch (HttpRequestException)
+            {
+                return order;
+            }
+
+            return order;
         }
 
         public async Task<OrderCreateDto> CreateOrderAsync(CreateOrderDto dto)

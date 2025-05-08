@@ -13,8 +13,11 @@ namespace RookieEcommerce.CustomerSite.Services
             return productRatings!;
         }
 
-        public async Task<PaginationResponseDto<ProductRatingDetailsDto>> GetProductRatingsAsync(Guid productId)
+        public async Task<PaginationResponseDto<ProductRatingDetailsDto>> GetProductRatingsAsync(Guid productId, string? token)
         {
+            httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
             var productRatings = await httpClient
                 .GetFromJsonAsync<PaginationResponseDto<ProductRatingDetailsDto>>($"api/v1/product-ratings?productId={productId}&IsIncludedItems=true");
             return productRatings!;
@@ -27,8 +30,11 @@ namespace RookieEcommerce.CustomerSite.Services
             return productRatings!;
         }
 
-        public async Task AddProductRatingAsync(CreateProductRatingDto dto)
+        public async Task AddProductRatingAsync(CreateProductRatingDto dto, string? token)
         {
+            httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
             var entity = ProductRatingMapper.CreateProductRatingDtoToProductRating(dto);
             var response = await httpClient.PostAsJsonAsync("api/v1/product-ratings", entity);
 

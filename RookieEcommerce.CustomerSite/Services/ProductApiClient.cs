@@ -7,7 +7,7 @@ namespace RookieEcommerce.CustomerSite.Services
 {
     public class ProductApiClient(HttpClient httpClient)
     {
-        public async Task<PaginationResponseDto<ProductDetailsDto>> GetProductsAsync(string? sortOrder, double? minPrice, double? maxPrice, Guid? categoryId, int? pageNumber)
+        public async Task<PaginationResponseDto<ProductDetailsDto>> GetProductsAsync(string? sortOrder, double? minPrice, double? maxPrice, Guid? categoryId, int? pageNumber, string? token)
         {
             var queryBuilder = new StringBuilder("api/v1/products?IsIncludeItems=true");
 
@@ -33,18 +33,25 @@ namespace RookieEcommerce.CustomerSite.Services
             }
 
             string apiUrl = queryBuilder.ToString();
-
+            
+            httpClient.DefaultRequestHeaders.Authorization =
+                 new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            
             var products = await httpClient
                 .GetFromJsonAsync<PaginationResponseDto<ProductDetailsDto>>(apiUrl);
 
             return products!;
         }
 
-        public async Task<ProductDetailsDto> GetProductByIdAsync(Guid productId)
+        public async Task<ProductDetailsDto> GetProductByIdAsync(Guid productId, string? token)
         {
+            httpClient.DefaultRequestHeaders.Authorization =
+                   new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
             var product = await httpClient
                 .GetFromJsonAsync<ProductDetailsDto>($"api/v1/products/{productId}?isIncludeItems=true");
             return product!;
         }
+
     }
 }
