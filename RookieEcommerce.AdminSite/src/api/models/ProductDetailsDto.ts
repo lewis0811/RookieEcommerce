@@ -85,6 +85,24 @@ export interface ProductDetailsDto {
     details?: string | null;
     /**
      * 
+     * @type {number}
+     * @memberof ProductDetailsDto
+     */
+    totalQuantity?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProductDetailsDto
+     */
+    sku?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProductDetailsDto
+     */
+    totalSell?: number;
+    /**
+     * 
      * @type {CategoryDetailsDto}
      * @memberof ProductDetailsDto
      */
@@ -127,6 +145,9 @@ export function ProductDetailsDtoFromJSONTyped(json: any, ignoreDiscriminator: b
         'description': json['description'] == null ? undefined : json['description'],
         'price': json['price'] == null ? undefined : json['price'],
         'details': json['details'] == null ? undefined : json['details'],
+        'totalQuantity': json['totalQuantity'] == null ? undefined : json['totalQuantity'],
+        'sku': json['sku'] == null ? undefined : json['sku'],
+        'totalSell': json['totalSell'] == null ? undefined : json['totalSell'],
         'category': json['category'] == null ? undefined : CategoryDetailsDtoFromJSON(json['category']),
         'images': json['images'] == null ? undefined : ((json['images'] as Array<any>).map(ProductImageDetailsDtoFromJSON)),
         'variants': json['variants'] == null ? undefined : ((json['variants'] as Array<any>).map(ProductVariantDetailsDtoFromJSON)),
@@ -151,6 +172,9 @@ export function ProductDetailsDtoToJSONTyped(value?: ProductDetailsDto | null, i
         'description': value['description'],
         'price': value['price'],
         'details': value['details'],
+        'totalQuantity': value['totalQuantity'],
+        'sku': value['sku'],
+        'totalSell': value['totalSell'],
         'category': CategoryDetailsDtoToJSON(value['category']),
         'images': value['images'] == null ? undefined : ((value['images'] as Array<any>).map(ProductImageDetailsDtoToJSON)),
         'variants': value['variants'] == null ? undefined : ((value['variants'] as Array<any>).map(ProductVariantDetailsDtoToJSON)),

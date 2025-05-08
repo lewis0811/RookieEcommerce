@@ -9,6 +9,7 @@ import {
     CreateCategoryCommand,
     UpdateCategoryCommand,
 } from '../api';
+import { authService } from '../auth/AuthConfig';
 
 const apiConfig = new Configuration({ basePath: import.meta.env.VITE_BASE_PATH_API });
 const categoriesApi = new CategoriesApi(apiConfig);
@@ -39,6 +40,23 @@ export const useCategoryManagement = (initialPageSize: number = 10) => {
         description: '',
         parentCategoryId: null,
     });
+
+    const getAuthHeaders = useCallback(async (): Promise<Record<string, string> | null> => {
+        try {
+            const token = await authService.getAccessToken();
+            if (!token) {
+                console.error('Authentication token not found.');
+                return null;
+            }
+            return {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            };
+        } catch (authError) {
+            console.error('Error getting access token:', authError);
+            return null;
+        }
+    }, []);
 
     const fetchCategories = useCallback(async (showLoading = true) => {
         if (showLoading) setLoading(true);
@@ -117,12 +135,21 @@ export const useCategoryManagement = (initialPageSize: number = 10) => {
     const handleDelete = async (categoryId: string) => {
         setLoading(true);
         setError(null);
+        
+        const headers = await getAuthHeaders();
+        if (!headers) {
+            setLoading(false);
+            setError("Authentication failed. Cannot fetch images.");
+            setCategories([]);
+            return;
+        }
+
         try {
-            await categoriesApi.apiV1CategoriesCategoryIdDelete({ categoryId });
+            await categoriesApi.apiV1CategoriesCategoryIdDelete({ categoryId }, {headers}); 
             if (categories.length === 1 && page > 0) {
                 setPage(prevPage => prevPage - 1);
             } else {
-                fetchCategories(false);
+                fetchCategories(true);
             }
         } catch (err: unknown) {
             console.error("Failed to delete category:", err);
@@ -146,6 +173,14 @@ export const useCategoryManagement = (initialPageSize: number = 10) => {
     const handleFormSubmit = async () => {
         setLoading(true);
         setError(null);
+        
+        const headers = await getAuthHeaders();
+        if (!headers) {
+            setLoading(false);
+            setError("Authentication failed. Cannot fetch images.");
+            setCategories([]);
+            return;
+        }
 
         const commandData = {
             name: formData.name || undefined,
@@ -158,15 +193,14 @@ export const useCategoryManagement = (initialPageSize: number = 10) => {
                 const updateCommand: UpdateCategoryCommand = {
                     name: commandData.name,
                     description: commandData.description,
-                    // parentCategoryId không cho sửa ở đây theo logic cũ
                 };
                 await categoriesApi.apiV1CategoriesCategoryIdPut({
                     categoryId: editingCategory.id,
                     updateCategoryCommand: updateCommand,
-                });
+                }, {headers});
             } else {
                 const createCommand: CreateCategoryCommand = commandData;
-                await categoriesApi.apiV1CategoriesPost({ createCategoryCommand: createCommand });
+                await categoriesApi.apiV1CategoriesPost({ createCategoryCommand: createCommand }, {headers});
             }
             handleModalClose();
             setPage(0); 

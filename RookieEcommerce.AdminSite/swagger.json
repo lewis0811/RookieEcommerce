@@ -681,6 +681,26 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -2835,6 +2855,11 @@
             "type": "string",
             "nullable": true
           },
+          "totalSell": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
           "categoryId": {
             "type": "string",
             "format": "uuid",
@@ -2936,6 +2961,18 @@
           "details": {
             "type": "string",
             "nullable": true
+          },
+          "totalQuantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalSell": {
+            "type": "integer",
+            "format": "int32"
           },
           "category": {
             "$ref": "#/components/schemas/CategoryDetailsDto"
@@ -3500,6 +3537,11 @@
             "nullable": true
           },
           "totalQuantity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalSell": {
             "type": "integer",
             "format": "int32",
             "nullable": true

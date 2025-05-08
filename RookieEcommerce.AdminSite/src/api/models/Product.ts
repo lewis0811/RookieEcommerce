@@ -97,6 +97,12 @@ export interface Product {
     sku?: string | null;
     /**
      * 
+     * @type {number}
+     * @memberof Product
+     */
+    readonly totalSell?: number;
+    /**
+     * 
      * @type {string}
      * @memberof Product
      */
@@ -147,6 +153,7 @@ export function ProductFromJSONTyped(json: any, ignoreDiscriminator: boolean): P
         'details': json['details'] == null ? undefined : json['details'],
         'totalQuantity': json['totalQuantity'] == null ? undefined : json['totalQuantity'],
         'sku': json['sku'] == null ? undefined : json['sku'],
+        'totalSell': json['totalSell'] == null ? undefined : json['totalSell'],
         'categoryId': json['categoryId'] == null ? undefined : json['categoryId'],
         'category': json['category'] == null ? undefined : CategoryFromJSON(json['category']),
         'images': json['images'] == null ? undefined : ((json['images'] as Array<any>).map(ProductImageFromJSON)),
@@ -158,7 +165,7 @@ export function ProductToJSON(json: any): Product {
     return ProductToJSONTyped(json, false);
 }
 
-export function ProductToJSONTyped(value?: Omit<Product, 'name'|'description'|'price'|'details'|'totalQuantity'|'categoryId'> | null, ignoreDiscriminator: boolean = false): any {
+export function ProductToJSONTyped(value?: Omit<Product, 'name'|'description'|'price'|'details'|'totalQuantity'|'totalSell'|'categoryId'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

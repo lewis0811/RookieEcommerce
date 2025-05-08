@@ -49,6 +49,12 @@ export interface UpdateProductCommand {
      * @memberof UpdateProductCommand
      */
     totalQuantity?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdateProductCommand
+     */
+    totalSell?: number | null;
 }
 
 /**
@@ -73,6 +79,7 @@ export function UpdateProductCommandFromJSONTyped(json: any, ignoreDiscriminator
         'price': json['price'] == null ? undefined : json['price'],
         'details': json['details'] == null ? undefined : json['details'],
         'totalQuantity': json['totalQuantity'] == null ? undefined : json['totalQuantity'],
+        'totalSell': json['totalSell'] == null ? undefined : json['totalSell'],
     };
 }
 
@@ -92,6 +99,7 @@ export function UpdateProductCommandToJSONTyped(value?: UpdateProductCommand | n
         'price': value['price'],
         'details': value['details'],
         'totalQuantity': value['totalQuantity'],
+        'totalSell': value['totalSell'],
     };
 }
 

@@ -291,14 +291,16 @@ export const useProductVariantManagement = ({ productId }: UseProductVariantMana
                 );
             }
             handleCloseDialog();
-            setPage(0); 
+
+            fetchVariantsInternal(productId, page, rowsPerPage, searchTerm, sortBy, appliedMinPrice, appliedMaxPrice);
+            setPage(0);
         } catch (err: unknown) {
             const errorMessage = await parseApiError(err);
             setError(`Save failed: ${errorMessage}`);
         } finally {
             setLoading(false);
         }
-    }, [productId, formData, editingVariant, getAuthHeaders, parseApiError, handleCloseDialog]);
+    }, [productId, formData, editingVariant, getAuthHeaders, parseApiError, handleCloseDialog, fetchVariantsInternal, page, rowsPerPage, searchTerm, sortBy, appliedMinPrice, appliedMaxPrice]);
 
     // --- Delete Variant ---
     const handleDeleteConfirm = useCallback(async (): Promise<void> => {

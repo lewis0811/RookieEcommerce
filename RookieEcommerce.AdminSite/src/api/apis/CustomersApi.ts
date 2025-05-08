@@ -17,12 +17,15 @@ import * as runtime from '../runtime';
 import type {
   CustomerDetailsDto,
   CustomerDetailsDtoPaginationList,
+  ProblemDetails,
 } from '../models/index';
 import {
     CustomerDetailsDtoFromJSON,
     CustomerDetailsDtoToJSON,
     CustomerDetailsDtoPaginationListFromJSON,
     CustomerDetailsDtoPaginationListToJSON,
+    ProblemDetailsFromJSON,
+    ProblemDetailsToJSON,
 } from '../models/index';
 
 export interface ApiV1CustomersGetRequest {
