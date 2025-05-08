@@ -59,7 +59,7 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
                     {
                         throw new InvalidOperationException($"Invalid Product Variant ID {productVariantId.Value} for Product ID {productId}.");
                     }
-                    unitPrice = variant.Price; // Get price from variant
+                    unitPrice = variant.Price + product.Price; // Get price from variant
                     variantInfo = string.Join(", ", $"{variant.VariantType}: {variant.Name}");
                 }
                 else
@@ -90,6 +90,9 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
             // Add to repository
             await orderRepository.AddAsync(order, cancellationToken);
 
+            // Update product quantities and total sells
+            await UpdateProductQuantitiesAndTotalSell(orderItemsEntities, cancellationToken);
+
             // Save changes
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -101,6 +104,30 @@ namespace RookieEcommerce.Application.Features.Orders.Commands
             // Map to DTO and return
             var orderDto = OrderMapper.OrderToOrderCreateDto(order);
             return orderDto;
+        }
+
+        private async Task UpdateProductQuantitiesAndTotalSell(List<OrderItem> orderItemsEntities, CancellationToken cancellationToken)
+        {
+            foreach (var item in orderItemsEntities)
+            {
+                if (item.ProductVariantId != null)
+                {
+                    var variant = await productVariantRepository.GetByIdAsync((Guid)item.ProductVariantId, null, cancellationToken)
+                        ?? throw new InvalidOperationException($"Variant Id {item.ProductVariantId} not found.");
+                    var variantQuantity = variant.StockQuantity - item.Quantity;
+                    variant.Update(null, null, variantQuantity);
+
+                    await productVariantRepository.UpdateAsync(variant, cancellationToken);
+                }
+
+                var product = await productRepository.GetByIdAsync(item.ProductId, null, cancellationToken)
+                    ?? throw new InvalidOperationException($"Product Id {item.ProductId} not found.");
+
+                var productQuantity = product.TotalQuantity - item.Quantity;
+                product.Update(null, null, null, null, productQuantity, product.TotalSell + item.Quantity);
+
+                await productRepository.UpdateAsync(product, cancellationToken);
+            }
         }
 
         private static string GenerateOrderConfirmationHtml(Order order, List<(string ProductName, string? VariantInfo, int Quantity, decimal UnitPrice, decimal LineTotal)> itemDetails, string customerEmail, string customerName, string shippingPhoneNumber)
