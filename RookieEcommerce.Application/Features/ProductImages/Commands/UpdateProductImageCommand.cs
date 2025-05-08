@@ -25,6 +25,28 @@ namespace RookieEcommerce.Application.Features.ProductImages.Commands
             // Check if request.SortOder != null, if then managed to swap the exist image that contain request's order number
             await AdjustSortOrderAsync(request, productImage, cancellationToken);
 
+            // If isPrimary != null and equal true, then managed to find the previous primary and turn it off, then turn this request on
+            if (request.IsPrimary != null && request.IsPrimary == true)
+            {
+                var existingImageAtTargetPrimary = await productImageRepository
+                    .GetByAttributeAsync(
+                    img => img.ProductId == productImage.ProductId
+                    && img.IsPrimary == request.IsPrimary && img.Id != productImage.Id,
+                    null,
+                    cancellationToken);
+
+                // Swap previous image sort order to exist image sort order if it not null
+                if (existingImageAtTargetPrimary != null)
+                {
+                    existingImageAtTargetPrimary.Update(null, null, !request.IsPrimary);
+
+                    // Update via Repository
+                    await productImageRepository.UpdateAsync(existingImageAtTargetPrimary, cancellationToken);
+                }
+            }
+
+
+
             // Map request to product image
             productImage.Update(request.AltText, request.SortOrder, request.IsPrimary);
 
