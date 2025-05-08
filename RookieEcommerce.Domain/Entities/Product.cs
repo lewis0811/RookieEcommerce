@@ -8,6 +8,7 @@
         public string? Details { get; private set; } = string.Empty; // Store as json
         public int TotalQuantity { get; private set; } = 0;
         public string Sku { get; set; } = string.Empty;
+        public int TotalSell { get; private set; } = 0;
 
         // Foreign Key
         public Guid? CategoryId { get; private set; }
@@ -39,13 +40,14 @@
             };
         }
 
-        public void Update(string? name, string? description, decimal? price, string? detail, int? totalQuantity)
+        public void Update(string? name, string? description, decimal? price, string? detail, int? totalQuantity, int? totalSell)
         {
             if (name != null && name != Name) Name = name;
             if (description != null && description != Description) Description = description;
             if (price != null && price != Price) Price = (decimal)price;
             if (detail != null && detail != Details) Details = detail;
             if (totalQuantity != null && totalQuantity != TotalQuantity) TotalQuantity = (int)totalQuantity;
+            if (totalSell != null && totalSell != TotalSell) TotalSell = (int)totalSell;
             UpdateModifiedDate();
         }
     }
