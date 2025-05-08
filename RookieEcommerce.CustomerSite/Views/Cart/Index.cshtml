@@ -43,7 +43,7 @@
 											var productName = item.Product?.Name;
 											var productVariantName = item.ProductVariant?.Name;
 											decimal productPrice = item.ProductVariant != null
-												? item.ProductVariant.Price
+												? item.ProductVariant.Price + item.Product!.Price
 												: (decimal)item.Product?.Price!;
 										decimal lineTotal = (decimal)item.LineTotal!;
 										@* --- end --- *@
@@ -51,8 +51,8 @@
 
 										<tr>
 											<td style="width: 18%" class="align-middle text-center">
-												<a class="product-image" title="@productName" href="/clay-1821">
-													<img width="75"  alt="@productName" src="@productImage">
+												<a class="product-image" title="@productName" href="#">
+													<img width="75"  alt="@productName" src="@productImage" >
 												</a>
 											</td>
 											<td style="width: 32%" class="align-middle text-center">
@@ -106,7 +106,9 @@
 							</div>
 						</div>
 						<div class="mt-3 text-end">
-							<a asp-action="Index" asp-controller="Checkout" class="btn btn-primary btn-block">Tiến hành thanh toán</a>
+							<form asp-action="Index" asp-controller="Checkout" method="get">
+								<button class="btn btn-primary btn-block" disabled="@(cart.Items!.Count == 0)">Tiến hành thanh toán</button>
+							</form>
 						</div>
 					</div>
 				</div>

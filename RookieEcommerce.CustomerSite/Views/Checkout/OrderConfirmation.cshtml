@@ -3,15 +3,12 @@
 }
 
 <div class="container py-5 text-center">
-    @* Icon thành công *@
     <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" class="bi bi-check-circle-fill text-success mb-4" viewBox="0 0 16 16">
         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
     </svg>
 
-    @* Tiêu đề *@
     <h1 class="display-5 fw-bold mb-3">@ViewData["Title"]</h1>
 
-    @* Hiển thị thông báo thành công từ Controller *@
     @if (ViewBag.SuccessMessage != null)
     {
         <p class="lead mb-4">@ViewBag.SuccessMessage</p>
@@ -21,20 +18,45 @@
         <p class="lead mb-4">Cảm ơn bạn đã đặt hàng!</p>
     }
 
-    @* Thông tin thêm *@
     <p>Chúng tôi đã nhận được đơn hàng của bạn và sẽ xử lý sớm nhất có thể.</p>
     <p class="mb-4">Một email xác nhận chi tiết đơn hàng đã được gửi đến địa chỉ email bạn đã cung cấp.</p>
 
-    @* Các nút hành động *@
+    <p class="text-muted">Bạn sẽ được tự động chuyển về trang chủ sau <span id="countdownTimer">5</span> giây.</p>
+
     <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
         <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg px-4 gap-3">
             <i class="bi bi-house-door me-1"></i> Về Trang Chủ
         </a>
-        @* Bạn có thể thêm link đến trang lịch sử đơn hàng nếu có *@
-        @*
-        <a asp-controller="Order" asp-action="History" class="btn btn-outline-secondary btn-lg px-4">
-            <i class="bi bi-receipt me-1"></i> Xem Lịch Sử Đơn Hàng
-        </a>
-        *@
     </div>
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        (function () {
+            var seconds = 5;
+            var countdownElement = document.getElementById('countdownTimer');
+
+            function updateCountdownDisplay() {
+                if (countdownElement) {
+                    countdownElement.textContent = seconds;
+                }
+            }
+
+            function redirectToHome() {
+                window.location.href = '@Url.Action("Index", "Home")'
+            }
+
+            var countdownInterval = setInterval(function () {
+                seconds--;
+                updateCountdownDisplay();
+
+                if (seconds <= 0) {
+                    clearInterval(countdownInterval);
+                    redirectToHome();
+                }
+            }, 1000);
+
+            updateCountdownDisplay();
+        })();
+    </script>
+}
