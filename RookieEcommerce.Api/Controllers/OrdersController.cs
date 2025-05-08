@@ -1,5 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OpenIddict.Client.AspNetCore;
+using OpenIddict.Validation.AspNetCore;
+using RookieEcommerce.Api.Constants;
 using RookieEcommerce.Application.Features.Orders.Commands;
 using RookieEcommerce.Application.Features.Orders.Queries;
 
@@ -7,6 +11,7 @@ namespace RookieEcommerce.Api.Controllers
 {
     [Route("api/v{version:apiVersion}/orders")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, Roles = $"{ApplicationRole.User}, {ApplicationRole.Admin}")]
     public class OrdersController(IMediator mediator) : ControllerBase
     {
         [HttpGet("customer/{customer-id}")]

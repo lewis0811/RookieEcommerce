@@ -1,5 +1,8 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OpenIddict.Validation.AspNetCore;
+using RookieEcommerce.Api.Constants;
 using RookieEcommerce.Application.Common;
 using RookieEcommerce.Application.Features.Products.Commands;
 using RookieEcommerce.Application.Features.Products.Queries;
@@ -9,10 +12,13 @@ namespace RookieEcommerce.Api.Controllers
 {
     [Route("api/v{version:apiVersion}/products")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, Roles = $"{ApplicationRole.User}, {ApplicationRole.Admin}")]
+
     public class ProductsController(IMediator mediator) : ControllerBase
     {
         // GET: products
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(200)]
         public async Task<ActionResult<PaginationList<ProductDetailsDto>>> GetProducts([FromQuery] GetProductsQuery query, CancellationToken cancellationToken)
         {
@@ -22,6 +28,7 @@ namespace RookieEcommerce.Api.Controllers
 
         // GET: product/{productId}
         [HttpGet("{product-id}")]
+        [AllowAnonymous]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<ProductDetailsDto>> GetProduct([FromRoute(Name = "product-id")] Guid productId, bool isIncludeItems, CancellationToken cancellationToken)

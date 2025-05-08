@@ -14,7 +14,7 @@ namespace RookieEcommerce.Api.Controllers
     [Route("api/v{version:apiVersion}/product-images")]
     [ApiController]
     [ApiVersion(1)]
-    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, Roles = "ADMIN")]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, Roles = ApplicationRole.Admin)]
     public class ProductImagesController(IMediator mediator) : ControllerBase
     {
         // GET: product-images

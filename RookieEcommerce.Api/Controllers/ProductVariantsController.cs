@@ -1,5 +1,8 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OpenIddict.Validation.AspNetCore;
+using RookieEcommerce.Api.Constants;
 using RookieEcommerce.Application.Common;
 using RookieEcommerce.Application.Features.Products.Queries;
 using RookieEcommerce.Application.Features.ProductVariants.Commands;
@@ -11,6 +14,7 @@ namespace RookieEcommerce.Api.Controllers
 {
     [Route("api/v{version:apiVersion}/product-variants")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, Roles = $"{ApplicationRole.User}, {ApplicationRole.Admin}")]
     public class ProductVariantsController(IMediator mediator) : ControllerBase
     {
         // GET: product-variants

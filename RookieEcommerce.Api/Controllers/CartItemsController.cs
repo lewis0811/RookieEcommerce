@@ -1,11 +1,15 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OpenIddict.Validation.AspNetCore;
+using RookieEcommerce.Api.Constants;
 using RookieEcommerce.Application.Features.CartItems.Queries.Command;
 
 namespace RookieEcommerce.Api.Controllers
 {
     [Route("api/v{version:apiVersion}/carts/{cart-id}/items")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, Roles = $"{ApplicationRole.User}, {ApplicationRole.Admin}")]
     public class CartItemsController(IMediator mediator) : ControllerBase
     {
         // POST: api/carts/{cart-id}/items
