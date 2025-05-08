@@ -8,7 +8,7 @@ namespace RookieEcommerce.Application.Features.Products.Commands
         {
             RuleFor(c => c.Name).NotEmpty().MaximumLength(100);
             RuleFor(c => c.Description).NotEmpty().MaximumLength(200);
-            RuleFor(c => c.Price).GreaterThanOrEqualTo(1);
+            RuleFor(c => c.Price).GreaterThanOrEqualTo(5000); // Lowest ewallet transfer
         }
     }
 }

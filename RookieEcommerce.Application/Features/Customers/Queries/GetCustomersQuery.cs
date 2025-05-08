@@ -13,10 +13,10 @@ namespace RookieEcommerce.Application.Features.Customers.Queries
 
     public class GetCustomersQueryHandler(ICustomerRepository customerRepository) : IRequestHandler<GetCustomersQuery, PaginationList<CustomerDetailsDto>>
     {
-        public async Task<PaginationList<CustomerDetailsDto>> Handle(GetCustomersQuery request, CancellationToken cancellationToken)
+        public async Task<PaginationList<CustomerDetailsDto>> Handle(GetCustomersQuery query, CancellationToken cancellationToken)
         {
             // Get paginated of customers
-            var customers = await customerRepository.GetPaginated(request);
+            var customers = await customerRepository.GetPaginated(query);
 
             // Map to dto
             var dtos = CustomerMapper.CustomerListToCustomerDetailsDto(customers.Items);
