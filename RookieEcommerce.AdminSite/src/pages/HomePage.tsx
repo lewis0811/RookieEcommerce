@@ -76,8 +76,8 @@ const Homepage: React.FC = () => {
               onChange={handleSortChange}
               disabled={loading}
             >
-              <MenuItem value="name">Tên (A-Z)</MenuItem>
-              <MenuItem value="name desc">Tên (Z-A)</MenuItem>
+              <MenuItem value="firstName">Tên (A-Z)</MenuItem>
+              <MenuItem value="firstName desc">Tên (Z-A)</MenuItem>
               <MenuItem value="email">Email (A-Z)</MenuItem>
               <MenuItem value="email desc">Email (Z-A)</MenuItem>
             </Select>

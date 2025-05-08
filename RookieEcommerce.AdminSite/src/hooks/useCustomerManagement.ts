@@ -14,7 +14,7 @@ export const useCustomerManagement = () => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [totalCount, setTotalCount] = useState(0);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [sortBy, setSortBy] = useState<string>('name');
+    const [sortBy, setSortBy] = useState<string>('firstName');
 
     const getAuthHeaders = useCallback(async (): Promise<Record<string, string> | null> => {
         try {
@@ -84,6 +84,7 @@ export const useCustomerManagement = () => {
                     }
                         , { headers }
                     );
+                    console.log(response);
                 setCustomers(response.items ?? []);
                 setTotalCount(response.totalCount ?? 0);
             } catch (err: unknown) {

@@ -60,7 +60,7 @@ const ProductImageManagementPage: React.FC<ProductImageManagementProps> = ({ pro
     handleEditFormChange,
     handleSaveChanges,
     setError
-} = useProductImageManagement(productId);
+  } = useProductImageManagement(productId);
 
   // --- JSX ---
   return (
@@ -107,7 +107,7 @@ const ProductImageManagementPage: React.FC<ProductImageManagementProps> = ({ pro
               {editingImageId === image.id ? (
                 // --- Edit Mode ---
                 <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', border: '2px solid', borderColor: 'primary.main' }}>
-                  <CardMedia component="img" height="150" image={image.imageUrl || "/placeholder.png"} alt={`Editing ${image.altText}`} sx={{ objectFit: 'contain' }} />
+                  <CardMedia component="img" image={image.imageUrl || "/placeholder.png"} alt={`Editing ${image.altText}`} sx={{ height: 300 }} />
                   <CardContent sx={{ flexGrow: 1, p: 2 }}>
 
                     {error && editingImageId === image.id && (
@@ -165,7 +165,7 @@ const ProductImageManagementPage: React.FC<ProductImageManagementProps> = ({ pro
                     sx={{ objectFit: 'cover' }}
                     onError={(e) => { (e.target as HTMLImageElement).onerror = null; (e.target as HTMLImageElement).src = "/placeholder.png"; }}
                   />
-                    {image.isPrimary && (<Chip label="Ảnh Chính" color="success" size="small" sx={{ position: 'absolute', bottom: 12, right: 10, fontWeight: 'bold', boxShadow: 1 }} />)}
+                  {image.isPrimary && (<Chip label="Ảnh Chính" color="success" size="small" sx={{ position: 'absolute', bottom: 12, right: 10, fontWeight: 'bold', boxShadow: 1 }} />)}
                   {/* Show Alt Text & Order */}
                   <CardContent sx={{ pt: 1, pb: 0 }}>
                     <Typography variant="caption" display="block" gutterBottom noWrap title={image.altText || '(No Alt Text)'}>

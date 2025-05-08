@@ -137,7 +137,7 @@ export const useProductImageManagement = (productId: string | null): UseProductI
         try {
             const response: ProductImageDetailsDtoPaginationList =
                 await productImagesApi.apiV1ProductImagesGet(
-                    { productId: productId, pageSize: 100, },
+                    { productId: productId, pageSize: 100, sortBy: "sortOrder" },
                     { headers }
                 );
             setProductImages(response.items ?? []);

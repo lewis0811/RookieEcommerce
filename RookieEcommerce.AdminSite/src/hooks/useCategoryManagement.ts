@@ -170,7 +170,7 @@ export const useCategoryManagement = (initialPageSize: number = 10) => {
             }
             handleModalClose();
             setPage(0); 
-            fetchParentCategories();
+            fetchCategories();
         } catch (err: unknown) {
             console.error("Failed to save category:", err);
             let errMsg = 'Lỗi không xác định khi lưu danh mục.';

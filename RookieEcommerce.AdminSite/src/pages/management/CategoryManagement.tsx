@@ -1,5 +1,4 @@
-// src/pages/CategoryManagementPage.tsx
-import React from 'react'; // Bỏ useState, useEffect, useCallback
+import React from 'react';
 import {
     Container, Box, Typography, TextField, Button, CircularProgress, Alert,
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
@@ -7,7 +6,7 @@ import {
     Select, MenuItem, FormControl, InputLabel, FormHelperText, TablePagination
 } from '@mui/material';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import { useCategoryManagement } from '../../hooks/useCategoryComponent';
+import { useCategoryManagement } from '../../hooks/useCategoryManagement';
 import { CategoryDetailsDto } from '../../api';
 
 const DEFAULT_PAGE_SIZE_COMPONENT = 10;
@@ -41,7 +40,7 @@ const CategoryManagementPage: React.FC = () => {
 
     // Handler dialog delete confirm
     const handleDeleteConfirmed = (categoryId: string) => {
-        if (window.confirm(`Bảnh có chắc muốn xóa danh mục này không? (${categoryId})`)) {
+        if (window.confirm(`Bạn có chắc muốn xóa danh mục này không? (${categoryId})`)) {
             handleDelete(categoryId);
         }
     };
