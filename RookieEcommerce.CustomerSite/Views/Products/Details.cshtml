@@ -1,25 +1,36 @@
 ﻿@using System.Globalization
+@using RookieEcommerce.CustomerSite.Services
+@using RookieEcommerce.SharedViewModels.OrderDtos
+@using static OpenIddict.Abstractions.OpenIddictConstants
 @model RookieEcommerce.CustomerSite.Models.HomeProductDetailsViewModel
 
 @{
     ViewData["Title"] = Model.ProductDetails.Name;
     var productDetails = Model.ProductDetails;
     var productRatings = Model.ProductRatings;
+  
+    var orderCheck = false;
 
     var createModel = Model.CreateProductRating;
     createModel.ProductId = productDetails.Id;
-    createModel.CustomerId = Guid.Parse("4C1E0C92-0BEA-A47A-6C8A-59E397F632F2"); // Change to get from cookie later
+    if (ViewBag.CustomerId != null)
+    {
+        createModel.CustomerId = Guid.Parse(ViewBag.CustomerId);
+    }
 
-    var orderItem = Model.OrderDetails!.OrderItems!.FirstOrDefault(c => c.ProductId == productDetails.Id);
-    var idToFind = orderItem?.ProductVariantId != null
-        ? orderItem.ProductVariantId 
-        : productDetails.Id;
+    if (Model.OrderDetails != null && Model.OrderDetails.OrderItems != null)
+    {
+        var orderItem = Model.OrderDetails.OrderItems.FirstOrDefault(c => c.ProductId == productDetails.Id);
+
+        // Found orderItem, mean customer has ordered this product
+        orderCheck = true;
+    }
 
     var totalRating = productRatings.Items.Count > 0
     ? Math.Round(productRatings.Items.Select(c => c.RatingValue).Average(), 1)
     : 0;
 }
-
+@* <script>console.log(@isUserLoggedIn)</script> *@
 <div class="container mt-5">
     <div class="row mb-3">
         @* Left col: Product images*@
@@ -27,13 +38,19 @@
             @if (productDetails.Images != null && productDetails.Images.Any())
             {
                 @* Show first image to be base image *@
-                <img src="@productDetails.Images.FirstOrDefault()?.ImageUrl" class="img-fluid rounded" alt="@productDetails.Name" width="500" height="500" />
+                <div style="width: 450px">
+                    <div class="ratio ratio-1x1 ">
+                        <img src="@productDetails.Images.FirstOrDefault()?.ImageUrl" class="img-fluid rounded" alt="@productDetails.Name" style="object-fit: cover;" loading="lazy" />
+                    </div>
+                </div>
 
                 <div class="row mt-3">
                     @foreach (var image in productDetails.Images.OrderBy(c => c.SortOrder))
                     {
-                        <div class="col-3 col-md-2 mb-3">
-                            <img src="@image.ImageUrl" class="img-thumbnail" alt="Product thumbnail" style="cursor: pointer;" />
+                        <div class="col-3 col-md-2 mb-3" style="width: 100px">
+                            <div class="ratio ratio-1x1">
+                                <img src="@image.ImageUrl" class="img-thumbnail" alt="Product thumbnail" style="cursor: pointer;" />
+                            </div>
                         </div>
                     }
                 </div>
@@ -46,7 +63,7 @@
 
         @* Right col: Product details*@
         <div class="col-md-6">
-            <form asp-controller="Products" asp-action="AddToCart" method="post">
+            <form asp-controller="Products" asp-action="AddToCart" method="post" id="addToCartForm">
                 <input asp-for=CartItem.ProductId value="@createModel.ProductId" hidden/>
 
                 <h3 class="mb-3">@productDetails.Name</h3>
@@ -61,6 +78,12 @@
                 </div>
 
                 <hr/>
+
+                @* Sku *@
+                @if (productDetails.Category != null)
+                {
+                    <p class="text-muted">Mã: @productDetails.Sku</p>
+                }
 
                 @* Categories *@
                 @if (productDetails.Category != null)
@@ -83,7 +106,9 @@
                         <div class="mb-4 row">
                             <fieldset class="col-auto fs-1">
                                 <legend class="btn-group col-form-label fs-6 px-1 align-items-center fw-bold">
-                                    @group.Key
+                                    <span class="me-2">
+                                        @group.Key
+                                    </span>
                                     @foreach (var item in group)
                                     {
                                         <input asp-for=CartItem.ProductVariantId type="radio" class="btn-check" id="@item.Name" value="@item.Id" autocomplete="off" checked />
@@ -96,6 +121,9 @@
                         </div>
                     }
                 }
+
+                @* Description *@
+                <p class="text-success fw-bold">Số lượng còn: @productDetails.TotalQuantity</p>
 
                 @* Amount *@
                 <div class="mb-3 fw-bold row align-items-center">
@@ -166,18 +194,6 @@
                                             <strong class="me-auto">@item.Customer!.FirstName @item.Customer.LastName</strong>
                                             <small class="text-muted">@item.CreatedDate</small>
                                         </div>
-                                        <div class="d-flex align-items-start mb-1">
-                                            @{
-                                                var matchedType = item.Product!.Variants!.FirstOrDefault(c => c.Id == idToFind)?.Name
-                                                ?? item.Product.Name;
-
-                                                // Prevent case matchedType equal product's name
-                                                var responseType = matchedType != item.Product.Name
-                                                ? item.Product.Name + " - " + matchedType
-                                                : matchedType;
-                                            }
-                                            <small class="text-muted">Phân loại: @responseType</small>
-                                        </div>
                                         <div class="text-warning text-center">
                                             @for (int i = 1; i <= 5; i++)
                                             {
@@ -202,32 +218,36 @@
 
                         @* Rating form *@
                         <div class="col-md-4 border-start">
-                            <form asp-controller="Products" asp-action="Rating" method="post" >
+                            <form asp-controller="Products" asp-action="Rating" method="post">
                                 <h4 class="text-center">Viết đánh giá của bạn</h4>
-                                    <div class="mb-3">
-                                        <p class="form-label">Đánh giá</p>
-                                        <div class="star-rating animated-stars">
-                                            <input asp-for=CreateProductRating.CustomerId value=@createModel.CustomerId hidden/>
-                                            <input asp-for=CreateProductRating.ProductId value=@createModel.ProductId hidden />
+                                <div class="mb-3">
+                                    <p class="form-label">Đánh giá</p>
+                                    <div class="star-rating animated-stars">
+                                        <input asp-for=CreateProductRating.CustomerId value=@createModel.CustomerId hidden/>
+                                        <input asp-for=CreateProductRating.ProductId value=@createModel.ProductId hidden />
 
-                                            <input type="radio" id="star5" asp-for=CreateProductRating.RatingValue value="5">
-                                            <label for="star5" class="bi bi-star-fill"><span hidden>5</span></label>
-                                            <input type="radio" id="star4" asp-for=CreateProductRating.RatingValue value="4">
-                                            <label for="star4" class="bi bi-star-fill"><span hidden>4</span></label>
-                                            <input type="radio" id="star3" asp-for=CreateProductRating.RatingValue value="3">
-                                            <label for="star3" class="bi bi-star-fill"><span hidden>3</span></label>
-                                            <input type="radio" id="star2" asp-for=CreateProductRating.RatingValue value="2">
-                                            <label for="star2" class="bi bi-star-fill"><span hidden>2</span></label>
-                                            <input type="radio" id="star1" asp-for=CreateProductRating.RatingValue value="1">
-                                            <label for="star1" class="bi bi-star-fill"><span hidden>1</span></label>
-                                        </div>
+                                        <input type="radio" id="star5" asp-for=CreateProductRating.RatingValue value="5">
+                                        <label for="star5" class="bi bi-star-fill"><span hidden>5</span></label>
+                                        <input type="radio" id="star4" asp-for=CreateProductRating.RatingValue value="4">
+                                        <label for="star4" class="bi bi-star-fill"><span hidden>4</span></label>
+                                        <input type="radio" id="star3" asp-for=CreateProductRating.RatingValue value="3">
+                                        <label for="star3" class="bi bi-star-fill"><span hidden>3</span></label>
+                                        <input type="radio" id="star2" asp-for=CreateProductRating.RatingValue value="2">
+                                        <label for="star2" class="bi bi-star-fill"><span hidden>2</span></label>
+                                        <input type="radio" id="star1" asp-for=CreateProductRating.RatingValue value="1">
+                                        <label for="star1" class="bi bi-star-fill"><span hidden>1</span></label>
                                     </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Nội dung đánh giá
-                                            <textarea asp-for=CreateProductRating.Comment class="form-control" rows="4" required></textarea>
-                                        </label>
-                                    </div>
-                                <button type="submit" class="btn btn-primary mt-2">Gửi đánh giá</button>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Nội dung đánh giá
+                                        <textarea asp-for=CreateProductRating.Comment class="form-control" rows="4" required></textarea>
+                                    </label>
+                                </div>
+                                @if (!orderCheck)
+                                {
+                                    <p class="text-warning">*Vui lòng mua hàng để đánh giá</p>
+                                }
+                                <button type="submit" class="btn btn-primary mt-2" disabled =@(!orderCheck) >Gửi đánh giá</button>
                             </form>
                         </div>
 
@@ -288,6 +308,26 @@
                 setTimeout(() => {
                     this.style.transform = 'scale(1)';
                 }, 200);
+            });
+        });
+    </script>
+
+    @* Button login check script *@
+    <script>
+        var isUserActuallyLoggedIn = @(ViewBag.UserIsLoggedIn ? "true" : "false");
+        $(document).ready(function() {
+            $('#productRatingForm').on('submit', function(event) {
+                if (!isUserActuallyLoggedIn) {
+                    event.preventDefault();
+                    alert('Vui lòng đăng nhập để gửi đánh giá sản phẩm!');
+                }
+            });
+
+            $('#addToCartForm').on('submit', function(event) {
+                if (!isUserActuallyLoggedIn) {
+                    event.preventDefault();
+                    alert('Vui lòng đăng nhập để thêm vào giỏ hàng!');
+                }
             });
         });
     </script>
