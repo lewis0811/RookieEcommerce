@@ -78,7 +78,7 @@ const ProductImageManagementPage: React.FC<ProductImageManagementProps> = ({ pro
           variant="contained"
           startIcon={<AddPhotoAlternateIcon />}
           onClick={handleOpenUploadDialog}
-          disabled={loading || uploading || !productId}
+          disabled={loading || uploading || !productId || productImages.length >= 3}
         >
           Thêm ảnh mới
         </Button>
@@ -107,7 +107,13 @@ const ProductImageManagementPage: React.FC<ProductImageManagementProps> = ({ pro
               {editingImageId === image.id ? (
                 // --- Edit Mode ---
                 <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', border: '2px solid', borderColor: 'primary.main' }}>
-                  <CardMedia component="img" image={image.imageUrl || "/placeholder.png"} alt={`Editing ${image.altText}`} sx={{ height: 300 }} />
+                  <CardMedia 
+                    component="img" 
+                    height="300"
+                    image={image.imageUrl || "/placeholder.png"} 
+                    alt={`Editing ${image.altText}`} 
+                    sx={{ objectFit: 'contain' }} 
+                  />
                   <CardContent sx={{ flexGrow: 1, p: 2 }}>
 
                     {error && editingImageId === image.id && (
@@ -162,7 +168,7 @@ const ProductImageManagementPage: React.FC<ProductImageManagementProps> = ({ pro
                     height="300"
                     image={image.imageUrl || "/placeholder.png"}
                     alt={image.altText || `Product Image ${image.id}`}
-                    sx={{ objectFit: 'cover' }}
+                    sx={{ objectFit: 'contain' }}
                     onError={(e) => { (e.target as HTMLImageElement).onerror = null; (e.target as HTMLImageElement).src = "/placeholder.png"; }}
                   />
                   {image.isPrimary && (<Chip label="Ảnh Chính" color="success" size="small" sx={{ position: 'absolute', bottom: 12, right: 10, fontWeight: 'bold', boxShadow: 1 }} />)}

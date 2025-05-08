@@ -57,8 +57,8 @@ const CategoryManagementPage: React.FC = () => {
 
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Typography variant="h4" component="h1" gutterBottom>
-                Quản lý Category
+            <Typography variant="h4" component="h1" gutterBottom sx={{ textAlign: 'center', fontWeight: 'bold', color: 'primary.main', mb: 3 }}>
+                Danh sách Category
             </Typography>
 
             {/* Search, sort, add button */}
@@ -69,9 +69,8 @@ const CategoryManagementPage: React.FC = () => {
                         variant="outlined"
                         size="small"
                         value={searchTerm}
-                        onChange={handleSearchChange} 
+                        onChange={handleSearchChange}
                         sx={{ minWidth: '200px' }}
-                        disabled={loading && !isModalOpen}
                     />
                     <FormControl size="small" sx={{ minWidth: 220 }} disabled={loading && !isModalOpen}>
                         <InputLabel>Sắp xếp theo</InputLabel>
@@ -110,14 +109,13 @@ const CategoryManagementPage: React.FC = () => {
                     <TableHead >
                         <TableRow>
                             <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }}>Tên</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }}>Mô tả</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }}>Danh mục cha</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText', width: 600 }}>Mô tả</TableCell>
                             <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }}>Ngày tạo</TableCell>
                             <TableCell align="right" sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }}>Hành động</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        
+
                         {!loading && categories.length === 0 && (
                             <TableRow>
                                 <TableCell colSpan={5} align="center">
@@ -133,9 +131,8 @@ const CategoryManagementPage: React.FC = () => {
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell sx={{ typography: 'body2', whiteSpace: 'nowrap' }}>{cat.name}</TableCell>
-                                <TableCell sx={{ typography: 'body2', whiteSpace: 'nowrap', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis' }}>{cat.description}</TableCell>
-                                <TableCell sx={{ typography: 'body2', whiteSpace: 'nowrap' }}>{cat.parentCategoryName ?? 'N/A'}</TableCell>
-                                <TableCell sx={{ typography: 'body2', whiteSpace: 'nowrap' }}>{cat.createdDate ? new Date(cat.createdDate).toLocaleDateString('vi-VN') : 'N/A'}</TableCell>
+                                <TableCell sx={{ typography: 'body2', whiteSpace: 'normal', overflow: 'hidden', textOverflow: 'ellipsis' }}>{cat.description}</TableCell>
+                                <TableCell sx={{ typography: 'body2', whiteSpace: 'nowrap' }}>{cat.createdDate ? new Date(cat.createdDate).toLocaleString() : 'N/A'}</TableCell>
                                 <TableCell align="right">
                                     <IconButton onClick={() => handleEdit(cat)} color="primary" disabled={loading} size="small">
                                         <EditIcon fontSize="small" />
@@ -211,7 +208,7 @@ const CategoryManagementPage: React.FC = () => {
                             disabled={loading}
                         />
                         <FormControl fullWidth margin="normal" disabled={!!editingCategory?.id || loading}>
-                            <InputLabel id="parent-category-label">Danh mục cha</InputLabel>
+                            <InputLabel id="parent-category-label">Tắt vì chưa implement logic ở customer site</InputLabel>
                             <Select
                                 labelId="parent-category-label"
                                 id="parentCategoryId"
@@ -219,6 +216,7 @@ const CategoryManagementPage: React.FC = () => {
                                 value={formData.parentCategoryId ?? ''}
                                 label="Danh mục cha"
                                 onChange={handleFormChange}
+                                disabled
                             >
                                 <MenuItem value="">
                                     <em>-- Không có (Danh mục gốc) --</em>

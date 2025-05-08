@@ -490,7 +490,6 @@ const ProductManagement: React.FC = () => {
               <MenuItem value="name desc">Name (Z-A)</MenuItem>
               <MenuItem value="price">Price (Low-High)</MenuItem>
               <MenuItem value="price desc">Price (High-Low)</MenuItem>
-              {/* Add other sort options if API supports, e.g., createdDate */}
             </Select>
           </FormControl>
         </Box>
@@ -500,9 +499,9 @@ const ProductManagement: React.FC = () => {
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => handleOpenDialog()}
-          disabled={loading} // Disable button while loading list
+          disabled={loading}
         >
-          Create Product
+          Thêm Product
         </Button>
       </Box>
 
@@ -521,11 +520,12 @@ const ProductManagement: React.FC = () => {
         <Table stickyHeader aria-label="product table">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }}>Name</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }}>Description</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }} align="right">Price</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }}>Category</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }} align="center">Actions</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }}>Tên</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }}>Mô tả</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }} >Giá</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }} >Số lượng</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }}>Danh mục</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', backgroundColor: 'primary.light', color: 'primary.contrastText' }} align="center">Hành động</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -540,11 +540,20 @@ const ProductManagement: React.FC = () => {
                 <TableRow hover role="checkbox" tabIndex={-1} key={product.id}>
                   <TableCell sx={{ whiteSpace: 'nowrap' }}>{product.name}</TableCell>
                   <TableCell>{product.description}</TableCell>
-                  <TableCell align="right">
+                  <TableCell>
                     {product.price?.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) ?? 'N/A'}
                   </TableCell>
+                  <TableCell sx={{ whiteSpace: 'nowrap' }}>{product.totalQuantity ?? 'N/A'}</TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap' }}>{product.category?.name ?? 'N/A'}</TableCell>
                   <TableCell align="center">
+                    <IconButton
+                      onClick={() => navigate(`./details?productId=${product.id}`)}
+                      color="secondary"
+                      aria-label={`details`}
+                      disabled={loading}
+                    >
+                      <InfoIcon />
+                    </IconButton>
                     <IconButton
                       onClick={() => handleOpenDialog(product)}
                       color="primary"
@@ -560,14 +569,6 @@ const ProductManagement: React.FC = () => {
                       disabled={loading} 
                     >
                       <DeleteIcon />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => navigate(`./details?productId=${product.id}`)}
-                      color="secondary"
-                      aria-label={`details`}
-                      disabled={loading}
-                    >
-                      <InfoIcon />
                     </IconButton>
                   </TableCell>
                 </TableRow>
