@@ -19,4 +19,8 @@
     <ProjectReference Include="..\RookieEcommerce.SharedViewModels\RookieEcommerce.SharedViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\CartItems\Queries\" />
+  </ItemGroup>
+
 </Project>

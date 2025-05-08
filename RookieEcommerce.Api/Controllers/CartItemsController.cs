@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation.AspNetCore;
 using RookieEcommerce.Api.Constants;
-using RookieEcommerce.Application.Features.CartItems.Queries.Command;
+using RookieEcommerce.Application.Features.CartItems.Commands;
 
 namespace RookieEcommerce.Api.Controllers
 {

@@ -56,6 +56,7 @@ namespace RookieEcommerce.Api.Controllers
         }
 
         [HttpGet("callback")]
+        [AllowAnonymous]
         public ActionResult<PaymentResult> Callback()
         {
             string callbackUrlBase = _configuration["Vnpay:CallbackUrlBase"]!;

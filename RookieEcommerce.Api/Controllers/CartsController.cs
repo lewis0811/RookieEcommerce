@@ -38,7 +38,6 @@ namespace RookieEcommerce.Api.Controllers
 
         // POST: api/carts
         [HttpPost]
-        [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, Roles = $"{ApplicationRole.Admin}")]
         public async Task<IActionResult> CreateCart([FromBody] CreateCartCommand command, CancellationToken cancellationToken)
         {
             var cart = await mediator.Send(command, cancellationToken);

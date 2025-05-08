@@ -33,7 +33,7 @@ namespace RookieEcommerce.Application.Features.ProductVariants.Commands
                 ?? throw new InvalidOperationException($"Product with ID {request.ProductId} not found.");
 
             // Check if variant exist
-            var existVariant = await productVariantRepository.AnyAsync(c => c.Name.ToLower().Equals(request.Name), cancellationToken);
+            var existVariant = await productVariantRepository.AnyAsync(c => c.Name.ToLower().Equals(request.Name) && c.ProductId == request.ProductId, cancellationToken);
             if (existVariant) throw new InvalidOperationException($"Product variant name {request.Name} already exist.");
 
             // Create new variant entity

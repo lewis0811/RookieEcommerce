@@ -26,6 +26,7 @@ namespace RookieEcommerce.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
+        [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, Roles = $"{ApplicationRole.Admin}, {ApplicationRole.User}")]
         public async Task<ActionResult<CustomerDetailsDto>> GetCustomerById(Guid id, CancellationToken cancellationToken)
         {
             var query = new GetCustomerByIdQuery { Id = id };
