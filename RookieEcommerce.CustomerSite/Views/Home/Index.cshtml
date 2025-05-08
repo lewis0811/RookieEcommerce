@@ -6,22 +6,20 @@
     ViewData["Title"] = "Home Page";
 }
 
-@* --- Tiêu Đề --- *@
 <div class="container">
     <h3 class="text-center fw-bold mt-5 mb-5">SÁP VUỐT TÓC NAM TỐT NHẤT - ĐẸP TRAI, TỰ TIN TỨC THÌ.</h3>
 </div>
 
-@* --- Sắp xếp và lọc --- *@
+@* --- Sort and filter --- *@
 <div class="container">
 
-    @* --- Sắp xếp --- *@
+    @* --- Sort --- *@
     <form method="get" asp-controller="Home" asp-action="Index">
         <div class="d-flex fw-bold m-4 row text-center">
             <div class="col">
                 <i class="bi bi-sort-alpha-down fs-4"></i>
                 <span class="col-form-label me-2">Sắp xếp theo:</span>
 
-                @* Các div chứa radio button *@
                 <div class="form-check form-check-inline">
                     <input class="form-check-input sort-radio" type="radio" name="sortOrder" id="sortNewest" value="createdDate desc" @(ViewData["CurrentSort"] as string == "createdDate desc" ? "checked" : "")>
                     <label class="form-check-label" for="sortNewest">Mới nhất</label>
@@ -46,19 +44,20 @@
                     <input class="form-check-input sort-radio" type="radio" name="sortOrder" id="sortPriceDesc" value="price desc" @(ViewData["CurrentSort"] as string == "price desc" ? "checked" : "")>
                     <label class="form-check-label" for="sortPriceDesc">Giá giảm dần</label>
                 </div>
-                @* Mặc định nếu không có sortOrder nào được chọn (lần đầu vào trang) *@
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input sort-radio" type="radio" name="sortOrder" id="sortSellDesc" value="totalSell desc" @(ViewData["CurrentSort"] as string == "price desc" ? "checked" : "")>
+                    <label class="form-check-label" for="sortPriceDesc">Mua nhiều</label>
+                </div>
+
                 <div class="form-check form-check-inline" style="display: none;">
                     <input class="form-check-input" type="radio" name="sortOrder" id="defaultSort" value="" @(string.IsNullOrEmpty(ViewData["CurrentSort"] as string) ? "checked" : "")>
                 </div>
 
-                @* Thêm các input hidden khác nếu cần giữ lại tham số (ví dụ: categoryId, searchString, pageNumber) *@
-                @* <input type="hidden" name="categoryId" value="@Model.CurrentCategoryId" /> *@
-                @* <input type="hidden" name="searchString" value="@Model.CurrentSearchString" /> *@
             </div>
         </div>
     </form>
 
-    @* --- Lọc --- *@
+    @* --- Filter --- *@
     <div class="d-flex fw-bold m-4 row align-items-center text-center p-3" style="background-color: #ebebeb">
 
         <div class="col-auto">
@@ -119,18 +118,17 @@
 </div>
 
 
-
 <div class="container">
 
     <div class="row">
+
         @if (Model.Products?.Items != null && Model.Products.Items.Count > 0)
         {
             @foreach (var item in Model.Products.Items)
             {
-                <div class="col-12 col-md-6 col-lg-4 mb-4">
-                    <form action="/cart/add" method="post" class="h-100" enctype="multipart/form-data">
-                        <div class="card h-100">
-
+                <div class="col-12 col-md-6 col-lg-3 mb-4">
+                        <div class="card h-100" style="position: relative">
+                            <span class="badge bg-success" style="position: absolute; z-index: 1">Đã bán: @item.TotalSell</span>
                             @* --- Image --- *@ 
                             @{
                                 var image = ((IEnumerable<ProductImageDetailsDto>)item.Images!)?.FirstOrDefault(c => c.IsPrimary);
@@ -138,19 +136,24 @@
                             <div class="position-relative">
                                 @if (image != null)
                                 {
-                                    <a asp-controller="Products" asp-action="Details" asp-route-productId="@item.Id" class="d-block">
+                                    <a asp-controller="Products" asp-action="Details" asp-route-productId="@item.Id"
+                                       class="d-block ratio ratio-1x1 bg-light">
                                         <img class="card-img-top img-fluid lazyload loaded"
-                                        src=@image.ImageUrl
-                                        alt=@item.Name
-                                        data-was-processed="true">
+                                             src="@image.ImageUrl"
+                                             alt="@item.Name"
+                                             data-was-processed="true"
+                                             style="object-fit: cover;" loading="lazy" />
                                     </a>
-                                } else
+                                }
+                                else
                                 {
-                                    <a asp-controller="Products" asp-action="Details" asp-route-productId="@item.Id" class="d-block">
+                                    <a asp-controller="Products" asp-action="Details" asp-route-productId="@item.Id"
+                                       class="d-block ratio ratio-1x1 bg-light">
                                         <img class="card-img-top img-fluid lazyload loaded"
-                                        src="https://dummyimage.com/400x400/55595c/fff&text=No+Image"
-                                        alt=@item.Name
-                                        data-was-processed="true"/>
+                                             src="https://dummyimage.com/400x400/55595c/fff&text=No+Image"
+                                             alt="@item.Name"
+                                             data-was-processed="true"
+                                             style="object-fit: cover;" />
                                     </a>
                                 }
                             </div>
@@ -166,13 +169,12 @@
                                         </div>
 
                                         <div class="mt-auto">
-                                            <a href="#" class="btn btn-dark w-100">Add to cart</a>
+                                <a asp class="btn btn-dark w-100" asp-controller="Products" asp-action="Details" asp-route-productId="@item.Id">View Details</a>
                                         </div>
                                     </div>
                                     <input type="hidden" name="variantId" value="23417456">
 
                                 </div>
-                            </form>
                         </div>
             }
 
@@ -331,11 +333,31 @@
                 sessionStorage.setItem(scrollPositionKey, window.scrollY);
             }
 
-            $('.category-filter-item').on('click', function (e) {
+            $('#sortNewest').on('click', function (e) {
                 saveScrollPosition();
             });
 
-            $('.price-filter-item').on('click', function (e) {
+            $('#sortOldest').on('click', function (e) {
+                saveScrollPosition();
+            });
+
+            $('#sortAlphaAsc').on('click', function (e) {
+                saveScrollPosition();
+            });
+
+            $('#sortAlphaAsc').on('click', function (e) {
+                saveScrollPosition();
+            });
+
+            $('#sortPriceAsc').on('click', function (e) {
+                saveScrollPosition();
+            });
+
+            $('#sortPriceDesc').on('click', function (e) {
+                saveScrollPosition();
+            });
+
+            $('#sortSellDesc').on('click', function (e) {
                 saveScrollPosition();
             });
 
