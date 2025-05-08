@@ -12,5 +12,16 @@ namespace RookieEcommerce.Domain.Entities
 
         public virtual ICollection<ProductRating> Ratings { get; set; } = [];
         public virtual Cart? Cart { get; set; } // A customer can only have one active cart
+
+        public static Customer Create(string firstName, string lastName, string email, string phoneNumber)
+        {
+            return new Customer
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                PhoneNumber = phoneNumber
+            };
+        }
     }
 }

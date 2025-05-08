@@ -122,13 +122,13 @@ namespace RookieEcommerce.CustomerSite.Controllers
             };
 
             // Call API to create order
-            var order = await orderApiClient.CreateOrderAsync(dto);
+            var order = await orderApiClient.CreateOrderAsync(dto, token);
 
             // Redirect if using EWallet payment method
             if (dto.PaymentMethod == PaymentMethod.VNPay)
             {
                 CreatePaymentDto paymentDto = new() { TotalAmount = (decimal)currentCart.TotalPrice, Description = $"{order.Id}", OrderId = order.Id };
-                string vnPayUrl = await vnPayApiClient.CreatePaymentUrlAsync(paymentDto);
+                string vnPayUrl = await vnPayApiClient.CreatePaymentUrlAsync(paymentDto, token);
 
                 return Redirect(vnPayUrl);
             }
@@ -141,6 +141,9 @@ namespace RookieEcommerce.CustomerSite.Controllers
         [HttpGet]
         public async Task<IActionResult> OrderConfirmation(string? orderId, string? transactionId)
         {
+            var token = await HttpContext.GetTokenAsync(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken);
+            if (token == null) { RedirectToAction("Login", "Authentication"); }
+
             var successMessage = TempData["SuccessMessage"] as string;
 
             if (string.IsNullOrEmpty(successMessage) && orderId == null)
@@ -150,7 +153,7 @@ namespace RookieEcommerce.CustomerSite.Controllers
 
             if (orderId != null && transactionId != null)
             {
-                await orderApiClient.UpdateOrderAsync(orderId, transactionId);
+                await orderApiClient.UpdateOrderAsync(orderId, transactionId, token);
             }
 
             ViewBag.SuccessMessage = successMessage;

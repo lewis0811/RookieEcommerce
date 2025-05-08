@@ -8,8 +8,11 @@ namespace RookieEcommerce.CustomerSite.Services
         public sealed class VnPayReturnUrl
         { public string Url { get; set; } = ""; }
 
-        public async Task<string> CreatePaymentUrlAsync(CreatePaymentDto dto)
+        public async Task<string> CreatePaymentUrlAsync(CreatePaymentDto dto, string? token)
         {
+            httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
             var response = await httpClient.PostAsJsonAsync($"api/v1/vnpay/payment-url", dto);
             if (response.IsSuccessStatusCode && response.StatusCode == System.Net.HttpStatusCode.Created)
             {

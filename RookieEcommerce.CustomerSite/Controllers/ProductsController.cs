@@ -45,7 +45,7 @@ namespace RookieEcommerce.CustomerSite.Controllers
 
             if (customerId != null)
             {
-                order = await orderApiClient.GetOrderDetailAsync(Guid.Parse(customerId));
+                order = await orderApiClient.GetOrderDetailAsync(Guid.Parse(customerId), token);
             }
 
             return View(new HomeProductDetailsViewModel { ProductDetails = product, ProductRatings = rating, OrderDetails = order });
@@ -85,12 +85,12 @@ namespace RookieEcommerce.CustomerSite.Controllers
 
                 if (cart == null)
                 {
-                    cartId = (Guid)await cartApiClient.CreateCustomerCartAsync(Guid.Parse(customerId));
+                    cartId = (Guid)await cartApiClient.CreateCustomerCartAsync(Guid.Parse(customerId), token);
                 }
                 else { cartId = cart.Id; }
             }
 
-            await cartItemApiClient.AddCartItemAsync(cartItem, cartId);
+            await cartItemApiClient.AddCartItemAsync(cartItem, cartId, token);
 
             return RedirectToAction("Index", "Cart");
         }

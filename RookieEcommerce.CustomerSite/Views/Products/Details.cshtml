@@ -30,7 +30,7 @@
     ? Math.Round(productRatings.Items.Select(c => c.RatingValue).Average(), 1)
     : 0;
 }
-@* <script>console.log(@isUserLoggedIn)</script> *@
+
 <div class="container mt-5">
     <div class="row mb-3">
         @* Left col: Product images*@
@@ -72,7 +72,8 @@
                 <div class="mb-3">
                     <h3>
                         <span style="color: #ffac4b; font-size: 30px; font-weight: 900">
-                            @productDetails.Price.ToString("C", new CultureInfo("vi-VN"))
+                            <span id="basePrice">@productDetails.Price.ToString("C", new CultureInfo("vi-VN"))</span>
+                            <span id="variantPrice" class="d-none">+ <span class="variant-price">0</span></span>
                         </span>
                     </h3>
                 </div>
@@ -97,7 +98,7 @@
                     <p class="form-text">@productDetails.Description</p>
                 </div>
 
-                @* Product varians*@
+                @* Product variants*@
                 @if (productDetails.Variants != null && productDetails.Variants.Any())
                 {
                     var variantGroups = productDetails.Variants.GroupBy(c => c.VariantType);
@@ -111,9 +112,13 @@
                                     </span>
                                     @foreach (var item in group)
                                     {
-                                        <input asp-for=CartItem.ProductVariantId type="radio" class="btn-check" id="@item.Name" value="@item.Id" autocomplete="off" checked />
+                                        <input asp-for=CartItem.ProductVariantId type="radio" class="btn-check variant-radio" id="@item.Name" value="@item.Id" autocomplete="off" checked disabled="@(item.StockQuantity == 0)" data-stock="@item.StockQuantity" data-price="@item.Price" />
                                         <label class="btn btn-outline-secondary" for="@item.Name">
                                             @item.Name
+                                            @if (item.Price > 0)
+                                            {
+                                                <span class="ms-1">(+@item.Price.ToString("C", new CultureInfo("vi-VN")))</span>
+                                            }
                                         </label>
                                     }
                                 </legend>
@@ -123,14 +128,14 @@
                 }
 
                 @* Description *@
-                <p class="text-success fw-bold">Số lượng còn: @productDetails.TotalQuantity</p>
+                <p class="text-success fw-bold">Số lượng còn: <span id="currentStock">@productDetails.TotalQuantity</span></p>
 
                 @* Amount *@
                 <div class="mb-3 fw-bold row align-items-center">
                     <div class="col-auto">Số lượng</div>
                     <div class="input-group col-auto" style="width: 150px;">
                         <button class="btn btn-outline-secondary btn-minus" type="button">-</button>
-                        <input type="number" asp-for=CartItem.Quantity class="form-control text-center"  min="1" value="1" maxlength="3">
+                        <input type="number" asp-for=CartItem.Quantity class="form-control text-center" min="1" value="1" maxlength="3" max="@productDetails.TotalQuantity">
                         <button class="btn btn-outline-secondary btn-plus" type="button">+</button>
                     </div>
                 </div>
@@ -327,6 +332,63 @@
                 if (!isUserActuallyLoggedIn) {
                     event.preventDefault();
                     alert('Vui lòng đăng nhập để thêm vào giỏ hàng!');
+                }
+            });
+        });
+    </script>
+
+    @* Variant stock update script *@
+    <script>
+        $(document).ready(function() {
+            // Get initial selected variant's stock
+            const initialSelectedVariant = $('.variant-radio:checked');
+            if (initialSelectedVariant.length) {
+                $('#currentStock').text(initialSelectedVariant.data('stock'));
+                $('input[type="number"]').attr('max', initialSelectedVariant.data('stock'));
+            }
+
+            // Update stock display when variant is selected
+            $('.variant-radio').change(function() {
+                const stock = $(this).data('stock');
+                $('#currentStock').text(stock);
+                $('input[type="number"]').attr('max', stock);
+                
+                // Reset quantity to 1 if current quantity is greater than new stock
+                const currentQuantity = parseInt($('input[type="number"]').val());
+                if (currentQuantity > stock) {
+                    $('input[type="number"]').val(1);
+                }
+            });
+        });
+    </script>
+
+    @* Variant price update script *@
+    <script>
+        $(document).ready(function() {
+            const formatter = new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
+
+            // Get initial selected variant's price
+            const initialSelectedVariant = $('.variant-radio:checked');
+            if (initialSelectedVariant.length) {
+                const variantPrice = parseFloat(initialSelectedVariant.data('price'));
+                console.log("Price", variantPrice);
+                if (variantPrice > 0) {
+                    $('#variantPrice').removeClass('d-none');
+                    $('.variant-price').text(formatter.format(variantPrice));
+                }
+            }
+
+            // Update price display when variant is selected
+            $('.variant-radio').change(function() {
+                const variantPrice = parseFloat($(this).data('price'));
+                if (variantPrice > 0) {
+                    $('#variantPrice').removeClass('d-none');
+                    $('.variant-price').text(formatter.format(variantPrice));
+                } else {
+                    $('#variantPrice').addClass('d-none');
                 }
             });
         });

@@ -14,7 +14,7 @@ namespace RookieEcommerce.CustomerSite.Controllers
         public async Task<IActionResult> Index()
         {
             var token = await HttpContext.GetTokenAsync(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken);
-            if (token == null) { RedirectToAction("Login", "Authentication"); }
+            if (token == null) { return Redirect("~/login"); }
 
             CartDetailsDto? cart = null;
             var customerId = User.Claims.FirstOrDefault(c => c.Type == Claims.Subject)?.Value;
@@ -31,7 +31,7 @@ namespace RookieEcommerce.CustomerSite.Controllers
         public async Task<IActionResult> HandleCartItem(Guid? cartItemId)
         {
             var token = await HttpContext.GetTokenAsync(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken);
-            if (token == null) { RedirectToAction("Login", "Authentication"); }
+            if (token == null) { return Redirect("~/login"); }
            
             CartDetailsDto? cart = null;
             var customerId = User.Claims.FirstOrDefault(c => c.Type == Claims.Subject)?.Value;
@@ -42,7 +42,7 @@ namespace RookieEcommerce.CustomerSite.Controllers
             if (cartItemId != null && cart != null)
             {
                 var cartId = cart.Id;
-                await cartApiClient.RemoveCartItemAsync(cartId, (Guid)cartItemId);
+                await cartApiClient.RemoveCartItemAsync(cartId, (Guid)cartItemId, token);
             }
 
             return RedirectToAction("Index");

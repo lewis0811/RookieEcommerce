@@ -17,6 +17,8 @@ namespace RookieEcommerce.CustomerSite
             IConfiguration configuration) // configuration might be needed for some services
 #pragma warning restore IDE0060 // Remove unused parameter
         {
+            services.AddHttpContextAccessor();
+
             // Register HttpClient
             services.AddHttpClient<ProductApiClient>()
                 .ConfigureRookieEcommerceApi(configuration);

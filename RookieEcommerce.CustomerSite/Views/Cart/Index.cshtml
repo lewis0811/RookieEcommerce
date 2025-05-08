@@ -1,6 +1,14 @@
 ﻿﻿@using System.Globalization
+@using Microsoft.AspNetCore.Authentication
+@using OpenIddict.Client.AspNetCore
 @model CartViewModel
+@inject IHttpContextAccessor HttpContextAccessor
 @{
+	string? backchannelAccessToken = null;
+	if (User.Identity!.IsAuthenticated)
+	{
+		backchannelAccessToken = await HttpContextAccessor.HttpContext!.GetTokenAsync(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken);
+	}
 	var cart = Model.CartDetails!;
 	decimal totalPrice = (decimal)cart.TotalPrice!;
 }
@@ -69,9 +77,9 @@
 											</td>
 											<td style="width: 14%" class="align-middle text-center">
 											<div class="input-group input-group-sm justify-content-center" data-item-id="@item.Id">
-													<button class="btn btn-outline-secondary btn-minus" type="submit">-</button>
-												<input type="number" min="0" class="form-control text-center cart-item-quantity" value="@item.Quantity" style="max-width: 60px;">
-													<button class="btn btn-outline-secondary btn-plus" type="submit">+</button>
+													<button class="btn btn-outline-secondary btn-minus" type="submit" disabled="@(item.Quantity == 1)">-</button>
+												<input type="number" min="1" class="form-control text-center cart-item-quantity" value="@item.Quantity" max="@item.ProductVariant!.StockQuantity" style="max-width: 60px;">
+													<button class="btn btn-outline-secondary btn-plus" type="submit" disabled="@(item.Quantity == item.ProductVariant!.StockQuantity)">+</button>
 												</div>
 											</td>
 											<td style="width: 14%" class="align-middle text-center">
@@ -125,33 +133,34 @@
 			const $btnPlus = $('.btn-plus');
 			const cartId = $('#cartIndex').data('cart-id');
 
-			// --- Hàm gửi yêu cầu PUT ---
+
 		function updateCartItem(itemId, newQuantity) {
 			if (!cartId) {
 				 console.error('Không tìm thấy Cart ID!');
-				 return; // Dừng nếu không có cartId
+				 return; 
 			}
 
 			const baseUrl = 'https://localhost:7143';
 			const updateUrl = `${baseUrl}/api/v1/carts/${cartId}/items/${itemId}`;
+			const token = "@backchannelAccessToken";
 
 			$.ajax({
 				url: updateUrl,
-				method: 'PUT', // Sử dụng phương thức PUT
-				contentType: 'application/json', // Kiểu nội dung gửi đi
-				data: JSON.stringify({ quantity: newQuantity }), // Dữ liệu gửi đi (khớp với curl)
+				method: 'PUT', 
+				contentType: 'application/json',
+				headers: {
+					'Authorization': 'Bearer ' + token
+				},
+				data: JSON.stringify({ quantity: newQuantity }), 
 				success: function(response) {
-					// Xử lý khi thành công
 					console.log('Cập nhật thành công:', response);
 					location.reload();
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
-					// Xử lý khi có lỗi
 					console.error('Lỗi cập nhật:', textStatus, errorThrown, jqXHR.responseText);
 					let errorMsg = `Lỗi khi cập nhật sản phẩm ${itemId}. Vui lòng thử lại.`;
 					if(jqXHR.responseText) {
 						try {
-							// Thử parse lỗi từ server nếu có response body
 							const errorResponse = JSON.parse(jqXHR.responseText);
 							errorMsg += ` (Server: ${errorResponse.message || jqXHR.statusText})`;
 						} catch (e) {

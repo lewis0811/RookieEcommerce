@@ -14,6 +14,9 @@ namespace RookieEcommerce.CustomerSite.Services
             if (!string.IsNullOrEmpty(sortOrder))
             {
                 queryBuilder.Append($"&SortBy={HttpUtility.UrlEncode(sortOrder)}");
+            } else
+            {
+                queryBuilder.Append($"&SortBy=totalSell desc");
             }
             if (minPrice.HasValue)
             {

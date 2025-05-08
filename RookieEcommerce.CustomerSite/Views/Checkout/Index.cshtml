@@ -21,7 +21,7 @@
                     @* --- Contact Information --- *@
                     <div class="mb-3">
                         <label asp-for="Email" class="form-label"></label>
-                        <input asp-for="Email" class="form-control" placeholder="Ví dụ: john.doe@gmail.com" value="@User.Identity.Name"/>
+                        <input asp-for="Email" class="form-control" placeholder="Ví dụ: john.doe@gmail.com" value="@User.Identity!.Name"/>
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 

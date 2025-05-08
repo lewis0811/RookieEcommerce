@@ -1,16 +1,26 @@
-﻿@using RookieEcommerce.CustomerSite.Services
+﻿@using Microsoft.AspNetCore.Authentication
+@using OpenIddict.Client.AspNetCore
+@using RookieEcommerce.CustomerSite.Services
 @using RookieEcommerce.SharedViewModels.CartDtos
 @using System.Security.Claims
 @using static OpenIddict.Abstractions.OpenIddictConstants
+@inject IHttpContextAccessor HttpContextAccessor
 @{
+    string? backchannelAccessToken = null;
+    if (User.Identity!.IsAuthenticated)
+    {
+        backchannelAccessToken = await HttpContextAccessor.HttpContext!.GetTokenAsync(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken);
+    }
+    
     var customerId = Context.User.Claims.FirstOrDefault(c => c.Type == Claims.Subject)?.Value;
     var error = "";
     var includeItems = true;
     CartDetailsDto? cart = null;
     int totalCartItem = 0;
-    
-
+   
     using var httpClient = new HttpClient();
+    httpClient.DefaultRequestHeaders.Authorization =
+     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", backchannelAccessToken);
     string requestUri = $"https://localhost:7143/api/v1/carts?customer-id={customerId}&isIncludeItems={includeItems}";
 
     try

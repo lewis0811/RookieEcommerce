@@ -45,8 +45,8 @@
                     <label class="form-check-label" for="sortPriceDesc">Giá giảm dần</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input sort-radio" type="radio" name="sortOrder" id="sortSellDesc" value="totalSell desc" @(ViewData["CurrentSort"] as string == "price desc" ? "checked" : "")>
-                    <label class="form-check-label" for="sortPriceDesc">Mua nhiều</label>
+                    <input class="form-check-input sort-radio" type="radio" name="sortOrder" id="sortSellDesc" value="totalSell desc" @(ViewData["CurrentSort"] as string == "totalSell desc" ? "checked" : "")>
+                    <label class="form-check-label" for="sortSellDesc">Mua nhiều</label>
                 </div>
 
                 <div class="form-check form-check-inline" style="display: none;">
@@ -67,8 +67,8 @@
 
         <div class="col-auto">
             <div class="dropdown">
-                <button class="btn dropdown-toggle bg-transparent border-0 text-black fw-bold" href="#" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Loại sản phẩm
+                <button class="btn dropdown-toggle bg-transparent border-0 text-black fw-bold" id="categoryFilter" href="#" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Phân loại
                 </button>
 
                 <ul class="dropdown-menu">
@@ -91,7 +91,7 @@
 
         <div class="col-auto">
             <div class="dropdown">
-                <button class="btn dropdown-toggle bg-transparent border-0 text-black fw-bold" href="#" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn dropdown-toggle bg-transparent border-0 text-black fw-bold" id="priceFilter" href="#" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Mức giá
                 </button>
 
@@ -161,7 +161,7 @@
                                     @* --- Detail --- *@
                                     <div class="card-body d-flex flex-column">
                                         <h5 class="card-title mb-2 text-center">
-                                            <a href="/wax-1821" title="${@item.Name}" class="text-decoration-none text-dark fw-light">@item.Name</a>
+                                <a asp-controller="Products" asp-action="Details" asp-route-productId="@item.Id" title="${@item.Name}" class="text-decoration-none text-dark fw-light">@item.Name</a>
                                         </h5>
 
                                         <div class="mb-3 text-center">
@@ -345,7 +345,7 @@
                 saveScrollPosition();
             });
 
-            $('#sortAlphaAsc').on('click', function (e) {
+            $('#sortAlphaDesc').on('click', function (e) {
                 saveScrollPosition();
             });
 
@@ -361,8 +361,12 @@
                 saveScrollPosition();
             });
 
-            $('body').on('click', 'ul.pagination a.page-link', function() {
-                    saveScrollPosition();
+            $('#categoryFilter').on('click', function (e) {
+                saveScrollPosition();
+            });
+
+            $('#priceFilter').on('click', function (e) {
+                saveScrollPosition();
             });
         });
     </script>
