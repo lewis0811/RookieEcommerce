@@ -14,6 +14,7 @@ namespace RookieEcommerce.Application.Features.Products.Commands
         public decimal Price { get; set; }
         public string? Details { get; set; }
         public int? TotalQuantity { get; set; }
+        public int? TotalSell { get; set; }
     }
 
     public class UpdateProductCommandHandler(IUnitOfWork unitOfWork, IProductRepository productRepository) : IRequestHandler<UpdateProductCommand>
@@ -25,7 +26,7 @@ namespace RookieEcommerce.Application.Features.Products.Commands
                 ?? throw new InvalidOperationException($"Product Id {request.Id} not found.");
 
             // Map request to product
-            product.Update(request.Name, request.Description, request.Price, request.Details, request.TotalQuantity);
+            product.Update(request.Name, request.Description, request.Price, request.Details, request.TotalQuantity, request.TotalSell);
 
             // Update via Repository
             await productRepository.UpdateAsync(product, cancellationToken);

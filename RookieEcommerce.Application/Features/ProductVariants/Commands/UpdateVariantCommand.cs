@@ -35,7 +35,7 @@ namespace RookieEcommerce.Application.Features.ProductVariants.Commands
                     ? product.TotalQuantity - (productVariant.StockQuantity - request.StockQuantity)
                     : product.TotalQuantity + (request.StockQuantity - productVariant.StockQuantity);
 
-                product.Update(null, null, null, null, totalStockQuantity);
+                product.Update(null, null, null, null, totalStockQuantity, null);
             }
 
             // Update properties

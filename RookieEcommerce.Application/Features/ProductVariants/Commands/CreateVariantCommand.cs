@@ -41,12 +41,27 @@ namespace RookieEcommerce.Application.Features.ProductVariants.Commands
 
             // Generate Sku number
             var existingSkus = productExist.Sku;
-            var numberOfVariant = productExist.Variants.Count;
-            numberOfVariant++;
+            var numberOfVariant = productExist.Variants.LastOrDefault()?.Sku;
+
+            if (numberOfVariant == null)
+            {
+                numberOfVariant = "1";
+            }
+            else
+            {
+                var lastSkuParts = numberOfVariant.Split('-');
+                var lastNumber = int.Parse(lastSkuParts.Last());
+                numberOfVariant = (lastNumber + 1).ToString();
+            }
+
             variant.Sku = existingSkus + "-" + numberOfVariant;
 
             // Add entity via Repository
             await productVariantRepository.AddAsync(variant, cancellationToken);
+
+            // Update product quantity
+            productExist.Update(null, null, null, null, productExist.TotalQuantity + request.StockQuantity, null);
+            await productRepository.UpdateAsync(productExist, cancellationToken);
 
             // Save changes via Unit Of Work
             await unitOfWork.SaveChangesAsync(cancellationToken);
