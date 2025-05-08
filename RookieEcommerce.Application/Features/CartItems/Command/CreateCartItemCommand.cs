@@ -6,7 +6,7 @@ using RookieEcommerce.Domain.Entities;
 using RookieEcommerce.SharedViewModels.CartDtos;
 using System.Text.Json.Serialization;
 
-namespace RookieEcommerce.Application.Features.CartItems.Queries.Command
+namespace RookieEcommerce.Application.Features.CartItems.Commands
 {
     public class CreateCartItemCommand : IRequest<CartItemCreateDto>
     {

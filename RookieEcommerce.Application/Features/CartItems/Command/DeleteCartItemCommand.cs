@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RookieEcommerce.Application.Contacts.Persistence;
 
-namespace RookieEcommerce.Application.Features.CartItems.Queries.Command
+namespace RookieEcommerce.Application.Features.CartItems.Commands
 {
     public class DeleteCartItemCommand : IRequest
     {

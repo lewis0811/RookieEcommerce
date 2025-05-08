@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace RookieEcommerce.Application.Features.CartItems.Queries.Command
+namespace RookieEcommerce.Application.Features.CartItems.Commands
 {
     public class CreateCartItemCommandValidator : AbstractValidator<CreateCartItemCommand>
     {

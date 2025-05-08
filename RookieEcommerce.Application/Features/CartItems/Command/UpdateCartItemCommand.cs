@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RookieEcommerce.Application.Contacts.Persistence;
 using System.Text.Json.Serialization;
 
-namespace RookieEcommerce.Application.Features.CartItems.Queries.Command
+namespace RookieEcommerce.Application.Features.CartItems.Commands
 {
     public class UpdateCartItemCommand : IRequest
     {
